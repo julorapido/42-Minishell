@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 16:27:11 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/09/26 18:04:43 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/02 14:24:36 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,11 @@ token	*token_new(char *s, enum TOKEN_TYPE ty)
 {
 	token	*new_t;
 
-	new_t = (token *) malloc(sizeof(token *));
+	new_t = (token *) malloc(sizeof(token ));
 	if (!new_t)
 		return (NULL);
-	new_t->v = s;
-	new_t->type = ty;
+	new_t->cmd = s;
+	new_t->t = ty;
 	new_t->next = NULL;
 	new_t->prev = NULL;
 	return (new_t);
@@ -63,16 +63,39 @@ void	token_push(token **token_lst, token *new_t)
 void	show_tokens(token **cmd_tokens)
 {
 	token	*t;
+	char	*s; 
 	int		i;
 
-	printf("=========================== \n");
+	printf("==================================================\n");
+	printf("=================       TOKENS        ============\n");	
 	i = 0;
 	t = *cmd_tokens;
 	while(t)
 	{
-		printf("nth token : %d \n value=%s ", i, t->v);
+		if(t->t == ARGUMENT)
+			s = "[$] ARG";
+		if(t->t == COMMAND)
+			s = "COMMAND";
+		if(t->t == COMMAND_FLAG)
+			s = "COMMAND FLAG";
+		if(t->t == GREAT)
+			s = "[>] OUTPUT REDIRECTION";
+		if(t->t == LESS)
+			s = "[<] INPUT REDIRECTION";
+		if(t->t == GREAT_GREAT)
+			s = "[>>] OUTPUT REDIRECTION";
+		if(t->t == LESS_LESS)
+			s = "[<<] INPUT REDIRECTION";
+		if(t->t == PIPE)
+			s = "[|] PIPE";
+		if(t->t == QUOTE)
+			s = "[\"\"] QUOTE VAR";
+		printf(
+			"- [%s] %s \n", 
+			s, ((t->t == COMMAND || t->t == COMMAND_FLAG || t->t == QUOTE) ? (t->cmd) : (""))
+		);
 		t = t->next;
 		i++;
 	}
-	printf("=========================== \n");
+	printf("==================================================\n");
 }

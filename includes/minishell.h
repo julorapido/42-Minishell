@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/09/26 18:02:56 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/01 15:36:58 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,27 +24,45 @@
 
 #include <libft.h>
 
+/*
+{
+	PIPE = |
+	OPERATOR = [>, <, >>]
+	COMMAND = [bin, ls, cat -e, pwd]
+	VARIABLE = "<: Hello World!2"
+}
+*/
+
 enum TOKEN_TYPE
 {
 	COMMAND,
-	OPERATOR,
+	COMMAND_FLAG,
 	PIPE,
-	VARIABLE
+	LESS,
+	LESS_LESS,
+	GREAT,
+	GREAT_GREAT,
+	QUOTE,
+	ARGUMENT
 };
 
 typedef struct s_token
 {
-	char 			*v;
-	enum TOKEN_TYPE	type;
+	char 			*cmd;
+	enum TOKEN_TYPE	t;
 	struct s_token	*prev;
 	struct s_token	*next;
-} token;
+}	token;
+
+
+// TOKEN
+token	*token_new(char *s, enum TOKEN_TYPE ty);
+void	token_push(token **token_lst, token *new_t);
+void	show_tokens(token **cmd_tokens);
 
 
 // TOKENIZE
-void	parse_command(char *cmd, token **token_list);
-token	*token_new(char *s, enum TOKEN_TYPE ty);
-void	token_push(token **token_lst, token *new_t);
+int		parse_command(char *cmd, token **token_list);
 
 
 #endif

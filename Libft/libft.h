@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 01:13:37 by julessainth       #+#    #+#             */
-/*   Updated: 2024/07/15 17:30:38 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/01 12:49:20 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ void	ft_putstr_fd(char const *s, int fd);
 void	ft_putendl_fd(char const *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
 void	ft_striteri(char *s, void (*f)(unsigned int, char *));
+
+char	**ft_multi_split(char const *s, char *set);
 
 /* bonus */
 t_list	*ft_lstnew(void *content);
