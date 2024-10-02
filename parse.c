@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 17:46:03 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/02 15:03:39 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/02 17:01:19 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ static enum TOKEN_TYPE	switcher(char *token)
 		return (LESS);
 	if (strlen(token) == 1 && *token == '>')
 		return (GREAT);	
+	if (strlen(token) == 1 && *token == ';')
+		return (SEPARATOR);	
 	if (*token == '|')
 		return (PIPE);
 	if (strlen(token) == 2 && ft_strcmp(token, "<<") == 2)
@@ -84,6 +86,7 @@ int	parse_command(char *cmd, token **cmd_tokens)
 					s_quote = fn_realloc_strcat(s_quote, s_cmds[i]);
 					i++;
 					if(!s_cmds[i])
+			cmd = commands[i];
 						break;
 				}
 				if(i > o && s_cmds[i])
@@ -109,4 +112,36 @@ int	parse_command(char *cmd, token **cmd_tokens)
 		}
 	}
 	return(0);
+}
+
+
+int parse_to_executor(token **cmd_tokens)
+{
+	token	*t;
+	t_cmd	*commands;
+	t_cmd	cmd;
+	int		i;
+
+	t = token_last(*cmd_tokens);
+	commands = (t_cmd *) malloc(sizeof(t_cmd) * 10);
+	printf("---------- EXECUTOR-COMMANDS ----------\n");	
+	printf("LAST TOKEN : [%s] \n", token_type_to_str(t->t));
+	printf("TOKEN VALUE : %s \n", t->cmd);
+	printf("\n");
+	while(t)
+	{
+		cmd = commands[i];
+		enum TOKEN_TYPE cmd_spliter[4] = {PIPE, LESS, LESS_LESS, GREAT_GREAT, GREAT};
+		if(t->t == PIPE || t->t == LESS || t->t == LESS_LESS || t->t == GREAT_GREAT || t->t == GREAT)
+		{
+			if(t->t == GREAT_GREAT || t->t == GREAT)
+			{
+				cmd
+			}
+			i++;
+		}
+		printf("[%s] -> ", token_type_to_str(t->t));
+		t = t->prev;
+	}
+	return (0);
 }

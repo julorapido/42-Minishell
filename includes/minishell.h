@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/01 15:36:58 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/02 16:02:35 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,11 @@ enum TOKEN_TYPE
 	GREAT,
 	GREAT_GREAT,
 	QUOTE,
+	SEPARATOR,
 	ARGUMENT
 };
 
+//	TOKEN
 typedef struct s_token
 {
 	char 			*cmd;
@@ -54,15 +56,27 @@ typedef struct s_token
 	struct s_token	*next;
 }	token;
 
+//	COMMAND
+typedef struct s_cmd
+{
+	char	*command;
+	char	*flags;
+	char	*input;
+	char	*output;
+}	t_cmd;
 
-// TOKEN
+
+// TOKEN UTILITES
 token	*token_new(char *s, enum TOKEN_TYPE ty);
 void	token_push(token **token_lst, token *new_t);
 void	show_tokens(token **cmd_tokens);
+token	*token_last(token	*head);
+char	*token_type_to_str(enum TOKEN_TYPE t);
 
 
-// TOKENIZE
+// PARSING
 int		parse_command(char *cmd, token **token_list);
+int		parse_to_executor(token **cmd_tokens);
 
 
 #endif
