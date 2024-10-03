@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/02 16:02:35 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/03 16:51:04 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include <unistd.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <stdbool.h>
 
 #include <libft.h>
 
@@ -59,8 +60,7 @@ typedef struct s_token
 //	COMMAND
 typedef struct s_cmd
 {
-	char	*command;
-	char	*flags;
+	char	*command;	
 	char	*input;
 	char	*output;
 }	t_cmd;

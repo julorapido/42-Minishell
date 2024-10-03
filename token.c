@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 16:27:11 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/02 16:06:15 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/03 17:11:33 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ token	*token_new(char *s, enum TOKEN_TYPE ty)
 	if (!new_t)
 		return (NULL);
 	new_t->cmd = s;
+	//new_t->t = (enum TOKEN_TYPE *) malloc(sizeof(enum TOKEN_TYPE ));
 	new_t->t = ty;
 	new_t->next = NULL;
 	new_t->prev = NULL;
@@ -57,6 +58,7 @@ void	token_push(token **token_lst, token *new_t)
 	{
 		*token_lst = new_t;
 		(*token_lst)->next = NULL;
+		(*token_lst)->prev = NULL;
 	}
 }
 
