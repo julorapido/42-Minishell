@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 17:46:03 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/04 17:33:26 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/04 17:52:17 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,18 +29,18 @@ static enum TOKEN_TYPE char_to_token(char c)
 
 static enum TOKEN_TYPE	switcher(char *tken, token **t_l)
 {
-	/*	if (strlen(tken) > 2 && (ft_strchr(tken, '>') || ft_strchr(tken, '<') || ft_strchr(tken, '|')))
+	if (strlen(tken) > 2 && (ft_strchr(tken, '>') || ft_strchr(tken, '<') || ft_strchr(tken, '|')))
 	{
 		int a = ft_m_strchr_i(tken, '>', '<');
 		token_push(t_l, token_new(ft_substr(tken, 0, a) , COMMAND));
 		token_push(t_l, token_new("", char_to_token(tken[a])));
-		token_push(t_l, token_new(ft_substr(tken, a, ft_strlen(tken)) , COMMAND));
+		token_push(t_l, token_new(ft_substr(tken, a + 1, ft_strlen(tken)) , COMMAND));
 		return (-1);
 	}
 	else
-	{*/
-		if (strlen(tken) == 1 && *tken == '<')
-			return (LESS);
+	{
+		if (strlen(tken) == 1)
+			return (char_to_token(*tken));
 		if (strlen(tken) == 1 && *tken == '>')
 			return (GREAT);	
 		if (strlen(tken) == 1 && *tken == ';')
@@ -59,7 +59,7 @@ static enum TOKEN_TYPE	switcher(char *tken, token **t_l)
 			return (COMMAND_FLAG);
 		if (strlen(tken) > 1 && !strchr(tken, '\"'))
 			return (COMMAND);
-	//}
+	}
 	return (COMMAND);
 }
 
@@ -134,8 +134,7 @@ int	parse_command(char *cmd, token **cmd_tokens)
 	enum TOKEN_TYPE	big_t;
 	// un-spaced special
 	enum TOKEN_TYPE	saved_t;
-	char			*saved_s;
-
+	char			*saved_s = NULL;
 	int				i;
 	
 	s_cmds = ft_split(cmd, ' ');
@@ -143,7 +142,7 @@ int	parse_command(char *cmd, token **cmd_tokens)
 	while (s_cmds[i])
 	{	
 		// push saved OPERATOR or COMMAND
-		if(!saved_s)
+		if(saved_s)
 		{
 			token_push(cmd_tokens, token_new(saved_s, COMMAND));
 			token_push(cmd_tokens, token_new("", saved_t));
