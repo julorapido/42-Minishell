@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:07:22 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/02 15:50:54 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/04 12:22:12 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,11 @@ int main(int argc, char **argv, char **env)
 	line = readline("$ ");
 	while(line)
 	{
+		if(ft_strlen(line) < 2)
+		{
+			line = readline("$ ");
+			continue;
+		}
 		cmd_tokens = (token **) malloc(sizeof(token **));
 		*cmd_tokens = NULL;
 		printf("---------- COMMAND-VALUE -----\n");
