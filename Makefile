@@ -1,10 +1,10 @@
 OUT = MINISHELL
 
-SRC = *.c
+SRC = ./parsing/*.c  *.c ./builtins/*.c ./env/*.c
 SRC_OBJS = $(SRC.c=.o)
 
 FLAGS = -Wall -Wextra
-HEADER = -I./includes -I$(LIBFT_DIR)
+HEADER = -I. -I$(LIBFT_DIR)
 
 LIBFT_DIR = Libft/
 LIBFT = $(LIBFT_DIR)/libft.a

@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/04 17:11:06 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/07 14:11:33 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,18 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <stdbool.h>
-
+#include <limits.h>
 #include <libft.h>
+#include <signal.h>
+#include <dirent.h>
+
+
+# define STDIN 0
+# define STDOUT 1
+# define STDERR 2
+
+# define ERROR 1
+# define SUCCESS 0
 
 /*
 {
@@ -65,6 +75,18 @@ typedef struct s_cmd
 	char	*output;
 }	t_cmd;
 
+typedef struct	s_env
+{
+	char			*value;
+	struct s_env	*next;
+}				t_env;
+
+typedef struct s_minishell
+{
+	t_env	*env;	
+	t_cmd	*commands;
+}	t_minishell;
+
 
 // TOKEN UTILITES
 token	*token_new(char *s, enum TOKEN_TYPE ty);
@@ -73,10 +95,19 @@ void	show_tokens(token **cmd_tokens);
 token	*token_last(token	*head);
 char	*token_type_to_str(enum TOKEN_TYPE t);
 
+// ENV
+int		env_init(t_minishell *t_m, char **argv);
 
 // PARSING
 int		parse_command(char *cmd, token **token_list);
 int		parse_to_executor(token **cmd_tokens);
+
+// BUILT-IN
+int		f__pwd(void);
+int		f__env(t_env *env);
+int		is_builtin(char *command);
+void	run_builtin(t_minishell *t_m, int n_builtin);
+
 
 
 #endif

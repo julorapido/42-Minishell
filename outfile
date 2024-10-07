@@ -1,9 +1,0 @@
-includes
-Libft
-Makefile
-MINISHELL
-minishell.c
-out
-outfile
-parse.c
-token.c

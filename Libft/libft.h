@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 01:13:37 by julessainth       #+#    #+#             */
-/*   Updated: 2024/10/04 14:33:03 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/07 14:16:49 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ void	ft_striteri(char *s, void (*f)(unsigned int, char *));
 // char	*ft_strchr_i(const char *string, int searchedChar);
 int		ft_m_strchr_i(const char *string, char a, char b);
 char	**ft_multi_split(char const *s, char *set);
+void	ft_putendl(char *s);
+
 
 /* bonus */
 t_list	*ft_lstnew(void *content);

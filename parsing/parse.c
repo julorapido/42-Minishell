@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 17:46:03 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/04 17:52:17 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/07 16:44:01 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,22 +39,14 @@ static enum TOKEN_TYPE	switcher(char *tken, token **t_l)
 	}
 	else
 	{
-		if (strlen(tken) == 1)
-			return (char_to_token(*tken));
-		if (strlen(tken) == 1 && *tken == '>')
-			return (GREAT);	
-		if (strlen(tken) == 1 && *tken == ';')
-			return (SEPARATOR);	
-		if (*tken == '|')
-			return (PIPE);
-		if (strlen(tken) == 1)
+		if (strlen(tken) == 1 || *tken == '|')
 			return (char_to_token(*tken));
 		if (strlen(tken) == 2 && (*tken == '<' && tken[1] == '<'))
 			return (LESS_LESS);
 		if (strlen(tken) == 2 && (*tken == '>' && tken[1] == '>'))
 			return (GREAT_GREAT);
 		if (strlen(tken) > 1 && *tken == '$')
-				return (ARGUMENT);
+			return (ARGUMENT);
 		if (strlen(tken) > 1 && *tken == '-')
 			return (COMMAND_FLAG);
 		if (strlen(tken) > 1 && !strchr(tken, '\"'))
@@ -76,7 +68,7 @@ static char	*fn_realloc_strcat(char *filled_str, char *cncat_str, int space_it)
 	{
 		filled_str[i] = temp[i];
 		i++;
-	}
+	}	
 	if(space_it)
 		filled_str[i++] = ' ';
 	j = 0;
@@ -84,8 +76,8 @@ static char	*fn_realloc_strcat(char *filled_str, char *cncat_str, int space_it)
 	{
 		filled_str[i + j] = cncat_str[j];
 		j++;
-	}
-	filled_str[i + j] = '\0';
+	}	
+	filled_str[i + j] = '\0';	
 	return (filled_str);
 }
 
@@ -136,27 +128,25 @@ int	parse_command(char *cmd, token **cmd_tokens)
 	enum TOKEN_TYPE	saved_t;
 	char			*saved_s = NULL;
 	int				i;
-	
-	s_cmds = ft_split(cmd, ' ');
-	i = 0;
-	while (s_cmds[i])
-	{	
-		// push saved OPERATOR or COMMAND
-		if(saved_s)
-		{
-			token_push(cmd_tokens, token_new(saved_s, COMMAND));
-			token_push(cmd_tokens, token_new("", saved_t));
-			saved_s = NULL;
-		}
+	int				s;
 
-		// QUOTE
+	s_cmds = ft_split(cmd, ' ');
+	s = 0;
+	while(s_cmds[s])
+		s++;
+	i = 0;
+	while (s_cmds[i] != NULL && i < s)
+	{	
+
+		// QUOTE ""
 		if(*s_cmds[i] == '\"')
 		{	
 			s_quote = malloc(ft_strlen(s_cmds[i]) + 1);	
 			int o = i;
 			ft_strlcpy(s_quote, s_cmds[i], ft_strlen(s_cmds[i]) + 1);
-			if(s_cmds[i + 1])
-			{
+			if(s_cmds[i + 1] && (s_cmds[i][ft_strlen(s_cmds[i])] != '\"')
+				&&  ft_strchr(ft_substr(s_cmds[i], 1, ft_strlen(s_cmds[i])), '\"')
+			){
 				i++;
 				// CONCATENATE UNTIL NEW "
 				while(ft_strchr(s_cmds[i], '\"') == NULL)
@@ -166,21 +156,41 @@ int	parse_command(char *cmd, token **cmd_tokens)
 					if(!s_cmds[i])
 						break;
 				}
-				if(i > o && s_cmds[i])
-					s_quote = fn_realloc_strcat(s_quote, s_cmds[i], 1);
-				int p = (!s_cmds[i]) ? (i - 1) : (i);
-				while (p > o)
+				if(i != o + 1 && s_cmds[i] != NULL)
 				{
-					free(s_cmds[p]);
-					p--;
+					printf("LAST REALLOC CONCAT \n");
+					s_quote = fn_realloc_strcat(s_quote, s_cmds[i], 1);
+					i++;
 				}
-			}else
+				int p = (!s_cmds[i]) ? (i - 1) : (i);
+				if(i != o + 1)
+				{
+					while (p > o)
+					{
+						free(s_cmds[p]);
+						p--;
+					}
+				}
+			}else if ( ft_strchr(ft_substr(s_cmds[i], 1, ft_strlen(s_cmds[i])), '\"')
+					&& (s_cmds[i][ft_strlen(s_cmds[i]) - 1] != '\"')
+			){
+				// type: $ ls "qweqwe";pwd | pdw	
+				int quote_ix = ft_m_strchr_i(ft_substr(s_cmds[i], 1, ft_strlen(s_cmds[i]) - 1), '\"', '\"');
+				quote_ix += 2;
+				s_quote = ft_substr(s_cmds[i], 0, quote_ix);
+				t = token_new(s_quote, QUOTE);
+				token_push(cmd_tokens, t);
+				s_cmds[i] = ft_substr(s_cmds[i], quote_ix, ft_strlen(s_cmds[i]));
+				printf("little ecum then: %s \n", s_cmds[i]);
+				continue;
+			}else{
 				free(s_cmds[i]);
+			}
 			t = token_new(s_quote, QUOTE);
 			token_push(cmd_tokens, t);
 			i++;
 		}
-		// NO QUOTE
+		// NO QUOTE _
 		else
 		{
 			// CMD HAS NO [; |] or is strict equal to [>, <, |, ;]
@@ -194,18 +204,22 @@ int	parse_command(char *cmd, token **cmd_tokens)
 
 				i++;
 			}
-			// CMD HAS [; |]
+			// CMD HAS SEPARATOR [; |]
 			else
 			{
 				while (ft_m_strchr_i(s_cmds[i], ';', '|') != -1)
 				{
 					int ix = ft_m_strchr_i(s_cmds[i], ';', '|');		
 					saved_s = ft_substr(s_cmds[i], 0, ix);
+					printf("ecume: %s \n", saved_s);
 					saved_t = s_cmds[i][ix] == ';' ? SEPARATOR : PIPE;
 					if ((size_t)(ix + 1) == ft_strlen(s_cmds[i]))
 						i++;
 					else
 						s_cmds[i] = ft_substr(s_cmds[i], ix + 1, ft_strlen(s_cmds[i]));	
+					
+					token_push(cmd_tokens, token_new(saved_s, switcher(saved_s, cmd_tokens)));
+					token_push(cmd_tokens, token_new("", saved_t));
 				}
 			}
 		}
