@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 17:46:03 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/07 16:44:01 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/08 14:41:33 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ static void	fn_revstr(char *up_s)
 		up_s[k] = ' ';
 		k++;
 		i--;	
+
 	}
 	up_s[k] = '\0';
 	i = -1;
@@ -116,9 +117,32 @@ static void	fn_revstr(char *up_s)
 		free(s_p[i]);	
 }
 
+static char	*str_remove_lstspace(char *s)
+{
+	int		i;
+	int		j;
+	char	*new_s;
+
+	i = 0;
+	while(s[i])
+		i++;
+	if(s[i - 1] == ' ')
+		i--;
+	new_s = (char *) malloc(i * sizeof(char));
+	if (!new_s)
+		return (NULL);
+	j = 0;
+	while(j < i)
+	{
+		new_s[j] = s[j];
+		j++;
+	}
+	new_s[j] = '\0';
+	return (new_s);
+}
 
 // PARSE [COMMAND] TO [TOKENS]
-int	parse_command(char *cmd, token **cmd_tokens)
+int	parse_tokens(char *cmd, token **cmd_tokens)
 {	
 	char			**s_cmds;
 	char			*s_quote;
@@ -144,9 +168,9 @@ int	parse_command(char *cmd, token **cmd_tokens)
 			s_quote = malloc(ft_strlen(s_cmds[i]) + 1);	
 			int o = i;
 			ft_strlcpy(s_quote, s_cmds[i], ft_strlen(s_cmds[i]) + 1);
-			if(s_cmds[i + 1] && (s_cmds[i][ft_strlen(s_cmds[i])] != '\"')
+			if(s_cmds[i + 1] && (s_cmds[i][ft_strlen(s_cmds[i]) - 1] != '\"')
 				&&  ft_strchr(ft_substr(s_cmds[i], 1, ft_strlen(s_cmds[i])), '\"')
-			){
+			){	
 				i++;
 				// CONCATENATE UNTIL NEW "
 				while(ft_strchr(s_cmds[i], '\"') == NULL)
@@ -156,9 +180,9 @@ int	parse_command(char *cmd, token **cmd_tokens)
 					if(!s_cmds[i])
 						break;
 				}
+
 				if(i != o + 1 && s_cmds[i] != NULL)
-				{
-					printf("LAST REALLOC CONCAT \n");
+				{	
 					s_quote = fn_realloc_strcat(s_quote, s_cmds[i], 1);
 					i++;
 				}
@@ -174,18 +198,13 @@ int	parse_command(char *cmd, token **cmd_tokens)
 			}else if ( ft_strchr(ft_substr(s_cmds[i], 1, ft_strlen(s_cmds[i])), '\"')
 					&& (s_cmds[i][ft_strlen(s_cmds[i]) - 1] != '\"')
 			){
-				// type: $ ls "qweqwe";pwd | pdw	
-				int quote_ix = ft_m_strchr_i(ft_substr(s_cmds[i], 1, ft_strlen(s_cmds[i]) - 1), '\"', '\"');
-				quote_ix += 2;
-				s_quote = ft_substr(s_cmds[i], 0, quote_ix);
-				t = token_new(s_quote, QUOTE);
-				token_push(cmd_tokens, t);
+				int quote_ix = ft_m_strchr_i(ft_substr(s_cmds[i], 1, ft_strlen(s_cmds[i]) - 1), '\"', '\"') + 2;
+				s_quote = ft_substr(s_cmds[i], 0, quote_ix);	
+				token_push(cmd_tokens, token_new(s_quote, QUOTE));
 				s_cmds[i] = ft_substr(s_cmds[i], quote_ix, ft_strlen(s_cmds[i]));
-				printf("little ecum then: %s \n", s_cmds[i]);
 				continue;
-			}else{
+			}else	
 				free(s_cmds[i]);
-			}
 			t = token_new(s_quote, QUOTE);
 			token_push(cmd_tokens, t);
 			i++;
@@ -194,8 +213,7 @@ int	parse_command(char *cmd, token **cmd_tokens)
 		else
 		{
 			// CMD HAS NO [; |] or is strict equal to [>, <, |, ;]
-			if(ft_strlen(s_cmds[i]) == 1 || 
-					(!ft_strchr(s_cmds[i], ';') && !ft_strchr(s_cmds[i], '|')))
+			if( ft_strlen(s_cmds[i]) == 1 || (!ft_strchr(s_cmds[i], ';') && !ft_strchr(s_cmds[i], '|')))
 			{
 				big_t = switcher(s_cmds[i], cmd_tokens);
 			
@@ -211,7 +229,6 @@ int	parse_command(char *cmd, token **cmd_tokens)
 				{
 					int ix = ft_m_strchr_i(s_cmds[i], ';', '|');		
 					saved_s = ft_substr(s_cmds[i], 0, ix);
-					printf("ecume: %s \n", saved_s);
 					saved_t = s_cmds[i][ix] == ';' ? SEPARATOR : PIPE;
 					if ((size_t)(ix + 1) == ft_strlen(s_cmds[i]))
 						i++;
@@ -228,7 +245,7 @@ int	parse_command(char *cmd, token **cmd_tokens)
 }
 
 // PARSE [TOKENS] TO [EXECUTOR-COMMAND]
-int parse_to_executor(token **cmd_tokens)
+int parse_commands(t_minishell *t_m, token **cmd_tokens)
 {
 	token	*t;
 	t_cmd	*commands;
@@ -239,10 +256,7 @@ int parse_to_executor(token **cmd_tokens)
 
 	i = 0;
 	t = token_last(*cmd_tokens);
-	commands = (t_cmd *) malloc(sizeof(struct s_cmd) * 10);	
-	printf("---------- EXECUTOR-COMMANDS ----------\n");	
-	// printf("LAST-TOKEN(start) [VALUE : %s] [TYPE : %s] \n", t->cmd, token_type_to_str(t->t));
-	// printf("\n");
+	commands = (t_cmd *) malloc(sizeof(struct s_cmd) * 10);		
 	while(t)
 	{
 		cmd__ = &commands[i];
@@ -299,13 +313,17 @@ int parse_to_executor(token **cmd_tokens)
 		sp = false;
 		t = t->prev;
 	}
+	t_m->commands = commands;
 	c = 0;
+	printf("---------- EXECUTOR-COMMANDS ----------\n");	
 	while(i >= 0)
 	{
 		cmd__ = &commands[i];
+		cmd__->command = str_remove_lstspace(cmd__->command);
 		printf("-COMMAND %d [cmd: %s| in: %s| out: %s] \n", c, cmd__->command, cmd__->input, cmd__->output);
 		i--;
 		c++;
 	}
+	t_m->cmd_count = c;
 	return (0);
 }

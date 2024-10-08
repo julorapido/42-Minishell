@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 12:08:14 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/07 14:04:54 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/08 14:44:41 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,22 @@ void	exec_cmds(t_minishell *t_m)
 	int		i;
 	int		c_int;
 
-	c = &(*t_m->commands);
-	while(c)
+	i = t_m->cmd_count - 1;
+	printf("--------- COMMANDS EXECUTION ---------\n");
+	while(i >= 0)
 	{
-		c_int = is_builtin(c.command);
-		if(is_builtin)
-			run_builtin(t_m->env, c_int);
-		}else
+		c = &(t_m->commands[i]);
+		if(!c->command)
+			break;
+		c_int = is_builtin(c);
+		if(c_int != -1)
+		{
+			run_builtin(t_m, c_int);
+		}
+		else
 		{
 			// run pipe, execve, etc..
 		}	
-		i++;
-		c = &(t_m->commands[i]);
+		i--;
 	}
 }

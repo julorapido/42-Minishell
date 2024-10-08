@@ -1,6 +1,6 @@
 OUT = MINISHELL
 
-SRC = ./parsing/*.c  *.c ./builtins/*.c ./env/*.c
+SRC = ./parsing/*.c  *.c ./builtins/*.c ./env/*.c ./executor/*.c
 SRC_OBJS = $(SRC.c=.o)
 
 FLAGS = -Wall -Wextra

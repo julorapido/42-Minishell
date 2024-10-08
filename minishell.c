@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:07:22 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/07 14:18:35 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/08 12:39:40 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-void	minishell(void)
+void	minishell(t_minishell *t_m)
 {
 	char 	*line;
 	token	**cmd_tokens;
@@ -30,13 +30,11 @@ void	minishell(void)
 		}
 		cmd_tokens = (token **) malloc(sizeof(token **));
 		*cmd_tokens = NULL;
-		printf("---------- COMMAND-VALUE -----\n");
-		printf("-> %s\n", line);
-		if( parse_command(line, cmd_tokens) >= 0)
-		{
-			show_tokens(cmd_tokens);
-			parse_to_executor(cmd_tokens);	
-		}
+		parse_tokens(line, cmd_tokens);
+		show_tokens(cmd_tokens);
+		parse_commands(t_m, cmd_tokens);
+		exec_cmds(t_m);
+
 		line = readline("$ ");
 	}
 }
@@ -52,6 +50,6 @@ int main(int argc, char **argv, char **env)
 	if(!t_m)
 		return (EXIT_FAILURE);
 	env_init(t_m, env);
-	minishell();
+	minishell(t_m);
 	exit(EXIT_SUCCESS);
 }
