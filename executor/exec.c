@@ -6,11 +6,24 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 12:08:14 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/08 14:44:41 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/08 15:38:01 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static	void free_c_args(t_minishell	*t_m)
+{
+	int		i;
+
+	i = 0;
+	while (t_m->c_args[i])
+	{
+		free(t_m->c_args[i]);
+		i++;
+	}
+	free(t_m->c_args[i]);
+}
 
 
 void	exec_cmds(t_minishell *t_m)
@@ -24,8 +37,11 @@ void	exec_cmds(t_minishell *t_m)
 	while(i >= 0)
 	{
 		c = &(t_m->commands[i]);
+		t_m->c_args = ft_split(c->command, ' ');
 		if(!c->command)
 			break;
+		if(ft_strcmp(t_m->c_args[0], "echo") == 0)
+			c->command = ft_strdup(t_m->c_args[0]);
 		c_int = is_builtin(c);
 		if(c_int != -1)
 		{
@@ -36,5 +52,6 @@ void	exec_cmds(t_minishell *t_m)
 			// run pipe, execve, etc..
 		}	
 		i--;
+		free_c_args(t_m);
 	}
 }

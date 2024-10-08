@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 17:46:03 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/08 14:41:33 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/08 17:32:06 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,13 @@ static enum TOKEN_TYPE char_to_token(char c)
 	if (c == ';')
 		return (SEPARATOR);
 
-	return (-1);
+	return (COMMAND);
 }
 
 static enum TOKEN_TYPE	switcher(char *tken, token **t_l)
 {
-	if (strlen(tken) > 2 && (ft_strchr(tken, '>') || ft_strchr(tken, '<') || ft_strchr(tken, '|')))
+	if (strlen(tken) > 2 && (ft_strchr(tken, '>') ||
+		ft_strchr(tken, '<') || ft_strchr(tken, '|')))
 	{
 		int a = ft_m_strchr_i(tken, '>', '<');
 		token_push(t_l, token_new(ft_substr(tken, 0, a) , COMMAND));
@@ -148,7 +149,7 @@ int	parse_tokens(char *cmd, token **cmd_tokens)
 	char			*s_quote;
 	token			*t;
 	enum TOKEN_TYPE	big_t;
-	// un-spaced special
+	// un-spaced special	
 	enum TOKEN_TYPE	saved_t;
 	char			*saved_s = NULL;
 	int				i;
@@ -161,15 +162,17 @@ int	parse_tokens(char *cmd, token **cmd_tokens)
 	i = 0;
 	while (s_cmds[i] != NULL && i < s)
 	{	
-
+		printf("COMMAND %s \n", s_cmds[i]);
 		// QUOTE ""
 		if(*s_cmds[i] == '\"')
 		{	
 			s_quote = malloc(ft_strlen(s_cmds[i]) + 1);	
 			int o = i;
 			ft_strlcpy(s_quote, s_cmds[i], ft_strlen(s_cmds[i]) + 1);
-			if(s_cmds[i + 1] && (s_cmds[i][ft_strlen(s_cmds[i]) - 1] != '\"')
-				&&  ft_strchr(ft_substr(s_cmds[i], 1, ft_strlen(s_cmds[i])), '\"')
+			if(s_cmds[i + 1] 
+				&& (s_cmds[i][ft_strlen(s_cmds[i]) - 1] != '\"')
+				&& 	ft_strchr(ft_substr(s_cmds[i], 1, ft_strlen(s_cmds[i])), '\"')
+				&& 	ft_strchr(ft_substr(s_cmds[i], 1, ft_strlen(s_cmds[i])), ' ')
 			){	
 				i++;
 				// CONCATENATE UNTIL NEW "
@@ -197,14 +200,14 @@ int	parse_tokens(char *cmd, token **cmd_tokens)
 				}
 			}else if ( ft_strchr(ft_substr(s_cmds[i], 1, ft_strlen(s_cmds[i])), '\"')
 					&& (s_cmds[i][ft_strlen(s_cmds[i]) - 1] != '\"')
-			){
+			){	
 				int quote_ix = ft_m_strchr_i(ft_substr(s_cmds[i], 1, ft_strlen(s_cmds[i]) - 1), '\"', '\"') + 2;
 				s_quote = ft_substr(s_cmds[i], 0, quote_ix);	
 				token_push(cmd_tokens, token_new(s_quote, QUOTE));
 				s_cmds[i] = ft_substr(s_cmds[i], quote_ix, ft_strlen(s_cmds[i]));
 				continue;
-			}else	
-				free(s_cmds[i]);
+			}else
+				free(s_cmds[i]);	
 			t = token_new(s_quote, QUOTE);
 			token_push(cmd_tokens, t);
 			i++;

@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/08 14:40:50 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/08 15:29:35 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ typedef struct s_minishell
 	t_env	*env;	
 	t_cmd	*commands;
 	size_t	cmd_count;
+	char	**c_args;
 }	t_minishell;
 
 
@@ -97,6 +98,8 @@ token	*token_last(token	*head);
 char	*token_type_to_str(enum TOKEN_TYPE t);
 
 // ENV
+char	*get_env(char **env);
+char	*get_path(char *cmd, char **env);
 int		env_init(t_minishell *t_m, char **argv);
 
 // PARSING
@@ -110,6 +113,7 @@ void	exec_cmds(t_minishell *t_m);
 // BUILT-IN
 int		f__pwd(void);
 int		f__env(t_env *env);
+int		f__echo(char **args);
 int		is_builtin(t_cmd *c);
 void	run_builtin(t_minishell *t_m, int n_builtin);
 
