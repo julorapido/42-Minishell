@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 17:46:03 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/09 16:54:58 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/09 17:57:15 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static char	*fn_realloc_strcat(char *filled_str, char *cncat_str, int space_it)
 
 
 // PARSE [COMMAND] TO [TOKENS]
-int	parse_tokens(char *cmd, token **cmd_tokens)
+int	parse_tokens(char *cmd, token **cmd_tokens, t_minishell *t_m)
 {	
 	char			**s_cmds;
 	char			*s_quote;
@@ -151,19 +151,27 @@ int	parse_tokens(char *cmd, token **cmd_tokens)
 			}
 			// CMD HAS SEPARATOR [; |]
 			else
-			{
-				while (ft_m_strchr_i(s_cmds[i], ';', '|') != -1)
+			{		
+				if(is_parse_error(s_cmds[i]))
 				{
-					int ix = ft_m_strchr_i(s_cmds[i], ';', '|');		
-					saved_s = ft_substr(s_cmds[i], 0, ix);
-					saved_t = s_cmds[i][ix] == ';' ? SEPARATOR : PIPE;
-					if ((size_t)(ix + 1) == ft_strlen(s_cmds[i]))
-						i++;
-					else
-						s_cmds[i] = ft_substr(s_cmds[i], ix + 1, ft_strlen(s_cmds[i]));	
+					t_m->parse_error_value = s_cmds[i];
+					t_m->parse_error = true;
+					return(0);
+				}else
+				{
+					while (ft_m_strchr_i(s_cmds[i], ';', '|') != -1)
+					{
+						int ix = ft_m_strchr_i(s_cmds[i], ';', '|');
+						saved_s = ft_substr(s_cmds[i], 0, ix);
+						saved_t = s_cmds[i][ix] == ';' ? SEPARATOR : PIPE;
+						if ((size_t)(ix + 1) == ft_strlen(s_cmds[i]))
+							i++;
+						else
+							s_cmds[i] = ft_substr(s_cmds[i], ix + 1, ft_strlen(s_cmds[i]));	
 					
-					token_push(cmd_tokens, token_new(saved_s, switcher(saved_s, cmd_tokens)));
-					token_push(cmd_tokens, token_new("", saved_t));
+						token_push(cmd_tokens, token_new(saved_s, switcher(saved_s, cmd_tokens)));
+						token_push(cmd_tokens, token_new("", saved_t));
+					}
 				}
 			}
 		}
@@ -235,7 +243,8 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 			if (t->t == PIPE || t->t == SEPARATOR)
 			{	
 				lst_was_pipe = (t->t == PIPE) ? (true) : (false);
-				i++;
+				if(cmd__->command)
+					i++;
 				ou = in = 0;
 			}
 			fn_revstr(cmd__->command);

@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:07:22 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/09 16:22:02 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/09 17:57:31 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,17 @@ void	minishell(t_minishell *t_m)
 		if(ft_strlen(line) < 1)
 		{
 			line = readline("$ ");
-			continue;
+			continue ;
 		}
 		cmd_tokens = (token **) malloc(sizeof(token **));
 		*cmd_tokens = NULL;
-		parse_tokens(line, cmd_tokens);
+		parse_tokens(line, cmd_tokens, t_m);
+		if(t_m->parse_error)
+		{
+			printf("parse error near `%s' \n", t_m->parse_error_value);
+			line = readline("$ ");
+			continue ;
+		}
 		show_tokens(cmd_tokens);
 		parse_commands(t_m, cmd_tokens);
 		exec_cmds(t_m);

@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/09 16:20:08 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/09 17:51:15 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ enum TOKEN_TYPE
 	GREAT_GREAT,
 	QUOTE,
 	SEPARATOR,
+	PARSE_ERROR,
 	ARGUMENT
 };
 
@@ -90,6 +91,8 @@ typedef struct s_minishell
 	t_cmd	*commands;	// commands list
 	size_t	cmd_count;	// command count
 	char	**c_args;	// splited args (for built-ins)
+	bool	parse_error;	// parse error in current command
+	char	*parse_error_value;
 }	t_minishell;
 
 
@@ -100,7 +103,7 @@ void			show_tokens(token **cmd_tokens);
 token			*token_last(token	*head);
 char			*token_type_to_str(enum TOKEN_TYPE t);
 enum TOKEN_TYPE	char_to_token(char c);
-
+bool			str_is_onlysep(char *s);
 
 // CMD UTILITES
 void	fn_revstr(char *up_s);
@@ -108,6 +111,7 @@ char	*cmd_remove_lstspace(char *s);
 void	rev_tm_commands(t_minishell	*t_m);
 void	print_commands(t_minishell *t_m);
 void	appyl_space_removal(t_minishell *t_m);
+bool	is_parse_error(char *s);
 
 // ENV
 char	*get_env(char **env);
@@ -115,8 +119,9 @@ char	*get_path(char *cmd, char **env);
 int		env_init(t_minishell *t_m, char **argv);
 
 // PARSING
+int		parse_tokens(char *cmd, token **cmd_tokens, t_minishell *t_m);
 int		parse_commands(t_minishell *t_m, token **cmd_tokens);
-int		parse_tokens(char *cmd, token **cmd_tokens);
+//int		parse_tokens(char *cmd, token **cmd_tokens);
 
 // EXECUTOR
 void	exec_cmds(t_minishell *t_m);

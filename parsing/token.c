@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 16:27:11 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/09 16:47:10 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/09 17:32:13 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,26 @@ enum TOKEN_TYPE char_to_token(char c)
 		return (SEPARATOR);
 	else
 		return (COMMAND);
+}
+
+bool	is_parse_error(char *s)
+{
+	int	i;
+	int	j;
+
+	j = 0;
+	i = 0;
+	while(s[i])
+	{
+		if (s[i] == ';' || s[i] == '<' || s[i] == '>' || s[i] == '|' || s[i] == '$' 
+			|| s[i] == '.' || s[i] == '/')
+			j++;
+		i++;
+	}
+	if((size_t)(j) == ft_strlen(s))
+		return (true);
+	else
+		return (false);
 }
 
 token	*token_new(char *s, enum TOKEN_TYPE ty)
