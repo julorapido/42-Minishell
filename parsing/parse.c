@@ -6,31 +6,15 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 17:46:03 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/08 17:32:06 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/09 16:54:58 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
-static enum TOKEN_TYPE char_to_token(char c)
-{
-	if (c == '<')
-		return (LESS);
-	if (c == '>')
-		return (GREAT);
-	if (c == '|')
-		return (PIPE);
-	if (c == ';')
-		return (SEPARATOR);
-
-	return (COMMAND);
-}
-
 static enum TOKEN_TYPE	switcher(char *tken, token **t_l)
 {
-	if (strlen(tken) > 2 && (ft_strchr(tken, '>') ||
-		ft_strchr(tken, '<') || ft_strchr(tken, '|')))
+	if (strlen(tken) > 2 && (ft_strchr(tken, '>') || ft_strchr(tken, '<') || ft_strchr(tken, '|')))
 	{
 		int a = ft_m_strchr_i(tken, '>', '<');
 		token_push(t_l, token_new(ft_substr(tken, 0, a) , COMMAND));
@@ -83,64 +67,6 @@ static char	*fn_realloc_strcat(char *filled_str, char *cncat_str, int space_it)
 }
 
 
-static void	fn_revstr(char *up_s)
-{
-	char	**s_p;
-	char	*s;
-	int 	i;
-	int		j;
- 	int		k;
-
-	k = 0;
-	i = 0;
-	s_p = ft_split(up_s, ' ');
-	while (s_p[i])
-		i++;
-	i--;
-	while (i >= 0)
-	{
-		s = s_p[i];
-		j = 0;
-		while(s[j])
-		{	
-			up_s[k] = s[j];
-			j++;
-			k++;
-		}
-		up_s[k] = ' ';
-		k++;
-		i--;	
-
-	}
-	up_s[k] = '\0';
-	i = -1;
-	while (s_p[i++])
-		free(s_p[i]);	
-}
-
-static char	*str_remove_lstspace(char *s)
-{
-	int		i;
-	int		j;
-	char	*new_s;
-
-	i = 0;
-	while(s[i])
-		i++;
-	if(s[i - 1] == ' ')
-		i--;
-	new_s = (char *) malloc(i * sizeof(char));
-	if (!new_s)
-		return (NULL);
-	j = 0;
-	while(j < i)
-	{
-		new_s[j] = s[j];
-		j++;
-	}
-	new_s[j] = '\0';
-	return (new_s);
-}
 
 // PARSE [COMMAND] TO [TOKENS]
 int	parse_tokens(char *cmd, token **cmd_tokens)
@@ -160,9 +86,8 @@ int	parse_tokens(char *cmd, token **cmd_tokens)
 	while(s_cmds[s])
 		s++;
 	i = 0;
-	while (s_cmds[i] != NULL && i < s)
+	while (s_cmds[i] != NULL)
 	{	
-		printf("COMMAND %s \n", s_cmds[i]);
 		// QUOTE ""
 		if(*s_cmds[i] == '\"')
 		{	
@@ -218,8 +143,7 @@ int	parse_tokens(char *cmd, token **cmd_tokens)
 			// CMD HAS NO [; |] or is strict equal to [>, <, |, ;]
 			if( ft_strlen(s_cmds[i]) == 1 || (!ft_strchr(s_cmds[i], ';') && !ft_strchr(s_cmds[i], '|')))
 			{
-				big_t = switcher(s_cmds[i], cmd_tokens);
-			
+				big_t = switcher(s_cmds[i], cmd_tokens);	
 				t = token_new(s_cmds[i], big_t);
 				token_push(cmd_tokens, t);
 
@@ -247,22 +171,25 @@ int	parse_tokens(char *cmd, token **cmd_tokens)
 	return(0);
 }
 
+
+
 // PARSE [TOKENS] TO [EXECUTOR-COMMAND]
 int parse_commands(t_minishell *t_m, token **cmd_tokens)
 {
 	token	*t;
 	t_cmd	*commands;
 	t_cmd	*cmd__;
-	int		i, c;
+	int		i;
 	int 	in = 0, ou = 0;
 	bool 	sp = false, lst_was_pipe = false; 
 
 	i = 0;
 	t = token_last(*cmd_tokens);
-	commands = (t_cmd *) malloc(sizeof(struct s_cmd) * 10);		
+	commands = (t_cmd *) malloc(sizeof(struct s_cmd) * MAX_CMDS);		
 	while(t)
 	{
-		cmd__ = &commands[i];
+		cmd__ = &commands[i];	
+		// commands, command flags and quotes [ls -l "bonjour"]
 		if((t->t == COMMAND || t->t == COMMAND_FLAG) || t->t == QUOTE)
 		{
 			if(t->prev)
@@ -304,7 +231,7 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 				}
 				else
 					cmd__->output = "STD_OUT";	
-			}
+			}	
 			if (t->t == PIPE || t->t == SEPARATOR)
 			{	
 				lst_was_pipe = (t->t == PIPE) ? (true) : (false);
@@ -316,17 +243,10 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 		sp = false;
 		t = t->prev;
 	}
-	t_m->commands = commands;
-	c = 0;
-	printf("---------- EXECUTOR-COMMANDS ----------\n");	
-	while(i >= 0)
-	{
-		cmd__ = &commands[i];
-		cmd__->command = str_remove_lstspace(cmd__->command);
-		printf("-COMMAND %d [cmd: %s| in: %s| out: %s] \n", c, cmd__->command, cmd__->input, cmd__->output);
-		i--;
-		c++;
-	}
-	t_m->cmd_count = c;
+	t_m->commands = commands;	
+	t_m->cmd_count = i + 1;
+	rev_tm_commands(t_m);
+	appyl_space_removal(t_m);
+	print_commands(t_m);
 	return (0);
 }

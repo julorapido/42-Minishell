@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:07:22 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/08 12:39:40 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/09 16:22:02 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	minishell(t_minishell *t_m)
 	line = readline("$ ");
 	while(line)
 	{
-		if(ft_strlen(line) < 2)
+		if(ft_strlen(line) < 1)
 		{
 			line = readline("$ ");
 			continue;

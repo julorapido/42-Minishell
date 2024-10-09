@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 12:08:14 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/08 15:38:01 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/09 15:04:00 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,12 @@ void	exec_cmds(t_minishell *t_m)
 	while(i >= 0)
 	{
 		c = &(t_m->commands[i]);
-		t_m->c_args = ft_split(c->command, ' ');
 		if(!c->command)
 			break;
-		if(ft_strcmp(t_m->c_args[0], "echo") == 0)
-			c->command = ft_strdup(t_m->c_args[0]);
-		c_int = is_builtin(c);
+		t_m->c_args = ft_split(c->command, ' ');	
+		//if(ft_strcmp(t_m->c_args[0], "echo") == 0)
+		//	c->command = ft_strdup(t_m->c_args[0]);
+		c_int = is_builtin(t_m->c_args[0]);
 		if(c_int != -1)
 		{
 			run_builtin(t_m, c_int);

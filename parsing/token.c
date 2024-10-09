@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 16:27:11 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/03 17:11:33 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/09 16:47:10 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,19 @@ token	*token_last(token	*head)
 	return (t);
 }
 
+enum TOKEN_TYPE char_to_token(char c)
+{
+	if (c == '<')
+		return (LESS);
+	else if (c == '>')
+		return (GREAT);
+	else if (c == '|')
+		return (PIPE);
+	else if (c == ';')
+		return (SEPARATOR);
+	else
+		return (COMMAND);
+}
 
 token	*token_new(char *s, enum TOKEN_TYPE ty)
 {
@@ -66,6 +79,8 @@ char	*token_type_to_str(enum TOKEN_TYPE t)
 {
 	char	*s;
 
+	if(t == SEPARATOR)
+		s = "(;) SEPARATOR";
 	if(t == ARGUMENT)
 		s = "($) ARG";
 	if(t == COMMAND)
