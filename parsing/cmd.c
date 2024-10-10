@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:55:36 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/09 16:52:55 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/10 17:17:30 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ void	print_commands(t_minishell *t_m)
 	while((size_t)(i) < t_m->cmd_count)
 	{
 		cmd__ = &(t_m->commands[i]);	
-		printf("-Command %d [cmd: %s| in: %s| out: %s] \n", i, cmd__->command, cmd__->input, cmd__->output);
+		printf("-Command %d [cmd: %s| in: %s| out: %s| outfiles_n %d] \n", i, cmd__->command, cmd__->input, cmd__->output, cmd__->n_redirections);
 		i++;
 	}
 }

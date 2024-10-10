@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/09 17:51:15 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/10 17:16:24 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ typedef struct s_cmd
 	char	*command;	
 	char	*input;
 	char	*output;
+	int		n_redirections;
 }	t_cmd;
 
 // ENV (as linked-list)

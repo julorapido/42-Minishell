@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 17:46:03 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/10 17:02:46 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/10 17:23:10 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,7 @@ int	parse_tokens(char *cmd, token **cmd_tokens, t_minishell *t_m)
 		s++;
 	i = 0;
 	while (s_cmds[i] != NULL && i < s)
-	{	
-		printf("coucou \n");		
+	{		
 		// QUOTE ""
 		if(*s_cmds[i] == '\"')
 		{	
@@ -208,8 +207,7 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 	commands = (t_cmd *) malloc(sizeof(struct s_cmd) * MAX_CMDS);
 	while(t)
 	{
-		cmd__ = &commands[i];
-		printf("yo T=%s\n", token_type_to_str(t->t));
+		cmd__ = &commands[i];	
 		// commands, command flags and quotes [ls -l "bonjour"]
 		if((t->t == COMMAND || t->t == COMMAND_FLAG) || t->t == QUOTE)
 		{
@@ -230,8 +228,14 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 		// redirections [<] [<<] [>] [>>]
 		if (t->t == GREAT_GREAT || t->t == GREAT)
 		{
-			cmd__->output = (t->next)->cmd;
-			ou++;
+			if((t->next) && (t->next)->cmd)
+			{
+				if(ou > 0)
+					cmd__->output = fn_realloc_strcat(cmd__->output, (t->next)->cmd, 1);
+				else
+					cmd__->output = (t->next)->cmd;
+				ou++;
+			}	
 		}
 		if ((t->t == LESS_LESS || t->t == LESS) && (in < 1))
 		{
@@ -257,14 +261,19 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 			{
 				lst_was_pipe = (t->t == PIPE) ? (true) : (false);
 				if(cmd__->command)
+				{
+					cmd__->n_redirections = ou;
 					i++;
+				}
 				ou = in = 0;
 			}
 			fn_revstr(cmd__->command);
 		}
 		sp = false;
 		t = t->prev;
-	}
+	}	
+	if(i == 0)
+		(&commands[0])->n_redirections = ou;
 	t_m->commands = commands;
 	t_m->cmd_count = i + 1;
 	rev_tm_commands(t_m);
