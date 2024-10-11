@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:55:36 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/10 17:17:30 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/11 15:06:04 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,17 @@ void	print_commands(t_minishell *t_m)
 	while((size_t)(i) < t_m->cmd_count)
 	{
 		cmd__ = &(t_m->commands[i]);	
-		printf("-Command %d [cmd: %s| in: %s| out: %s| outfiles_n %d] \n", i, cmd__->command, cmd__->input, cmd__->output, cmd__->n_redirections);
+		printf("-Command %d [cmd: %s| in: %s| out: '%s'| %s %d]", i, 
+				cmd__->command, cmd__->input, cmd__->output, 
+				cmd__->n_redirections > 0 ? "n_outFiles" : "", 
+				cmd__->n_redirections	
+		);
+		if(&(t_m->commands[i + 1]) && ((&(t_m->commands[i + 1]))->input))
+		{
+			if((cmd__->n_redirections > 0) && (ft_strcmp((&(t_m->commands[i + 1]))->input , "pipe") == 0) ) 
+				printf(" out: pipe| ");
+		}
+		printf("\n");
 		i++;
 	}
 }

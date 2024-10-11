@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 17:46:03 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/10 17:23:10 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/11 17:19:49 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,33 +19,29 @@ static enum TOKEN_TYPE	switcher(char *tken, token **t_l)
 	{
 		a = ft_m_strchr_i(tken, '>', '<');
 		while (a != -1 && !is_parse_error(tken))
-		{		
+		{	
+			//printf("SOUS-ECUMATOR [%s]    PUSHED [%s] [%s] \n", tken, ft_substr(tken, 0, a), token_type_to_str(char_to_token(tken[a])));
 			token_push(t_l, token_new(ft_substr(tken, 0, a) , COMMAND));
 			token_push(t_l, token_new("", char_to_token(tken[a])));
-			/*printf("Ecumed: [%s], Used: [%s], Token: [%s] \n",
-					ft_substr(tken, a + 1, ft_strlen(tken)),
-					ft_substr(tken, 0, a),
-					token_type_to_str( char_to_token(tken[a]))
-				);*/
 			tken = ft_substr(tken, a + 1, ft_strlen(tken));	
 			a = ft_m_strchr_i(tken, '>', '<');
 		}
 		if(ft_strlen(tken) > 0 && !is_parse_error(tken))
-			token_push(t_l, token_new(tken, COMMAND));		
+		{
+			// printf("SOUS-ECUMATORjure [%s] \n",tken);
+			token_push(t_l, token_new(tken, COMMAND));	
+		}	
 		return (-1);
 	}
 	else
 	{
+		// ;printf("----=-=-=-=--== %s \n", tken);
 		if (strlen(tken) == 1 || *tken == '|')
 			return (char_to_token(*tken));
 		if (strlen(tken) == 2 && (*tken == '<' && tken[1] == '<'))
 			return (LESS_LESS);
 		if (strlen(tken) == 2 && (*tken == '>' && tken[1] == '>'))
 			return (GREAT_GREAT);
-		if (strlen(tken) > 1 && *tken == '$')
-			return (ARGUMENT);
-		if (strlen(tken) > 1 && *tken == '-')
-			return (COMMAND_FLAG);
 		if (strlen(tken) > 1 && !strchr(tken, '\"'))
 			return (COMMAND);
 	}
@@ -228,8 +224,9 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 		// redirections [<] [<<] [>] [>>]
 		if (t->t == GREAT_GREAT || t->t == GREAT)
 		{
-			if((t->next) && (t->next)->cmd)
+			if((t->next) && (t->next)->cmd && (ft_strlen((t->next)->cmd) > 0))
 			{
+				printf("out => (%s) + (%s) [%s] {%s} \n", cmd__->output, (t->next)->cmd, token_type_to_str((t->next)->t), t->cmd );
 				if(ou > 0)
 					cmd__->output = fn_realloc_strcat(cmd__->output, (t->next)->cmd, 1);
 				else
@@ -245,6 +242,7 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 		// pipe [|] and separator [;]
 		if (t->t == SEPARATOR || t->t == PIPE || t->prev == NULL)
 		{
+			cmd__->n_redirections = ou;
 			if(!in)
 				cmd__->input = (t->t == SEPARATOR || t->prev == NULL) ? "STD_IN" : "pipe";
 			if(!ou)
@@ -257,12 +255,13 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 				else
 					cmd__->output = "STD_OUT";
 			}
+			if(!(ft_strcmp(cmd__->output, "STD_OUT") == 0))
+					fn_revstr(cmd__->output);
 			if (t->t == PIPE || t->t == SEPARATOR)
 			{
 				lst_was_pipe = (t->t == PIPE) ? (true) : (false);
 				if(cmd__->command)
 				{
-					cmd__->n_redirections = ou;
 					i++;
 				}
 				ou = in = 0;

@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 11:21:49 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/09 15:07:53 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/11 11:19:15 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,23 +45,21 @@ int	f__unset(t_minishell *t_m)
 
 	j = 2;
 	args = t_m->c_args;
-	printf("!!!!!!!! UNSET CALLED\n");
 	if (!args[1])
 	{
 		ft_putstr_fd("unset: not enough arguments\n", 2);
 		return (ERROR);
 	}
 	h = t_m->env;
-	printf("h %s \n", h->value);
 	while(h && h->next)
 	{
 		//if (!h->value)
 		//	continue;
 		i = 1;
-		printf("%s : %d\n", h->value,  size_t_var((h->next)->value));
+		//printf("%s : %d\n", h->value,  size_t_var((h->next)->value));
 		while (args[i])
 		{
-			if(ft_strncmp((h->next)->value, args[i], size_t_var((h->next)->value)))
+			if(ft_strncmp((h->next)->value, args[i], size_t_var((h->next)->value)) == 0)
 			{
 				tmp = h->next->next;	
 				free_node(t_m, h->next);

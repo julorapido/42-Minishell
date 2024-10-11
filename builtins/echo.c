@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 14:59:38 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/08 17:26:12 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/11 11:22:01 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,7 @@ int		f__echo(char **args)
 				ft_putstr_fd(ft_substr(args[i], 1, ft_strlen(args[i]) - 1), 1);
 			else
 				ft_putstr_fd(args[i], 1);
-			if (args[i + 1] && args[i][0] != '\0' && 
-					!(args[i][0] == '\"' && args[i][ft_strlen(args[i]) - 1] == '\"'))
+			if (args[i + 1] && args[i][0] != '\0')
 				write(1, " ", 1);
 			i++;
 		}

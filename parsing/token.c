@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 16:27:11 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/09 17:32:13 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/11 17:20:01 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,8 +135,10 @@ void	show_tokens(token **cmd_tokens)
 	{
 		s = token_type_to_str(t->t);
 		printf(
-			"- [%s] %s \n", 
-			s, ((t->t == COMMAND || t->t == COMMAND_FLAG || t->t == QUOTE) ? (t->cmd) : (""))
+			"- [%s] (%s) \n", 
+			s, 
+			//t->cmd
+			(t->t == COMMAND || t->t == COMMAND_FLAG || t->t == QUOTE || t->t == GREAT) ? (t->cmd) : ("")
 		);
 		t = t->next;
 		i++;
