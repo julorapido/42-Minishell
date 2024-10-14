@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 11:21:49 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/11 11:19:15 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/14 12:25:47 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,7 @@ int	f__unset(t_minishell *t_m)
 	}
 	h = t_m->env;
 	while(h && h->next)
-	{
-		//if (!h->value)
-		//	continue;
+	{	
 		i = 1;
 		//printf("%s : %d\n", h->value,  size_t_var((h->next)->value));
 		while (args[i])

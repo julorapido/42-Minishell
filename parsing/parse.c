@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 17:46:03 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/11 17:19:49 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/14 14:42:28 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,6 +203,7 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 	commands = (t_cmd *) malloc(sizeof(struct s_cmd) * MAX_CMDS);
 	while(t)
 	{
+		printf("== %s \n", token_type_to_str(t->t));
 		cmd__ = &commands[i];	
 		// commands, command flags and quotes [ls -l "bonjour"]
 		if((t->t == COMMAND || t->t == COMMAND_FLAG) || t->t == QUOTE)
@@ -225,8 +226,7 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 		if (t->t == GREAT_GREAT || t->t == GREAT)
 		{
 			if((t->next) && (t->next)->cmd && (ft_strlen((t->next)->cmd) > 0))
-			{
-				printf("out => (%s) + (%s) [%s] {%s} \n", cmd__->output, (t->next)->cmd, token_type_to_str((t->next)->t), t->cmd );
+			{	
 				if(ou > 0)
 					cmd__->output = fn_realloc_strcat(cmd__->output, (t->next)->cmd, 1);
 				else
@@ -249,14 +249,14 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 			{
 				if(lst_was_pipe)
 				{
-					cmd__->output = "pipe";
+					cmd__->output = ft_strdup("pipe");
 					lst_was_pipe = false;
 				}
 				else
-					cmd__->output = "STD_OUT";
+					cmd__->output = ft_strdup("STD_OUT");
 			}
-			if(!(ft_strcmp(cmd__->output, "STD_OUT") == 0))
-					fn_revstr(cmd__->output);
+			if(!(ft_strcmp(cmd__->output, "STD_OUT") == 0) && ft_strcmp(cmd__->output, "pipe") != 0)
+				fn_revstr(cmd__->output);
 			if (t->t == PIPE || t->t == SEPARATOR)
 			{
 				lst_was_pipe = (t->t == PIPE) ? (true) : (false);

@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 12:15:52 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/09 15:04:58 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/14 14:04:59 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ void	run_builtin(t_minishell *t_m, int n_builtin)
 {
 	if (n_builtin == 1)
 		f__echo(t_m->c_args);
+	if (n_builtin == 2)
+		f__cd(t_m->c_args, t_m);
 	if (n_builtin == 3)
 		f__pwd();
 	if (n_builtin == 4)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:07:22 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/11 17:20:26 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/14 15:05:42 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,13 @@ void	minishell(t_minishell *t_m)
 	token	**cmd_tokens;
 
 	line = readline("$ ");
+	add_history(line);
 	while(line)
 	{
 		if(ft_strlen(line) < 1)
 		{
 			line = readline("$ ");
+			add_history(line);
 			continue ;
 		}
 		cmd_tokens = (token **) malloc(sizeof(token **));
@@ -35,6 +37,7 @@ void	minishell(t_minishell *t_m)
 		{
 			printf("parse error near `%s' \n", t_m->parse_error_value);
 			line = readline("$ ");
+			add_history(line);
 			continue ;
 		}
 		show_tokens(cmd_tokens);
@@ -42,6 +45,7 @@ void	minishell(t_minishell *t_m)
 		exec_cmds(t_m);
 
 		line = readline("$ ");
+		add_history(line);
 	}
 }
 

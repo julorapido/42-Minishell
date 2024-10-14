@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/10 17:16:24 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/14 15:09:37 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,10 @@
 #include <limits.h>
 #include <libft.h>
 #include <signal.h>
-#include <dirent.h>
+#include <dirent.h> 
+#include <sys/types.h>
+#include <sys/wait.h>
+
 
 
 # define STDIN 0
@@ -97,6 +100,30 @@ typedef struct s_minishell
 }	t_minishell;
 
 
+typedef struct s_pipe
+{
+	int		pfd[2];
+	t_cmd	*commands;
+	int		argc;
+	char	**argv;
+	char	**envp;
+	t_minishell	*t_m;
+}	t_pipe;
+
+typedef struct s_pipes {
+	char	**argv;
+	char	**env;
+	int		argc;
+	int		pfd[2];
+	int		save;
+	int		xcmd;
+	pid_t	*pid;
+	t_minishell	*t_m;
+}				t_pipes;
+
+
+
+
 // TOKEN UTILITES
 token			*token_new(char *s, enum TOKEN_TYPE ty);
 void			token_push(token **token_lst, token *new_t);
@@ -116,7 +143,7 @@ bool	is_parse_error(char *s);
 
 // ENV
 char	*get_env(char **env);
-char	*get_path(char *cmd, char **env);
+char	*get_env_path(t_minishell *t_m);
 int		env_init(t_minishell *t_m, char **argv);
 
 // PARSING
@@ -130,6 +157,7 @@ void	exec_cmds(t_minishell *t_m);
 
 
 // BUILT-IN
+int		f__cd(char **args, t_minishell *t_m);
 int		f__pwd(void);
 int		f__env(t_env *env);
 int		f__echo(char **args);
@@ -137,6 +165,16 @@ int		f__unset(t_minishell *t_m);
 int		is_builtin(char *c);
 void	run_builtin(t_minishell *t_m, int n_builtin);
 
+
+// PIPEX
+void	exit_handler(int n_exit);
+int		open_file(char *file, int n);
+char	*my_getenv(char *name, char **env);
+char	*bget_path2(char *cmd, char **env);
+void	ft_free_tab(char **tab);
+char	*heredoc(char **argv);
+int		pipex(int argc, char **argv, char **env, t_minishell *t_m);
+int		hereorfile(t_pipes pipex);
 
 
 #endif
