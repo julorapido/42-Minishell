@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:55:36 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/11 15:06:04 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/15 17:01:17 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,25 @@ void	appyl_space_removal(t_minishell *t_m)
 	}
 }
 
+void	appyl_is_piped_out(t_minishell *t_m)
+{
+	int		i;
+	t_cmd	*cmd__;
+
+	i = 0;
+	while ((size_t)(i) < t_m->cmd_count)
+	{
+		cmd__ = &(t_m->commands[i]);
+		if(&(t_m->commands[i + 1]) && ((&(t_m->commands[i + 1]))->input))
+		{
+			if((cmd__->n_redirections > 0) && (ft_strcmp((&(t_m->commands[i + 1]))->input , "pipe") == 0) ) 
+				cmd__->is_piped_out = true;
+		}			
+
+		i++;
+	}
+}
+
 void	print_commands(t_minishell *t_m)
 {
 	int		i;
@@ -100,15 +119,18 @@ void	print_commands(t_minishell *t_m)
 	while((size_t)(i) < t_m->cmd_count)
 	{
 		cmd__ = &(t_m->commands[i]);	
-		printf("-Command %d [cmd: %s| in: %s| out: '%s'| %s %d]", i, 
-				cmd__->command, cmd__->input, cmd__->output, 
-				cmd__->n_redirections > 0 ? "n_outFiles" : "", 
-				cmd__->n_redirections	
+		printf("-Command %d [cmd: %s| in: %s| out: %s]", i,
+				cmd__->command, cmd__->input, cmd__->output
 		);
-		if(&(t_m->commands[i + 1]) && ((&(t_m->commands[i + 1]))->input))
+		if (cmd__->n_redirections > 1)
 		{
-			if((cmd__->n_redirections > 0) && (ft_strcmp((&(t_m->commands[i + 1]))->input , "pipe") == 0) ) 
-				printf(" out: pipe| ");
+			printf(" [%d out_files : {", cmd__->n_redirections);
+			for(int i = 0; i < cmd__->n_redirections; i++)
+				printf("%s%s", cmd__->appends[i] == 1 ? ">>": ">", i < cmd__->n_redirections - 1 ? ", "  : "");
+			printf("} ]");
+		}else{
+			if(cmd__->appends[0] == 1)
+				printf(" [>>]");
 		}
 		printf("\n");
 		i++;

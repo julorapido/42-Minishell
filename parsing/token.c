@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 16:27:11 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/14 14:58:04 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/15 15:25:24 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,7 @@ enum TOKEN_TYPE char_to_token(char c)
 }
 
 bool	is_parse_error(char *s)
-{
-	return false;
+{	
 	int	i;
 	int	j;
 
@@ -136,9 +135,8 @@ void	show_tokens(token **cmd_tokens)
 	{
 		s = token_type_to_str(t->t);
 		printf(
-			"- [%s] (%s) \n", 
+			"- [%s] %s \n", 
 			s, 
-			//t->cmd
 			(t->t == COMMAND || t->t == COMMAND_FLAG || t->t == QUOTE || t->t == GREAT) ? (t->cmd) : ("")
 		);
 		t = t->next;

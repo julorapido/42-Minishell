@@ -6,7 +6,7 @@
 /*   By: gchauvot <gchauvot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 12:09:55 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/14 11:10:38 by gchauvot         ###   ########.fr       */
+/*   Updated: 2024/10/14 15:47:43 by gchauvot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	ft_execve(char *cmd, char **env, pid_t *pid, t_pipes piper)
 	int		built;
 
 	ft_cmd = ft_split(cmd, ' ');
-	built = is_builtin(cmd);
+	built = is_builtin(ft_cmd[0]);
 	path = bget_path2(ft_cmd[0], env);
 	if(built != -1)
 	{

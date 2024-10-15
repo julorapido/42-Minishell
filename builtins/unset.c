@@ -6,13 +6,13 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 11:21:49 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/14 12:25:47 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/15 13:12:08 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
 
-static int	size_t_var(char *s)
+#include "minishell.h"
+ int	size_t_var(char *s)
 {
 	int i;
 
@@ -22,17 +22,18 @@ static int	size_t_var(char *s)
 	return (i);
 }
 
-static void	free_node(t_minishell *t_m, t_env *env)
+void	free_node(t_minishell *t_m, t_env *env)
 {
-	if (t_m->env == env && env->next == NULL)
-	{
-		ft_memdel(t_m->env->value);
-		t_m->env->value = NULL;
-		t_m->env->next = NULL;
-		return ;
-	}
-	ft_memdel(env->value);
-	ft_memdel(env);
+	// if (t_m->env == env && env->next == NULL)
+	// {
+
+	// 	ft_memdel(t_m->env->value);
+	// 	t_m->env->value = NULL;
+	// 	t_m->env->next = NULL;
+	// 	return ;
+	// }
+	ft_memdel(t_m->env->value);
+	ft_memdel(t_m->env);
 }
 
 int	f__unset(t_minishell *t_m)
@@ -41,9 +42,7 @@ int	f__unset(t_minishell *t_m)
 	t_env	*tmp;
 	char	**args;
 	int		i;
-	int 	j;
 
-	j = 2;
 	args = t_m->c_args;
 	if (!args[1])
 	{
@@ -54,22 +53,24 @@ int	f__unset(t_minishell *t_m)
 	while(h && h->next)
 	{	
 		i = 1;
-		//printf("%s : %d\n", h->value,  size_t_var((h->next)->value));
 		while (args[i])
 		{
-			if(ft_strncmp((h->next)->value, args[i], size_t_var((h->next)->value)) == 0)
+			if(ft_strncmp((h)->next->value, args[i], size_t_var((h)->next->value)) == 0)
 			{
-				tmp = h->next->next;	
-				free_node(t_m, h->next);
-				h->next = tmp;
-				j--;
+				fprintf(stderr, "success removing: %s\n", h->next->value);
+				//tmp = (h)->next;
+				// free_node(t_m, h->next);
+				//h = tmp;
+				h->next=h->next->next;
 			}
 			i++;
 		}
 		h = h->next;
 	}
-	if (j > 0)
-		return (ERROR);
-	else
+
+	//if (j > 0)
+	//	return (ERROR);
+	//else
 		return (SUCCESS);
 }
+

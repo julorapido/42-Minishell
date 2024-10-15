@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 17:46:03 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/14 14:42:28 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/15 16:56:37 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,22 +20,20 @@ static enum TOKEN_TYPE	switcher(char *tken, token **t_l)
 		a = ft_m_strchr_i(tken, '>', '<');
 		while (a != -1 && !is_parse_error(tken))
 		{	
-			//printf("SOUS-ECUMATOR [%s]    PUSHED [%s] [%s] \n", tken, ft_substr(tken, 0, a), token_type_to_str(char_to_token(tken[a])));
-			token_push(t_l, token_new(ft_substr(tken, 0, a) , COMMAND));
+			if(ft_strlen(ft_substr(tken, 0, a)))
+				token_push(t_l, token_new(ft_substr(tken, 0, a) , COMMAND));
 			token_push(t_l, token_new("", char_to_token(tken[a])));
 			tken = ft_substr(tken, a + 1, ft_strlen(tken));	
 			a = ft_m_strchr_i(tken, '>', '<');
 		}
 		if(ft_strlen(tken) > 0 && !is_parse_error(tken))
 		{
-			// printf("SOUS-ECUMATORjure [%s] \n",tken);
 			token_push(t_l, token_new(tken, COMMAND));	
 		}	
 		return (-1);
 	}
 	else
-	{
-		// ;printf("----=-=-=-=--== %s \n", tken);
+	{	
 		if (strlen(tken) == 1 || *tken == '|')
 			return (char_to_token(*tken));
 		if (strlen(tken) == 2 && (*tken == '<' && tken[1] == '<'))
@@ -150,24 +148,33 @@ int	parse_tokens(char *cmd, token **cmd_tokens, t_minishell *t_m)
 		{
 			// CMD HAS NO [; |] or is strict equal to [>, <, |, ;]
 			if( ft_strlen(s_cmds[i]) == 1 || (!ft_strchr(s_cmds[i], ';') && !ft_strchr(s_cmds[i], '|')))
-			{	
-				big_t = switcher(s_cmds[i], cmd_tokens);	
-				if(big_t != -1)
+			{
+				if(ft_strcmp(s_cmds[i], ">>") == 0)
 				{
-					t = token_new(s_cmds[i], big_t);
-					token_push(cmd_tokens, t);
+					token_push(cmd_tokens, token_new(saved_s, GREAT));
+					token_push(cmd_tokens, token_new(saved_s, GREAT));
+				}
+				else
+				{
+					big_t = switcher(s_cmds[i], cmd_tokens);	
+					if(big_t != -1)
+					{
+						t = token_new(s_cmds[i], big_t);
+						token_push(cmd_tokens, t);
+					}
 				}
 				i++;
 			}
 			// CMD HAS SEPARATOR [; |]
 			else
-			{			
+			{	
 				if(is_parse_error(s_cmds[i]))
 				{
 					t_m->parse_error_value = s_cmds[i];
 					t_m->parse_error = true;
 					return(0);
-				}else
+				}	
+				else
 				{
 					int ix = ft_m_strchr_i(s_cmds[i], ';', '|');
 					saved_s = ft_substr(s_cmds[i], 0, ix);
@@ -195,15 +202,17 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 	t_cmd	*commands;
 	t_cmd	*cmd__;
 	int		i;
-	int 	in = 0, ou = 0;
+	int 	in = 0, ou = 0, s_ou = 0, s_ou_count = 0;
 	bool 	sp = false, lst_was_pipe = false;
 
 	i = 0;
 	t = token_last(*cmd_tokens);
 	commands = (t_cmd *) malloc(sizeof(struct s_cmd) * MAX_CMDS);
+	for(int i = 0; i< MAX_CMDS ; i ++)
+		for(int j = 0; j < MAX_OUTFILES; j++)
+			(&commands[i])->appends[j] = 0;
 	while(t)
 	{
-		printf("== %s \n", token_type_to_str(t->t));
 		cmd__ = &commands[i];	
 		// commands, command flags and quotes [ls -l "bonjour"]
 		if((t->t == COMMAND || t->t == COMMAND_FLAG) || t->t == QUOTE)
@@ -222,18 +231,28 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 					cmd__->command = fn_realloc_strcat(cmd__->command, t->cmd, 1);
 			}		
 		}
-		// redirections [<] [<<] [>] [>>]
+		// redirections [>] [>>]
 		if (t->t == GREAT_GREAT || t->t == GREAT)
 		{
+			s_ou++;
+			if(ou > 0)
+				if (s_ou >= 2)
+					cmd__->appends[s_ou_count] = 1;
 			if((t->next) && (t->next)->cmd && (ft_strlen((t->next)->cmd) > 0))
 			{	
 				if(ou > 0)
+				{
 					cmd__->output = fn_realloc_strcat(cmd__->output, (t->next)->cmd, 1);
+					s_ou_count++;
+				}
 				else
 					cmd__->output = (t->next)->cmd;
 				ou++;
 			}	
 		}
+		if (!(t->t == GREAT_GREAT || t->t == GREAT))
+			s_ou = 0;
+		// input [<] heredoc [<<]
 		if ((t->t == LESS_LESS || t->t == LESS) && (in < 1))
 		{
 			cmd__->input = (t->next)->cmd;
@@ -264,7 +283,7 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 				{
 					i++;
 				}
-				ou = in = 0;
+				s_ou = ou = in = 0;
 			}
 			fn_revstr(cmd__->command);
 		}
@@ -277,6 +296,7 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 	t_m->cmd_count = i + 1;
 	rev_tm_commands(t_m);
 	appyl_space_removal(t_m);
+	appyl_is_piped_out(t_m);
 	print_commands(t_m);
 	return (0);
 }

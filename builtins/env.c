@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 12:23:06 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/14 12:20:51 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/15 13:17:40 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,3 +23,4 @@ int		f__env(t_env *env)
 		ft_putendl(env->value);
 	return (SUCCESS);
 }
+

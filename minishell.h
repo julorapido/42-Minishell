@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/14 15:09:37 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/15 16:28:25 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@
 # define SUCCESS 0
 
 # define MAX_CMDS 512
+# define MAX_OUTFILES 64
 
 /*
 {
@@ -80,6 +81,9 @@ typedef struct s_cmd
 	char	*input;
 	char	*output;
 	int		n_redirections;
+	int		appends[MAX_OUTFILES];
+	bool	is_piped_out;
+	bool	is_stdin;
 }	t_cmd;
 
 // ENV (as linked-list)
@@ -139,12 +143,14 @@ char	*cmd_remove_lstspace(char *s);
 void	rev_tm_commands(t_minishell	*t_m);
 void	print_commands(t_minishell *t_m);
 void	appyl_space_removal(t_minishell *t_m);
+void	appyl_is_piped_out(t_minishell *t_m);
 bool	is_parse_error(char *s);
 
 // ENV
 char	*get_env(char **env);
 char	*get_env_path(t_minishell *t_m);
 int		env_init(t_minishell *t_m, char **argv);
+
 
 // PARSING
 int		parse_tokens(char *cmd, token **cmd_tokens, t_minishell *t_m);
@@ -159,6 +165,7 @@ void	exec_cmds(t_minishell *t_m);
 // BUILT-IN
 int		f__cd(char **args, t_minishell *t_m);
 int		f__pwd(void);
+// int		f__env(t_env *env);
 int		f__env(t_env *env);
 int		f__echo(char **args);
 int		f__unset(t_minishell *t_m);

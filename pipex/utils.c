@@ -6,7 +6,7 @@
 /*   By: gchauvot <gchauvot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 12:33:17 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/11 15:09:50 by gchauvot         ###   ########.fr       */
+/*   Updated: 2024/10/14 18:00:22 by gchauvot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int	open_file(char *file, int in_out)
 	if (ret == -1)
 	{
 		ft_putstr_fd("pipex: No such file or directory: ", 2);
+		// fprintf(stderr, "errfile: %s\n", file);
 		ft_putendl_fd(file, 2);
 		exit(0);
 	}
