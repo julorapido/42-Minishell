@@ -6,11 +6,51 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 17:46:03 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/16 11:53:45 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/16 17:45:04 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+
+void	parse_errors(char *cmd, t_minishell *t_m)
+{
+	char	*s_cmds;
+	int		i;
+
+	s_cmds = ft_splitcat(ft_split(cmd, ' '));	
+	i = 0;
+	while(s_cmds[i])
+	{
+		if(s_cmds[i + 1])
+		{
+			// triple
+			if(s_cmds[i + 1 + 1])
+			{
+				if(is_char_operator(s_cmds[i]))
+				{
+					if(s_cmds[i] == s_cmds[i + 1] && s_cmds[i + 1] == s_cmds[i + 2])
+					{
+						t_m->parse_error = true;
+						break;
+					}
+				}
+			}		
+			//
+			if(is_char_operator(s_cmds[i + 1]) && is_char_operator(s_cmds[i]))
+			{
+				if(s_cmds[i + 1] != s_cmds[i] &&
+						!(s_cmds[i + 1] == '|' || s_cmds[i + 1] == ';'))
+				{
+					t_m->parse_error = true;
+					break;
+				}
+			}
+		}
+		i++;
+	}
+}
+
 
 static enum TOKEN_TYPE	switcher(char *tken, token **t_l)
 {	
@@ -18,7 +58,7 @@ static enum TOKEN_TYPE	switcher(char *tken, token **t_l)
 	if (strlen(tken) >= 2 && (ft_strchr(tken, '>') || ft_strchr(tken, '<') || ft_strchr(tken, '|')))
 	{
 		a = ft_m_strchr_i(tken, '>', '<');
-		while (a != -1 && !is_parse_error(tken))
+		while (a != -1 /*&& !is_parse_error(tken)*/ )
 		{	
 			if(ft_strlen(ft_substr(tken, 0, a)))
 				token_push(t_l, token_new(ft_substr(tken, 0, a) , COMMAND));
@@ -26,7 +66,7 @@ static enum TOKEN_TYPE	switcher(char *tken, token **t_l)
 			tken = ft_substr(tken, a + 1, ft_strlen(tken));	
 			a = ft_m_strchr_i(tken, '>', '<');
 		}
-		if(ft_strlen(tken) > 0 && !is_parse_error(tken))
+		if(ft_strlen(tken) > 0 /* && !is_parse_error(tken)*/ )
 		{
 			token_push(t_l, token_new(tken, COMMAND));	
 		}	
@@ -86,6 +126,7 @@ int	parse_tokens(char *cmd, token **cmd_tokens, t_minishell *t_m)
 	char			*saved_s = NULL;
 	int				i;
 	int				s;
+	char			*al_s1;
 
 	s_cmds = ft_split(cmd, ' ');
 	s = 0;
@@ -100,10 +141,11 @@ int	parse_tokens(char *cmd, token **cmd_tokens, t_minishell *t_m)
 			s_quote = malloc(ft_strlen(s_cmds[i]) + 1);	
 			int o = i;
 			ft_strlcpy(s_quote, s_cmds[i], ft_strlen(s_cmds[i]) + 1);
+			al_s1 = ft_substr(s_cmds[i], 1, ft_strlen(s_cmds[i]));
 			if(s_cmds[i + 1] 
 				&& (s_cmds[i][ft_strlen(s_cmds[i]) - 1] != '\"')
-				&& 	ft_strchr(ft_substr(s_cmds[i], 1, ft_strlen(s_cmds[i])), '\"')
-				&& 	ft_strchr(ft_substr(s_cmds[i], 1, ft_strlen(s_cmds[i])), ' ')
+				&& 	ft_strchr(al_s1 /*ft_substr(s_cmds[i], 1, ft_strlen(s_cmds[i]))*/, '\"')
+				&& 	ft_strchr(al_s1 /*ft_substr(s_cmds[i], 1, ft_strlen(s_cmds[i]))*/, ' ')
 			){	
 				i++;
 				// CONCATENATE UNTIL NEW "
@@ -151,8 +193,8 @@ int	parse_tokens(char *cmd, token **cmd_tokens, t_minishell *t_m)
 			{
 				if(ft_strcmp(s_cmds[i], ">>") == 0)
 				{
-					token_push(cmd_tokens, token_new(saved_s, GREAT));
-					token_push(cmd_tokens, token_new(saved_s, GREAT));
+					token_push(cmd_tokens, token_new("", GREAT));
+					token_push(cmd_tokens, token_new("", GREAT));
 				}
 				else
 				{
@@ -168,14 +210,14 @@ int	parse_tokens(char *cmd, token **cmd_tokens, t_minishell *t_m)
 			// CMD HAS SEPARATOR [; |]
 			else
 			{	
-				if(is_parse_error(s_cmds[i]))
+				/*if(is_parse_error(s_cmds[i]))
 				{
 					t_m->parse_error_value = s_cmds[i];
 					t_m->parse_error = true;
 					return(0);
-				}	
+				}
 				else
-				{
+				{*/
 					int ix = ft_m_strchr_i(s_cmds[i], ';', '|');
 					saved_s = ft_substr(s_cmds[i], 0, ix);
 					saved_t = s_cmds[i][ix] == ';' ? SEPARATOR : PIPE;
@@ -185,8 +227,10 @@ int	parse_tokens(char *cmd, token **cmd_tokens, t_minishell *t_m)
 						s_cmds[i] = ft_substr(s_cmds[i], ix + 1, ft_strlen(s_cmds[i]));	
 					if (ft_strlen(saved_s) > 0)
 						token_push(cmd_tokens, token_new(saved_s, switcher(saved_s, cmd_tokens)));
+					else
+						free(saved_s);
 					token_push(cmd_tokens, token_new("", saved_t));
-				}
+				/*}*/
 			}
 		}
 	}		
@@ -279,11 +323,11 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 			if (t->t == PIPE || t->t == SEPARATOR)
 			{
 				lst_was_pipe = (t->t == PIPE) ? (true) : (false);
-				if(cmd__->command)
-				{
+				//if(cmd__->command)
+				//{
 					i++;
-				}
-				ou = in = 0;
+				//}
+				s_ou_count = ou = in = 0;
 			}
 			fn_revstr(cmd__->command);
 		}

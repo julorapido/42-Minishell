@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/16 11:39:52 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/16 14:14:50 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,8 @@ token			*token_last(token	*head);
 char			*token_type_to_str(enum TOKEN_TYPE t);
 enum TOKEN_TYPE	char_to_token(char c);
 bool			str_is_onlysep(char *s);
+bool			is_char_operator(char c);
+
 
 // CMD UTILITES
 void	fn_revstr(char *up_s);
@@ -157,7 +159,8 @@ int		env_init(t_minishell *t_m, char **argv);
 // PARSING
 int		parse_tokens(char *cmd, token **cmd_tokens, t_minishell *t_m);
 int		parse_commands(t_minishell *t_m, token **cmd_tokens);
-//int		parse_tokens(char *cmd, token **cmd_tokens);
+void	parse_errors(char *cmd, t_minishell *t_m);
+
 
 // EXECUTOR
 void	exec_cmds(t_minishell *t_m);
@@ -167,7 +170,6 @@ void	exec_cmds(t_minishell *t_m);
 // BUILT-IN
 int		f__cd(char **args, t_minishell *t_m);
 int		f__pwd(void);
-// int		f__env(t_env *env);
 int		f__env(t_env *env);
 int		f__echo(char **args);
 int		f__unset(t_minishell *t_m);

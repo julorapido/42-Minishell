@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:07:22 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/14 15:05:42 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/16 12:47:16 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	minishell(t_minishell *t_m)
 		}
 		cmd_tokens = (token **) malloc(sizeof(token **));
 		*cmd_tokens = NULL;
-		parse_tokens(line, cmd_tokens, t_m);
+		parse_errors(line, t_m);
 		if(t_m->parse_error)
 		{
 			printf("parse error near `%s' \n", t_m->parse_error_value);
@@ -40,6 +40,7 @@ void	minishell(t_minishell *t_m)
 			add_history(line);
 			continue ;
 		}
+		parse_tokens(line, cmd_tokens, t_m);
 		show_tokens(cmd_tokens);
 		parse_commands(t_m, cmd_tokens);
 		exec_cmds(t_m);

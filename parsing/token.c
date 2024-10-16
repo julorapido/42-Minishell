@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 16:27:11 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/15 15:25:24 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/16 13:08:11 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,21 +42,10 @@ enum TOKEN_TYPE char_to_token(char c)
 		return (COMMAND);
 }
 
-bool	is_parse_error(char *s)
+bool	is_char_operator(char c)
 {	
-	int	i;
-	int	j;
-
-	j = 0;
-	i = 0;
-	while(s[i])
-	{
-		if (s[i] == ';' || s[i] == '<' || s[i] == '>' || s[i] == '|' || s[i] == '$' 
-			|| s[i] == '.' || s[i] == '/')
-			j++;
-		i++;
-	}
-	if((size_t)(j) == ft_strlen(s))
+	if (c == ';' || c == '<' || c == '>' || c == '|' || c == '$' 
+		|| c == '.' || c == '/')
 		return (true);
 	else
 		return (false);

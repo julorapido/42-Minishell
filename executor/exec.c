@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gchauvot <gchauvot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 12:08:14 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/15 15:09:47 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/16 12:18:49 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,7 +187,10 @@ void	exec_cmds(t_minishell *t_m)
 	{
 		c = &(t_m->commands[i]);
 		if(!c->command)
-			break;
+		{
+			i++;
+			continue ;
+		}
 		//printf("PARRENT c[%d]: @%s@\n",i, c->command);
 		t_m->c_args = ft_split(c->command, ' ');	
 		//if(ft_strcmp(t_m->c_args[0], "echo") == 0)
