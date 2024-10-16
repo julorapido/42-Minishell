@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/15 16:28:25 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/16 11:39:52 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ typedef struct s_cmd
 	int		appends[MAX_OUTFILES];
 	bool	is_piped_out;
 	bool	is_stdin;
+	bool	is_heredoc;
 }	t_cmd;
 
 // ENV (as linked-list)
@@ -141,6 +142,7 @@ bool			str_is_onlysep(char *s);
 void	fn_revstr(char *up_s);
 char	*cmd_remove_lstspace(char *s);
 void	rev_tm_commands(t_minishell	*t_m);
+void	rev_commands_appends(t_minishell *t_m);
 void	print_commands(t_minishell *t_m);
 void	appyl_space_removal(t_minishell *t_m);
 void	appyl_is_piped_out(t_minishell *t_m);

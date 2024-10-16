@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 17:46:03 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/15 16:56:37 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/16 11:53:45 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,7 +202,7 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 	t_cmd	*commands;
 	t_cmd	*cmd__;
 	int		i;
-	int 	in = 0, ou = 0, s_ou = 0, s_ou_count = 0;
+	int 	in = 0, ou = 0, s_ou_count = 0;
 	bool 	sp = false, lst_was_pipe = false;
 
 	i = 0;
@@ -231,12 +231,11 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 					cmd__->command = fn_realloc_strcat(cmd__->command, t->cmd, 1);
 			}		
 		}
-		// redirections [>] [>>]
+		// redirections [>] appends [>>]
 		if (t->t == GREAT_GREAT || t->t == GREAT)
-		{
-			s_ou++;
-			if(ou > 0)
-				if (s_ou >= 2)
+		{	
+			if(t->prev)
+				if((t->prev)->t == GREAT)
 					cmd__->appends[s_ou_count] = 1;
 			if((t->next) && (t->next)->cmd && (ft_strlen((t->next)->cmd) > 0))
 			{	
@@ -250,11 +249,12 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 				ou++;
 			}	
 		}
-		if (!(t->t == GREAT_GREAT || t->t == GREAT))
-			s_ou = 0;
 		// input [<] heredoc [<<]
 		if ((t->t == LESS_LESS || t->t == LESS) && (in < 1))
 		{
+			if(t->prev)
+				if((t->prev)->t == LESS)
+					cmd__->is_heredoc = true;
 			cmd__->input = (t->next)->cmd;
 			in++;
 		}
@@ -283,7 +283,7 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 				{
 					i++;
 				}
-				s_ou = ou = in = 0;
+				ou = in = 0;
 			}
 			fn_revstr(cmd__->command);
 		}
@@ -295,6 +295,7 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 	t_m->commands = commands;
 	t_m->cmd_count = i + 1;
 	rev_tm_commands(t_m);
+	rev_commands_appends(t_m);
 	appyl_space_removal(t_m);
 	appyl_is_piped_out(t_m);
 	print_commands(t_m);

@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:55:36 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/15 17:01:17 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/16 11:56:17 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,9 +119,16 @@ void	print_commands(t_minishell *t_m)
 	while((size_t)(i) < t_m->cmd_count)
 	{
 		cmd__ = &(t_m->commands[i]);	
-		printf("-Command %d [cmd: %s| in: %s| out: %s]", i,
-				cmd__->command, cmd__->input, cmd__->output
+		printf("-Command %d [cmd: %s| in: %s%s| out: %s]", i,
+				cmd__->command,
+				cmd__->is_heredoc ? "(heredoc <<) ": "",
+				cmd__->input, cmd__->output
 		);
+		if(&(t_m->commands[i + 1]) && ((&(t_m->commands[i + 1]))->input))
+		{
+			if((cmd__->n_redirections > 0) && (ft_strcmp((&(t_m->commands[i + 1]))->input , "pipe") == 0) ) 
+				printf(" [piped out |] ");
+		}
 		if (cmd__->n_redirections > 1)
 		{
 			printf(" [%d out_files : {", cmd__->n_redirections);
@@ -151,4 +158,25 @@ void	rev_tm_commands(t_minishell	*t_m)
 		t_m->commands[(t_m->cmd_count - 1) - i] = temp;
 		i++;
 	}
+}
+
+void	rev_commands_appends(t_minishell *t_m)
+{
+	/*int		i;
+	int		j;
+	int		temp;	
+
+	i = 0;
+	while ((size_t)(i) < t_m->cmd_count)
+	{
+		j = 0;
+		while(j < t_m->commands[i]->n_redirections)
+		{
+			temp = t_m->commands[i]->appends[j];
+			t_m->commands[i] = ((t_m->commands[i])->appends)[t_m->commands[i]->n_redirections - j];
+			((t_m->commands[i]->)appends)[t_m->commands[i]->n_redirections - j] = temp;
+			j++;
+		}
+		i++;
+	}*/
 }
