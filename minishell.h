@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/16 14:14:50 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/17 16:12:56 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,10 @@ typedef struct s_minishell
 	size_t	cmd_count;	// command count
 	char	**c_args;	// splited args (for built-ins)
 	bool	parse_error;	// parse error in current command
-	char	*parse_error_value;
+	char	e_v[2];			// parse error info (zsh: parse error near `<.//>')
+	pid_t	*pid;			// array of all pids, one per command
+	int		(*pipes_fd)[2];	// array of pipes
+	int		*heredocs;		// array of heredocs
 }	t_minishell;
 
 
@@ -159,7 +162,7 @@ int		env_init(t_minishell *t_m, char **argv);
 // PARSING
 int		parse_tokens(char *cmd, token **cmd_tokens, t_minishell *t_m);
 int		parse_commands(t_minishell *t_m, token **cmd_tokens);
-void	parse_errors(char *cmd, t_minishell *t_m);
+int		parse_errors(char *cmd, t_minishell *t_m);
 
 
 // EXECUTOR
@@ -169,12 +172,13 @@ void	exec_cmds(t_minishell *t_m);
 
 // BUILT-IN
 int		f__cd(char **args, t_minishell *t_m);
-int		f__pwd(void);
-int		f__env(t_env *env);
-int		f__echo(char **args);
+int		f__pwd(int fd_out);
+// int		f__env(t_env *env);
+int		f__env(t_env *env, int fdout);
+int		f__echo(char **args, int fdout);
 int		f__unset(t_minishell *t_m);
 int		is_builtin(char *c);
-void	run_builtin(t_minishell *t_m, int n_builtin);
+void	run_builtin(t_minishell *t_m, int n_builtin, int fdout);
 
 
 // PIPEX
@@ -183,7 +187,8 @@ int		open_file(char *file, int n);
 char	*my_getenv(char *name, char **env);
 char	*bget_path2(char *cmd, char **env);
 void	ft_free_tab(char **tab);
-char	*heredoc(char **argv);
+//char	*heredoc(char **argv);
+int		heredoc(char *eof, t_cmd *cmd, int i);
 int		pipex(int argc, char **argv, char **env, t_minishell *t_m);
 int		hereorfile(t_pipes pipex);
 

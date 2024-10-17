@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built-in.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: gchauvot <gchauvot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 12:15:52 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/15 13:18:03 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/16 15:53:06 by gchauvot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,16 @@ int	is_builtin(char *c)
 	return (-1);
 }
 
-void	run_builtin(t_minishell *t_m, int n_builtin)
+void	run_builtin(t_minishell *t_m, int n_builtin, int fdout)
 {
 	if (n_builtin == 1)
-		f__echo(t_m->c_args);
+		f__echo(t_m->c_args, fdout);
 	if (n_builtin == 2)
 		f__cd(t_m->c_args, t_m);
 	if (n_builtin == 3)
-		f__pwd();
+		f__pwd(fdout);
 	if (n_builtin == 4)
-		f__env(t_m->env);
+		f__env(t_m->env, fdout);
 	if (n_builtin == 6)
 		f__unset(t_m);
 }

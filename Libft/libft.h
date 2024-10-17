@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 01:13:37 by julessainth       #+#    #+#             */
-/*   Updated: 2024/10/16 14:49:01 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/17 15:14:48 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,5 +95,10 @@ void	ft_lstdelone(t_list *lst, void (*del)(void*));
 void	ft_lstclear(t_list **lst, void (*del)(void*));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 void	ft_lstiter(t_list *lst, void (*f)(void *));
+
+
+/* gnl */
+char	*get_next_line(int fd);
+int		gnl_strlen(char *dst, char *src, int siz, int alt);
 
 #endif

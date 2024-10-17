@@ -1,13 +1,13 @@
 OUT = MINISHELL
 
-SRC = ./parsing/*.c  *.c ./builtins/*.c ./env/*.c ./executor/*.c ./pipex/*.c
+SRC = ./parsing/*.c  *.c ./builtins/*.c ./env/*.c ./executor/*.c 
 SRC_OBJS = $(SRC.c=.o)
 
 FLAGS = -Wall -Wextra
 HEADER = -I. -I$(LIBFT_DIR)
 
 LIBFT_DIR = Libft/
-LIBFT = $(LIBFT_DIR)/libft.a
+LIBFT = $(LIBFT_DIR)libft.a
 
 all : $(LIBFT) $(OUT)
 
