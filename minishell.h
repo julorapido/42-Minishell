@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/17 16:12:56 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/21 12:44:05 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,16 +141,18 @@ char			*token_type_to_str(enum TOKEN_TYPE t);
 enum TOKEN_TYPE	char_to_token(char c);
 bool			str_is_onlysep(char *s);
 bool			is_char_operator(char c);
+void			token_dbl_push(token **token_lst, token *new_t);
 
 
-// CMD UTILITES
+
+// [PARSING, CMD] UTILITES
 void	fn_revstr(char *up_s);
 char	*cmd_remove_lstspace(char *s);
-void	rev_tm_commands(t_minishell	*t_m);
-void	rev_commands_appends(t_minishell *t_m);
 void	print_commands(t_minishell *t_m);
-void	appyl_space_removal(t_minishell *t_m);
-void	appyl_is_piped_out(t_minishell *t_m);
+void	apply_space_removal(t_minishell *t_m);
+void	apply_is_piped_out(t_minishell *t_m);
+void	apply_appends_reverse(t_minishell *t_m);
+void	apply_commands_reverse(t_minishell	*t_m);
 bool	is_parse_error(char *s);
 
 // ENV
@@ -168,15 +170,13 @@ int		parse_errors(char *cmd, t_minishell *t_m);
 // EXECUTOR
 void	exec_cmds(t_minishell *t_m);
 
-
-
 // BUILT-IN
 int		f__cd(char **args, t_minishell *t_m);
 int		f__pwd(int fd_out);
-// int		f__env(t_env *env);
 int		f__env(t_env *env, int fdout);
 int		f__echo(char **args, int fdout);
 int		f__unset(t_minishell *t_m);
+void	f__export(t_minishell *t);
 int		is_builtin(char *c);
 void	run_builtin(t_minishell *t_m, int n_builtin, int fdout);
 
@@ -187,7 +187,6 @@ int		open_file(char *file, int n);
 char	*my_getenv(char *name, char **env);
 char	*bget_path2(char *cmd, char **env);
 void	ft_free_tab(char **tab);
-//char	*heredoc(char **argv);
 int		heredoc(char *eof, t_cmd *cmd, int i);
 int		pipex(int argc, char **argv, char **env, t_minishell *t_m);
 int		hereorfile(t_pipes pipex);

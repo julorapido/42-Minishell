@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:55:36 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/16 11:56:17 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/21 18:02:08 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	fn_revstr(char *up_s)
 
 	k = 0;
 	i = 0;
-	if (!up_s || up_s == NULL || ft_strlen(up_s) == 1)
+	if (!up_s || up_s == NULL || ft_strlen(up_s) <= 1)
 		return ;
 	s_p = ft_split(up_s, ' ');
 	while (s_p[i])
@@ -33,39 +33,42 @@ void	fn_revstr(char *up_s)
 	{
 		s = s_p[i];
 		j = 0;
-		while(s[j])
-		{	
+		while (s[j] != '\0')
+		{
 			up_s[k] = s[j];
 			j++;
 			k++;
 		}
 		up_s[k] = ' ';
 		k++;
-		i--;	
-
+		i--;
+	}	
+	i = 0;
+	while (s_p[i])
+	{
+		free(s_p[i]);
+		i++;
 	}
-	up_s[k] = '\0';
-	i = -1;
-	while (s_p[i++])
-		free(s_p[i]);	
 }
 
 char	*cmd_remove_lstspace(char *s)
 {
 	int		i;
 	int		j;
+	int		l;
 	char	*new_s;
 
-	i = 0;
-	while(s[i])
-		i++;
-	if(s[i - 1] == ' ')
-		i--;
-	new_s = (char *) malloc(i * sizeof(char));
+	if (!s || s[0] == '\0' || !(*s))
+		return (NULL);
+	i = 0;	
+	l = ft_strlen(s);
+	if (s[l - 1] == ' ')
+		i = 1;	
+	new_s = (char *) malloc(((l - i) + 1) * sizeof(char));
 	if (!new_s)
 		return (NULL);
 	j = 0;
-	while(j < i)
+	while (j < l - i)
 	{
 		new_s[j] = s[j];
 		j++;
@@ -74,10 +77,11 @@ char	*cmd_remove_lstspace(char *s)
 	return (new_s);
 }
 
-void	appyl_space_removal(t_minishell *t_m)
+void	apply_space_removal(t_minishell *t_m)
 {
 	int		i;
 	t_cmd	*cmd__;
+	char	*temp_cmd;
 
 	i = 0;
 	while ((size_t)(i) < t_m->cmd_count)
@@ -85,12 +89,13 @@ void	appyl_space_removal(t_minishell *t_m)
 		cmd__ = &(t_m->commands[i]);
 		if (!(cmd__->command))
 			break;
-		cmd__->command = cmd_remove_lstspace(cmd__->command);
+		temp_cmd = cmd_remove_lstspace(cmd__->command); 
+		cmd__->command = temp_cmd;
 		i++;
 	}
 }
 
-void	appyl_is_piped_out(t_minishell *t_m)
+void	apply_is_piped_out(t_minishell *t_m)
 {
 	int		i;
 	t_cmd	*cmd__;
@@ -98,13 +103,14 @@ void	appyl_is_piped_out(t_minishell *t_m)
 	i = 0;
 	while ((size_t)(i) < t_m->cmd_count)
 	{
+		if(!(&(t_m->commands[i])))
+			break ;
 		cmd__ = &(t_m->commands[i]);
-		if(&(t_m->commands[i + 1]) && ((&(t_m->commands[i + 1]))->input))
+		if (&(t_m->commands[i + 1]) && ((&(t_m->commands[i + 1]))->input))
 		{
-			if((cmd__->n_redirections > 0) && (ft_strcmp((&(t_m->commands[i + 1]))->input , "pipe") == 0) ) 
-				cmd__->is_piped_out = true;
+			//if ((cmd__->n_redirections > 0) && (ft_strcmp((&(t_m->commands[i + 1]))->input , "pipe") == 0) ) 
+				// cmd__->is_piped_out = true;
 		}			
-
 		i++;
 	}
 }
@@ -118,6 +124,8 @@ void	print_commands(t_minishell *t_m)
 	printf("---------- EXECUTOR-COMMANDS ----------\n");
 	while((size_t)(i) < t_m->cmd_count)
 	{
+		if(!(&(t_m->commands[i])))
+			break ;
 		cmd__ = &(t_m->commands[i]);	
 		printf("-Command %d [cmd: %s| in: %s%s| out: %s]", i,
 				cmd__->command,
@@ -144,7 +152,7 @@ void	print_commands(t_minishell *t_m)
 	}
 }
 
-void	rev_tm_commands(t_minishell	*t_m)
+void	apply_commands_reverse(t_minishell	*t_m)
 {
 	int		i;
 	t_cmd	temp;
@@ -160,7 +168,7 @@ void	rev_tm_commands(t_minishell	*t_m)
 	}
 }
 
-void	rev_commands_appends(t_minishell *t_m)
+void	apply_appends_reverse(t_minishell *t_m)
 {
 	/*int		i;
 	int		j;

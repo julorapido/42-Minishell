@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 12:08:14 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/17 13:22:25 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/18 14:20:53 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,8 +164,7 @@ int	ft_soloexec(t_minishell *t_m, int i, int c_int)
 	char 	**nenv;
 	int		n_out;
 
-	x = 0;
-	fprintf(stderr,"soloexec\n");
+	x = 0;	
 	c = &(t_m->commands[i]);
 	outlist = ft_split(c->output,' ');
 	nenv = pipe_env(t_m);
@@ -187,8 +186,7 @@ int	ft_soloexec(t_minishell *t_m, int i, int c_int)
 					{
 						char *fname = ft_strjoin("temp/", ft_itoa(i));
 						fdin = open_file(fname, 0);
-						perror("heredocopen: ");
-						fprintf(stderr, "bro: %d\n", fdin);
+						perror("heredocopen: ");	
 					}
 				else
 					fdin = open_file(c->input, 0);
@@ -295,8 +293,7 @@ void	exec_cmds(t_minishell *t_m)
 	int		c_int;
 
 	i = 0;
-	fprintf(stderr,"--------- COMMANDS EXECUTION ---------\n");
-	fprintf(stderr,"cmdcount=@%ld@\n", t_m->cmd_count);
+	fprintf(stderr,"--------- COMMANDS EXECUTION ---------\n");	
 	t_m->pid = ft_calloc(t_m->cmd_count + 1, sizeof(pid_t));
 	if (!t_m->pid)
 		return (perror("pid array creation error."), exit(1));

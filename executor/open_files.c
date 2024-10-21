@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:32:41 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/17 13:34:17 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/18 13:21:41 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,15 +63,12 @@ int	heredocalloc(t_minishell *t_m)
 
 	i = 0;
 	t_m->heredocs = ft_calloc(t_m->cmd_count + 1, sizeof(int));
-	printf("herdocalloc [%d]\n", i);
 	while(i <= t_m->cmd_count - 1)
 	{
-		c = &(t_m->commands[i]);
-		printf("c->is_heredoc [%d]\n", c->is_heredoc);
+		c = &(t_m->commands[i]);	
 		if(c->is_heredoc)
 			t_m->heredocs[i] = heredoc(c->input, c, i);
-		i++;
-		printf("herdocalloc [%d]\n", i);
+		i++;	
 	}
 	return (1);
 }

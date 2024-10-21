@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 14:35:01 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/16 17:45:32 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/21 17:10:25 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	*ft_splitcat(char **ft_split)
 		s += ft_strlen(ft_split[i]);
 		i++;
 	}
-	ret = (char *) malloc(s * sizeof(char));
+	ret = (char *) malloc((s + 1) * sizeof(char));
 	if (!ret)
 		return (NULL);
 	k = 0;
@@ -45,5 +45,6 @@ char	*ft_splitcat(char **ft_split)
 		//free(ft_split[i]);
 		i++;
 	}
+	ret[k] = '\0';
 	return (ret);
 }

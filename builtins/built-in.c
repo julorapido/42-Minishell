@@ -6,7 +6,7 @@
 /*   By: gchauvot <gchauvot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 12:15:52 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/16 15:53:06 by gchauvot         ###   ########.fr       */
+/*   Updated: 2024/10/21 12:43:41 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ void	run_builtin(t_minishell *t_m, int n_builtin, int fdout)
 		f__pwd(fdout);
 	if (n_builtin == 4)
 		f__env(t_m->env, fdout);
+	if (n_builtin == 5)
+		f__export(t_m);
 	if (n_builtin == 6)
 		f__unset(t_m);
 }
