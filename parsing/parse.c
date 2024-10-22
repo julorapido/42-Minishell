@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 17:46:03 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/21 18:01:35 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/22 15:50:39 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,29 +90,34 @@ static enum TOKEN_TYPE	switcher(char *tken, token **t_l)
 	return (COMMAND);
 }
 
-char	*fn_realloc_strcat(char *filled_str, char *cncat_str, int space_it)
+static char	*fn_realloc_strcat(char *filled_str, char *cncat_str, int space_it)
 {
 	int		i;
 	int		j;
 	char	*temp;
 
 	temp = filled_str;
-	filled_str = (char *) malloc((ft_strlen(filled_str) + ft_strlen(cncat_str) +  space_it ? 2 : 1));
+	//filled_str = (char *) malloc((ft_strlen(temp) + ft_strlen(cncat_str) +  space_it ? 2 : 1));
+	filled_str = (char *) ft_calloc((ft_strlen(temp) + ft_strlen(cncat_str) +  space_it ? 2 : 1), sizeof(char));
 	i = 0;
-	while (temp[i])
+	printf("COPY [%s] into [%s] {%d}-size \n", temp, cncat_str, 
+		(ft_strlen(temp) + ft_strlen(cncat_str) +  (space_it ? 2 : 1))
+	);
+	while(temp[i])
 	{
 		filled_str[i] = temp[i];
 		i++;
 	}	
-	if (space_it){
-		filled_str[i + 1] = ' ';i++;}
+	if(space_it)
+	{
+		filled_str[i++] = ' ';
+	}
 	j = 0;
 	while (cncat_str[j])
 	{
 		filled_str[i + j] = cncat_str[j];
 		j++;
 	}	
-	printf("PUT NULL CHARACTER ON [%s] at [%d] \n", filled_str, i + j);
 	filled_str[i + j] = '\0';	
 	return (filled_str);
 }
@@ -231,8 +236,11 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 	t = token_last(*cmd_tokens);
 	commands = (t_cmd *) malloc(sizeof(struct s_cmd) * MAX_CMDS);
 	for(int i = 0; i< MAX_CMDS ; i ++)
+	{
+		(&commands[i])->command = NULL;	
 		for(int j = 0; j < MAX_OUTFILES; j++)
 			(&commands[i])->appends[j] = 0;
+	}
 	while(t)
 	{
 		cmd__ = &commands[i];	
@@ -319,7 +327,7 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 	t_m->cmd_count = i + 1;
 	apply_commands_reverse(t_m);
 	apply_appends_reverse(t_m);
-	apply_space_removal(t_m);
+	// apply_space_removal(t_m);
 	apply_is_piped_out(t_m);	
 	return (0);
 }

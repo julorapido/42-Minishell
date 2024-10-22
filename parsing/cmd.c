@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:55:36 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/21 18:02:08 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/22 15:16:25 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ void	fn_revstr(char *up_s)
 		up_s[k] = ' ';
 		k++;
 		i--;
-	}	
+	}
+	up_s[k - 1] = '\0';
 	i = 0;
 	while (s_p[i])
 	{
@@ -60,10 +61,10 @@ char	*cmd_remove_lstspace(char *s)
 
 	if (!s || s[0] == '\0' || !(*s))
 		return (NULL);
-	i = 0;	
+	i = 0;
 	l = ft_strlen(s);
 	if (s[l - 1] == ' ')
-		i = 1;	
+		i = 1;
 	new_s = (char *) malloc(((l - i) + 1) * sizeof(char));
 	if (!new_s)
 		return (NULL);
@@ -89,7 +90,7 @@ void	apply_space_removal(t_minishell *t_m)
 		cmd__ = &(t_m->commands[i]);
 		if (!(cmd__->command))
 			break;
-		temp_cmd = cmd_remove_lstspace(cmd__->command); 
+		temp_cmd = cmd_remove_lstspace(cmd__->command);
 		cmd__->command = temp_cmd;
 		i++;
 	}
@@ -108,9 +109,9 @@ void	apply_is_piped_out(t_minishell *t_m)
 		cmd__ = &(t_m->commands[i]);
 		if (&(t_m->commands[i + 1]) && ((&(t_m->commands[i + 1]))->input))
 		{
-			//if ((cmd__->n_redirections > 0) && (ft_strcmp((&(t_m->commands[i + 1]))->input , "pipe") == 0) ) 
+			//if ((cmd__->n_redirections > 0) && (ft_strcmp((&(t_m->commands[i + 1]))->input , "pipe") == 0) )
 				// cmd__->is_piped_out = true;
-		}			
+		}
 		i++;
 	}
 }
@@ -126,7 +127,7 @@ void	print_commands(t_minishell *t_m)
 	{
 		if(!(&(t_m->commands[i])))
 			break ;
-		cmd__ = &(t_m->commands[i]);	
+		cmd__ = &(t_m->commands[i]);
 		printf("-Command %d [cmd: %s| in: %s%s| out: %s]", i,
 				cmd__->command,
 				cmd__->is_heredoc ? "(heredoc <<) ": "",
@@ -134,7 +135,7 @@ void	print_commands(t_minishell *t_m)
 		);
 		if(&(t_m->commands[i + 1]) && ((&(t_m->commands[i + 1]))->input))
 		{
-			if((cmd__->n_redirections > 0) && (ft_strcmp((&(t_m->commands[i + 1]))->input , "pipe") == 0) ) 
+			if((cmd__->n_redirections > 0) && (ft_strcmp((&(t_m->commands[i + 1]))->input , "pipe") == 0) )
 				printf(" [piped out |] ");
 		}
 		if (cmd__->n_redirections > 1)
@@ -172,7 +173,7 @@ void	apply_appends_reverse(t_minishell *t_m)
 {
 	/*int		i;
 	int		j;
-	int		temp;	
+	int		temp;
 
 	i = 0;
 	while ((size_t)(i) < t_m->cmd_count)

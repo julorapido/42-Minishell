@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:07:22 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/21 17:47:14 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/22 14:37:40 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,10 @@ void	minishell(t_minishell *t_m)
 			continue ;
 		}
 		parse_tokens(line, cmd_tokens, t_m);
-		// show_tokens(cmd_tokens);
+		show_tokens(cmd_tokens);
 		parse_commands(t_m, cmd_tokens);
-		// print_commands(t_m);
-		exec_cmds(t_m);
+		print_commands(t_m);
+		// exec_cmds(t_m);
 
 		line = readline("$ ");
 		add_history(line);
