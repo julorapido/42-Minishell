@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 16:27:11 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/18 14:50:22 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/23 16:11:30 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,4 +137,21 @@ void	show_tokens(token **cmd_tokens)
 		t = t->next;
 		i++;
 	}	
+}
+
+void	free_tokens(token **t_arr)
+{
+	token	*head;
+	token	*t;
+
+	head = *t_arr;
+	while (head)
+	{
+		t = head;
+		head = head->next;
+		if (ft_strlen(t->cmd) > 0)
+			free(t->cmd);	
+		free(t);
+	}
+	free(t_arr);
 }

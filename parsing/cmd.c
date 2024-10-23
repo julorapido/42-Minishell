@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:55:36 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/22 15:16:25 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/23 17:34:24 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,82 @@ void	fn_revstr(char *up_s)
 		free(s_p[i]);
 		i++;
 	}
+	free(s_p);
 }
+
+int		switcher_i(char *tken)
+{
+	if (strlen(tken) >= 2 && (ft_strchr(tken, '>') || ft_strchr(tken, '<') || ft_strchr(tken, '|')))
+		return (-1);
+	else
+		return (10);
+}
+
+enum TOKEN_TYPE	switcher(char *tken, token **t_l)
+{	
+	int		a;
+	char	*s;
+	if (strlen(tken) >= 2 && (ft_strchr(tken, '>') || ft_strchr(tken, '<') || ft_strchr(tken, '|')))
+	{
+		a = ft_m_strchr_i(tken, '>', '<');
+		while (a != -1)
+		{
+			printf("ecume %s \n", tken);
+			s = ft_substr(tken, 0, a);
+			if (ft_strlen(s))
+				token_push(t_l, token_new(s, COMMAND));
+			else
+				free(s);
+			token_push(t_l, token_new("", char_to_token(tken[a])));
+			tken = ft_substr(tken, a + 1, ft_strlen(tken));
+			a = ft_m_strchr_i(tken, '>', '<');
+		}	
+		if (ft_strlen(tken) > 0)
+			token_push(t_l, token_new(tken, COMMAND));
+		else
+			free(tken);
+		return (-1);
+	}
+	else
+	{	
+		if (strlen(tken) == 1 || *tken == '|')
+			return (char_to_token(*tken));
+		if (strlen(tken) == 2 && (*tken == '<' && tken[1] == '<'))
+			return (LESS_LESS);
+		if (strlen(tken) == 2 && (*tken == '>' && tken[1] == '>'))
+			return (GREAT_GREAT);
+	}
+	return (COMMAND);
+}
+
+char	*fn_realloc_strcat(char *filled_str, char *cncat_str, int space_it)
+{
+	int		i;
+	int		j;
+	char	*temp;
+
+	temp = filled_str;	
+	filled_str = (char *) ft_calloc((ft_strlen(temp) + ft_strlen(cncat_str) +  ((space_it) ? (2) : (1))), sizeof(char));
+	i = 0;	
+	while(temp[i])
+	{
+		filled_str[i] = temp[i];
+		i++;
+	}	
+	if(space_it)
+	{
+		filled_str[i++] = ' ';
+	}
+	j = 0;
+	while (cncat_str[j])
+	{
+		filled_str[i + j] = cncat_str[j];
+		j++;
+	}	
+	filled_str[i + j] = '\0';	
+	return (filled_str);
+}
+
 
 char	*cmd_remove_lstspace(char *s)
 {

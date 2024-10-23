@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 17:46:03 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/22 15:50:39 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/23 17:25:16 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,14 @@
 
 int	parse_errors(char *cmd, t_minishell *t_m)
 {
-	char	*s_cmds;
+	char	*s_cmds;	
 	int		i;
 	int		q;
 	int		l;
 
-	t_m->parse_error = false;
-	s_cmds = ft_splitcat(ft_split(cmd, ' '));	
+	t_m->parse_error = false;	
+	t_m->splt_cat = ft_splitcat( ft_split(cmd, ' '));
+	s_cmds = t_m->splt_cat;
 	l = ft_strlen(s_cmds);
 	if(l == 0)
 		return (0);
@@ -57,69 +58,6 @@ int	parse_errors(char *cmd, t_minishell *t_m)
 	if (i > 0)
 		if (s_cmds[i - 1] == '|' || s_cmds[i - 1] == '>' || s_cmds[i - 1] == '<')
 			return (0,t_m->e_v[0] = s_cmds[i - 1], t_m->e_v[1] = NULL, t_m->parse_error = true);
-}
-
-
-static enum TOKEN_TYPE	switcher(char *tken, token **t_l)
-{	
-	int	a;
-	if (strlen(tken) >= 2 && (ft_strchr(tken, '>') || ft_strchr(tken, '<') || ft_strchr(tken, '|')))
-	{
-		a = ft_m_strchr_i(tken, '>', '<');
-		while (a != -1)
-		{	
-			if (ft_strlen(ft_substr(tken, 0, a)))
-				token_push(t_l, token_new(ft_substr(tken, 0, a) , COMMAND));
-			token_push(t_l, token_new("", char_to_token(tken[a])));
-			tken = ft_substr(tken, a + 1, ft_strlen(tken));	
-			a = ft_m_strchr_i(tken, '>', '<');
-		}
-		if (ft_strlen(tken) > 0)
-			token_push(t_l, token_new(tken, COMMAND));
-		return (-1);
-	}
-	else
-	{	
-		if (strlen(tken) == 1 || *tken == '|')
-			return (char_to_token(*tken));
-		if (strlen(tken) == 2 && (*tken == '<' && tken[1] == '<'))
-			return (LESS_LESS);
-		if (strlen(tken) == 2 && (*tken == '>' && tken[1] == '>'))
-			return (GREAT_GREAT);
-	}
-	return (COMMAND);
-}
-
-static char	*fn_realloc_strcat(char *filled_str, char *cncat_str, int space_it)
-{
-	int		i;
-	int		j;
-	char	*temp;
-
-	temp = filled_str;
-	//filled_str = (char *) malloc((ft_strlen(temp) + ft_strlen(cncat_str) +  space_it ? 2 : 1));
-	filled_str = (char *) ft_calloc((ft_strlen(temp) + ft_strlen(cncat_str) +  space_it ? 2 : 1), sizeof(char));
-	i = 0;
-	printf("COPY [%s] into [%s] {%d}-size \n", temp, cncat_str, 
-		(ft_strlen(temp) + ft_strlen(cncat_str) +  (space_it ? 2 : 1))
-	);
-	while(temp[i])
-	{
-		filled_str[i] = temp[i];
-		i++;
-	}	
-	if(space_it)
-	{
-		filled_str[i++] = ' ';
-	}
-	j = 0;
-	while (cncat_str[j])
-	{
-		filled_str[i + j] = cncat_str[j];
-		j++;
-	}	
-	filled_str[i + j] = '\0';	
-	return (filled_str);
 }
 
 static void parse_quote(token **cmd_tokens, char **s_cmds, int *i)
@@ -183,6 +121,7 @@ int	parse_tokens(char *cmd, token **cmd_tokens, t_minishell *t_m)
 {	 
 	char			**s_cmds;	
 	char			*saved_s;
+	char			*temp;
 	int				i;
 
 	s_cmds = ft_split(cmd, ' ');
@@ -199,24 +138,33 @@ int	parse_tokens(char *cmd, token **cmd_tokens, t_minishell *t_m)
 				if (ft_strcmp(s_cmds[i], ">>") == 0)
 					token_dbl_push(cmd_tokens, token_new("", GREAT));
 				else
-					if (switcher(s_cmds[i], cmd_tokens) != -1)
-						token_push(cmd_tokens, token_new(s_cmds[i], switcher(s_cmds[i], cmd_tokens)));
+					if (switcher_i(s_cmds[i]) != -1)
+						token_push(cmd_tokens, token_new(s_cmds[i], switcher(s_cmds[i], cmd_tokens)));	
 				i++;
 			}	
 			else // CMD HAS SEPARATOR [; |]
-			{		
+			{	
 				int ix = ft_m_strchr_i(s_cmds[i], ';', '|');
 				saved_s = ft_substr(s_cmds[i], 0, ix);	
 				if (ft_strlen(saved_s) > 0)
 					token_push(cmd_tokens, token_new(saved_s, switcher(saved_s, cmd_tokens)));
+				else
+					free(saved_s);
 				token_push(cmd_tokens, token_new("", s_cmds[i][ix] == ';' ? SEPARATOR : PIPE));
 				if ((size_t)(ix + 1) == ft_strlen(s_cmds[i]))
-					i++;
-				else
+				{
+					free(s_cmds[i]);
+					i++;	
+				}else
+				{
+					temp = s_cmds[i];
 					s_cmds[i] = ft_substr(s_cmds[i], ix + 1, ft_strlen(s_cmds[i]));
+					free(temp);
+				}
 			}
 		}
 	}
+	free(s_cmds);
 	return(0);
 }
 
@@ -231,7 +179,6 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 	int		i;
 	int 	in = 0, ou = 0, s_ou_count = 0;
 	bool 	sp = false, lst_was_pipe = false;
-
 	i = 0;
 	t = token_last(*cmd_tokens);
 	commands = (t_cmd *) malloc(sizeof(struct s_cmd) * MAX_CMDS);
@@ -330,4 +277,13 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 	// apply_space_removal(t_m);
 	apply_is_piped_out(t_m);	
 	return (0);
+}
+
+void parse_free(t_minishell *t_m)
+{
+	int	i;
+
+	i = 0;
+	free(t_m->splt_cat);
+	free_tokens(t_m->cmd_tokens);
 }

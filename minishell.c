@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:07:22 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/22 14:37:40 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/23 17:44:34 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,10 @@
 void	minishell(t_minishell *t_m)
 {
 	char 	*line;
-	token	**cmd_tokens;
-
+	// token	**cmd_tokens;
+	signalignore(SIGQUIT);
+	signalsetter(SIGINT, handler);
+	
 	line = readline("$ ");
 	add_history(line);
 	while(line)
@@ -30,9 +32,11 @@ void	minishell(t_minishell *t_m)
 			add_history(line);
 			continue ;
 		}
-		cmd_tokens = (token **) malloc(sizeof(token **));
-		*cmd_tokens = NULL;
+		t_m->cmd_tokens = (token **) malloc(sizeof(token **));
+		*(t_m->cmd_tokens) = NULL;
+		
 		parse_errors(line, t_m);
+		// free(t_m->splt_cat);
 		if(t_m->parse_error)
 		{
 			printf("zsh: parse error near `%c%c' \n", t_m->e_v[0], t_m->e_v[1]);
@@ -40,11 +44,12 @@ void	minishell(t_minishell *t_m)
 			add_history(line);
 			continue ;
 		}
-		parse_tokens(line, cmd_tokens, t_m);
-		show_tokens(cmd_tokens);
-		parse_commands(t_m, cmd_tokens);
+		parse_tokens(line, t_m->cmd_tokens, t_m);
+		show_tokens(t_m->cmd_tokens);
+		parse_commands(t_m, t_m->cmd_tokens);
 		print_commands(t_m);
-		// exec_cmds(t_m);
+		exec_cmds(t_m);
+		parse_free(t_m);
 
 		line = readline("$ ");
 		add_history(line);
@@ -58,6 +63,7 @@ int main(int argc, char **argv, char **env)
 	(void)argv;
 	if(!env || argc > 1)
 		return (0);
+	shlvlhandler(env);
 	t_m = (t_minishell *) malloc(sizeof(t_minishell));
 	if(!t_m)
 		return (EXIT_FAILURE);

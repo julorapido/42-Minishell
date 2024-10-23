@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/21 12:44:05 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/23 17:44:01 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ enum TOKEN_TYPE
 	ARGUMENT
 };
 
-//	TOKEN
 typedef struct s_token
 {
 	char 			*cmd;
@@ -74,7 +73,6 @@ typedef struct s_token
 	struct s_token	*next;
 }	token;
 
-//	COMMAND
 typedef struct s_cmd
 {
 	char	*command;	
@@ -87,7 +85,6 @@ typedef struct s_cmd
 	bool	is_heredoc;
 }	t_cmd;
 
-// ENV (as linked-list)
 typedef struct	s_env
 {
 	char			*value;
@@ -105,6 +102,8 @@ typedef struct s_minishell
 	pid_t	*pid;			// array of all pids, one per command
 	int		(*pipes_fd)[2];	// array of pipes
 	int		*heredocs;		// array of heredocs
+	char 	*splt_cat;		// parseError splitcat
+	token	**cmd_tokens;	// arr of tokens
 }	t_minishell;
 
 
@@ -135,17 +134,17 @@ typedef struct s_pipes {
 // TOKEN UTILITES
 token			*token_new(char *s, enum TOKEN_TYPE ty);
 void			token_push(token **token_lst, token *new_t);
-void			show_tokens(token **cmd_tokens);
 token			*token_last(token	*head);
 char			*token_type_to_str(enum TOKEN_TYPE t);
 enum TOKEN_TYPE	char_to_token(char c);
 bool			str_is_onlysep(char *s);
 bool			is_char_operator(char c);
+void			show_tokens(token **cmd_tokens);
 void			token_dbl_push(token **token_lst, token *new_t);
+void			free_tokens(token **t_arr);
 
 
-
-// [PARSING, CMD] UTILITES
+// [PARSING] UTILITES
 void	fn_revstr(char *up_s);
 char	*cmd_remove_lstspace(char *s);
 void	print_commands(t_minishell *t_m);
@@ -154,6 +153,10 @@ void	apply_is_piped_out(t_minishell *t_m);
 void	apply_appends_reverse(t_minishell *t_m);
 void	apply_commands_reverse(t_minishell	*t_m);
 bool	is_parse_error(char *s);
+enum TOKEN_TYPE	switcher(char *tken, token **t_l);
+char	*fn_realloc_strcat(char *filled_str, char *cncat_str, int space_it);
+int		switcher_i(char *tken);
+
 
 // ENV
 char	*get_env(char **env);
@@ -165,10 +168,10 @@ int		env_init(t_minishell *t_m, char **argv);
 int		parse_tokens(char *cmd, token **cmd_tokens, t_minishell *t_m);
 int		parse_commands(t_minishell *t_m, token **cmd_tokens);
 int		parse_errors(char *cmd, t_minishell *t_m);
+void	parse_free(t_minishell *t_m);
 
 
-// EXECUTOR
-void	exec_cmds(t_minishell *t_m);
+
 
 // BUILT-IN
 int		f__cd(char **args, t_minishell *t_m);
@@ -181,15 +184,54 @@ int		is_builtin(char *c);
 void	run_builtin(t_minishell *t_m, int n_builtin, int fdout);
 
 
+/* GAUTIER LE G.O.A.T DU MULTITHREADING */
+// EXECUTOR
+void free_c_args(t_minishell	*t_m);
+void	exec_cmds(t_minishell *t_m);
+int	child_molestor(t_minishell *t_m, t_cmd *c, size_t i, int c_int,
+	char **outlist, char **nenv);
+int	dupclose(int fd2, int fd1);
+int	ft_waiter(t_minishell *t_m);
+void	ft_exec2(char *cmd, char **env);
+int	nullcommand(t_minishell *t_m, size_t i);
+
+// heredoc
+int		heredoc(char *eof, t_cmd *cmd, t_minishell *t_m);
+int		heredocalloc(t_minishell *t_m);
+int		delete_heredocs(t_minishell *t_m);
+int		childhead_handler(t_minishell *t_m, size_t i, t_cmd *c);
+int		childbutt_handler(t_minishell *t_m, size_t i, t_cmd *c, char **outlist);
+
+// UTILS
+char	**pipe_env(t_minishell *t_m);
+void shlvladd(char *env);
+
+// SIGNALS
+// void handle_sigint(int sig);
+char	*tmpnamer(void);
+void 	handler(int signum);
+void	int_heredoc(int signum);
+void	signalsetter(int signum, void (*handler)(int));
+void	shlvlhandler(char **env);
+void	shlvldetector(t_env *env);
+void	signalignore(int signum);
 // PIPEX
 void	exit_handler(int n_exit);
-int		open_file(char *file, int n);
+int		open_file(char *file, int n, int append);
 char	*my_getenv(char *name, char **env);
 char	*bget_path2(char *cmd, char **env);
 void	ft_free_tab(char **tab);
-int		heredoc(char *eof, t_cmd *cmd, int i);
-int		pipex(int argc, char **argv, char **env, t_minishell *t_m);
-int		hereorfile(t_pipes pipex);
 
+// // PIPEX
+// void	exit_handler(int n_exit);
+// int		open_file(char *file, int n);
+// char	*my_getenv(char *name, char **env);
+// char	*bget_path2(char *cmd, char **env);
+// void	ft_free_tab(char **tab);
+// int		heredoc(char *eof, t_cmd *cmd, int i);
+// int		pipex(int argc, char **argv, char **env, t_minishell *t_m);
+// int		hereorfile(t_pipes pipex);
+// // EXECUTOR
+// void	exec_cmds(t_minishell *t_m);
 
 #endif

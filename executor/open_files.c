@@ -3,97 +3,148 @@
 /*                                                        :::      ::::::::   */
 /*   open_files.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/17 13:32:41 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/18 13:21:41 by jsaintho         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   open_files.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
 /*   By: gchauvot <gchauvot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:49:14 by gchauvot          #+#    #+#             */
-/*   Updated: 2024/10/17 12:46:34 by gchauvot         ###   ########.fr       */
+/*   Updated: 2024/10/23 17:30:42 by gchauvot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	heredoc(char *eof, t_cmd *cmd, int i)
+int	dupclose(int fd2, int fd1)
 {
-	char	*line;
-	int		docfd;
+	if (dup2(fd2, fd1) == -1)
+		return (perror("minishell: "), exit(1), 1);
+	if (close(fd2) == -1)
+		return (perror("minishell: "), exit(1), 1);
+	return (0);
+	
+}
+
+char *tmpnamer()
+{
+	size_t		i;
+	char *res;
+
+	i = 0;
+	//fprintf(stderr, "name: %s\n", name);
+	//chdir("/home/gchauvot/Proj/Minishells/v7/temp/");
+	// name[0]='/';
+	// // if (name[0]=='a')
+	// // 	fprintf(stderr, "namqweqwee: %s\n", name);
+	// name[1]='a';
+	// name[2]=0;
+	while (i < 5000)
+	{
+		res = ft_itoa(i);
+		if(access(res, F_OK))
+			break ;
+		else
+			free(res);
+		i++;
+	}
+	return (res);
+}
+
+int	heredoc(char *eof, t_cmd *cmd, t_minishell *t_m)
+{
+
 	char	*tempfile;
 
-	//printf("cmd: %s\n", cmd->command);
-	tempfile = ft_strjoin("temp/", ft_itoa(i));
-	perror("join err: ");
-	printf("tempfile: %s\n", tempfile);
-	docfd = open(tempfile, O_WRONLY | O_CREAT | O_TRUNC, 0777);
-	// docfd = open("/path/to/dir", O_TMPFILE | O_RDWR, S_IRUSR | S_IWUSR);
-	perror("opehere err: ");
-	while (1)
+
+	tempfile = tmpnamer();
+	if (!tempfile)
+		return (perror("join err: "), -1);
+	pid_t pid;
+	signalignore(SIGINT);
+	int fdin;
+	fdin=dup(0);
+	close(0);
+	pid = fork();
+	if (!pid)
 	{
-		write(2, "heredoc>", 9);
-		line = get_next_line(0);
-		if (line[ft_strlen(line)-1] == '\n')
-			line[ft_strlen(line)-1] = '\0';
-		if (!ft_strcmp(line, eof))
-			break ;
-		line[ft_strlen(line)] = '\n';
-		ft_putstr_fd(line, docfd);
-		free(line);
+		dup2(fdin, 0);
+		close(fdin);
+		char	*line;
+		int		docfd;
+		signalsetter(SIGINT, SIG_DFL);
+		docfd = open(tempfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if(docfd == -1)
+			return (perror("openhere err: "), -1);
+		while (1)
+		{
+			line = readline("heredoc>");
+			if (line)
+			{
+				if(ft_strlen(eof) == ft_strlen(line))
+				{
+					if(!ft_strncmp(eof,line, ft_strlen(eof)))
+						break ;
+				}
+				ft_putendl_fd(line, docfd);
+				free(line);
+			}			
+		}
+		if (line)
+			free(line);
+		close(docfd);
+		exit (0);
 	}
-	line[ft_strlen(line)] = '\n';
-	close(docfd);
-	free(tempfile);
-	free(line);
-	return (docfd);
+	if(pid)
+	{
+		rl_replace_line("",0);
+		waitpid(pid,0,0);
+		rl_replace_line("",0);
+		rl_on_new_line();
+		rl_redisplay();
+		dup2(fdin, 0);
+		rl_replace_line("",0);
+	}
+	signalsetter(SIGINT, handler);
+	free(cmd->input);
+	cmd->input = tempfile;
+	return(3);
 }
 
 int	heredocalloc(t_minishell *t_m)
 {
 	t_cmd	*c;
-	int		i;
+	size_t	i;
 
 	i = 0;
-	t_m->heredocs = ft_calloc(t_m->cmd_count + 1, sizeof(int));
+	// t_m->heredocs = ft_calloc(t_m->cmd_count + 1, sizeof(int));
+	// if (!t_m->heredocs)
+	// 	return (perror ("minishell_heredocalloc:"), -1);
 	while(i <= t_m->cmd_count - 1)
 	{
-		c = &(t_m->commands[i]);	
+		c = &(t_m->commands[i]);
 		if(c->is_heredoc)
-			t_m->heredocs[i] = heredoc(c->input, c, i);
-		i++;	
+			heredoc(c->input, c, t_m);
+		// if(t_m->heredocs[i] == -1)
+		// 	return (-1);
+		i++;
+
 	}
 	return (1);
-}
-int	open_files(char *filename, t_cmd *cmd, t_minishell *t_m)
-{
-
 }
 
 int	delete_heredocs(t_minishell *t_m)
 {
-	int	i;
-	t_cmd *c;
-	char	*fname;
+	size_t	i;
+	t_cmd	*c;
 
 	i = 0;
 	while(i < t_m->cmd_count)
 	{
 		c = &(t_m->commands[i]);
-		fname = ft_strjoin("temp/", ft_itoa(i));
 		if(c->is_heredoc)
 		{
-			unlink(fname);
-			perror("unlink1");
+			unlink(c->input);
+			free(c->input);
 		}
-		free(fname);
 		i++;
 	}
+	return (0);
 }
+
