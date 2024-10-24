@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:55:36 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/24 17:23:34 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/24 17:31:01 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,9 +104,7 @@ char	*fn_realloc_strcat(char *filled_str, char *cncat_str, int space_it)
 	}
 	free(temp);
 	if(space_it)
-	{
 		filled_str[i++] = ' ';
-	}
 	j = 0;
 	while (cncat_str[j])
 	{
@@ -142,44 +140,6 @@ char	*cmd_remove_lstspace(char *s)
 	}
 	new_s[j] = '\0';
 	return (new_s);
-}
-
-void	apply_space_removal(t_minishell *t_m)
-{
-	int		i;
-	t_cmd	*cmd__;
-	char	*temp_cmd;
-
-	i = 0;
-	while ((size_t)(i) < t_m->cmd_count)
-	{
-		cmd__ = &(t_m->commands[i]);
-		if (!(cmd__->command))
-			break;
-		temp_cmd = cmd_remove_lstspace(cmd__->command);
-		cmd__->command = temp_cmd;
-		i++;
-	}
-}
-
-void	apply_is_piped_out(t_minishell *t_m)
-{
-	int		i;
-	t_cmd	*cmd__;
-
-	i = 0;
-	while ((size_t)(i) < t_m->cmd_count)
-	{
-		if(!(&(t_m->commands[i])))
-			break ;
-		cmd__ = &(t_m->commands[i]);
-		if (&(t_m->commands[i + 1]) && ((&(t_m->commands[i + 1]))->input))
-		{
-			//if ((cmd__->n_redirections > 0) && (ft_strcmp((&(t_m->commands[i + 1]))->input , "pipe") == 0) )
-				// cmd__->is_piped_out = true;
-		}
-		i++;
-	}
 }
 
 void	print_commands(t_minishell *t_m)
@@ -236,23 +196,42 @@ void	apply_commands_reverse(t_minishell	*t_m)
 	}
 }
 
-void	apply_appends_reverse(t_minishell *t_m)
+/*
+void	apply_space_removal(t_minishell *t_m)
 {
-	/*int		i;
-	int		j;
-	int		temp;
+	int		i;
+	t_cmd	*cmd__;
+	char	*temp_cmd;
 
 	i = 0;
 	while ((size_t)(i) < t_m->cmd_count)
 	{
-		j = 0;
-		while(j < t_m->commands[i]->n_redirections)
+		cmd__ = &(t_m->commands[i]);
+		if (!(cmd__->command))
+			break;
+		temp_cmd = cmd_remove_lstspace(cmd__->command);
+		cmd__->command = temp_cmd;
+		i++;
+	}
+}
+
+void	apply_is_piped_out(t_minishell *t_m)
+{
+	int		i;
+	t_cmd	*cmd__;
+
+	i = 0;
+	while ((size_t)(i) < t_m->cmd_count)
+	{
+		if(!(&(t_m->commands[i])))
+			break ;
+		cmd__ = &(t_m->commands[i]);
+		if (&(t_m->commands[i + 1]) && ((&(t_m->commands[i + 1]))->input))
 		{
-			temp = t_m->commands[i]->appends[j];
-			t_m->commands[i] = ((t_m->commands[i])->appends)[t_m->commands[i]->n_redirections - j];
-			((t_m->commands[i]->)appends)[t_m->commands[i]->n_redirections - j] = temp;
-			j++;
+			//if ((cmd__->n_redirections > 0) && (ft_strcmp((&(t_m->commands[i + 1]))->input , "pipe") == 0) )
+				// cmd__->is_piped_out = true;
 		}
 		i++;
-	}*/
+	}
 }
+*/

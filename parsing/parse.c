@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 17:46:03 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/24 17:22:27 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/24 17:29:59 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -281,9 +281,8 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 	t_m->commands = commands;
 	t_m->cmd_count = i + 1;
 	apply_commands_reverse(t_m);
-	apply_appends_reverse(t_m);
 	// apply_space_removal(t_m);
-	apply_is_piped_out(t_m);	
+	// apply_is_piped_out(t_m);	
 	return (0);
 }
 

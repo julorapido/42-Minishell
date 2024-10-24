@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:07:22 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/24 15:09:01 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/24 17:31:54 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 void	minishell(t_minishell *t_m)
 {
 	char 	*line;
-	// token	**cmd_tokens;
 	signalignore(SIGQUIT);
 	signalsetter(SIGINT, handler);
 	
@@ -35,8 +34,7 @@ void	minishell(t_minishell *t_m)
 		t_m->cmd_tokens = (token **) malloc(sizeof(token **));
 		*(t_m->cmd_tokens) = NULL;
 		
-		parse_errors(line, t_m);
-		// free(t_m->splt_cat);
+		parse_errors(line, t_m);	
 		if(t_m->parse_error)
 		{
 			printf("zsh: parse error near `%c%c' \n", t_m->e_v[0], t_m->e_v[1]);
@@ -47,7 +45,7 @@ void	minishell(t_minishell *t_m)
 		parse_tokens(line, t_m->cmd_tokens, t_m);
 		//show_tokens(t_m->cmd_tokens);
 		parse_commands(t_m, t_m->cmd_tokens);
-		print_commands(t_m);
+		//print_commands(t_m);
 		//exec_cmds(t_m);
 		parse_free(t_m);
 
