@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:55:36 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/24 12:58:22 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/24 13:04:12 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,10 +77,8 @@ enum TOKEN_TYPE	switcher(char *tken, token **t_l)
 		}	
 		if (ft_strlen(tken) > 0)
 			token_push(t_l, token_new(tken, COMMAND));
-		else{
+		else
 			free(tken);
-			free(s);
-		}
 		return (-1);
 	}
 	else
