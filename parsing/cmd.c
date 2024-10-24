@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:55:36 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/24 15:03:29 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/24 16:32:57 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,15 +79,12 @@ enum TOKEN_TYPE	switcher(char *tken, token **t_l)
 			free(tken);
 		return (-1);
 	}
-	else
-	{
-		if (strlen(tken) == 1 || *tken == '|')
-			return (char_to_token(*tken));
-		if (strlen(tken) == 2 && (*tken == '<' && tken[1] == '<'))
-			return (LESS_LESS);
-		if (strlen(tken) == 2 && (*tken == '>' && tken[1] == '>'))
-			return (GREAT_GREAT);
-	}
+	if (strlen(tken) == 1 || *tken == '|')
+		return (char_to_token(*tken));
+	if (strlen(tken) == 2 && (*tken == '<' && tken[1] == '<'))
+		return (LESS_LESS);
+	if (strlen(tken) == 2 && (*tken == '>' && tken[1] == '>'))
+		return (GREAT_GREAT);
 	return (COMMAND);
 }
 
@@ -99,12 +96,13 @@ char	*fn_realloc_strcat(char *filled_str, char *cncat_str, int space_it)
 
 	temp = filled_str;	
 	filled_str = (char *) ft_calloc((ft_strlen(temp) + ft_strlen(cncat_str) +  ((space_it) ? (2) : (1))), sizeof(char));
-	i = 0;	
+	i = 0;
 	while(temp[i])
 	{
 		filled_str[i] = temp[i];
 		i++;
-	}	
+	}
+	free(temp);
 	if(space_it)
 	{
 		filled_str[i++] = ' ';

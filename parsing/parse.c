@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 17:46:03 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/24 15:03:14 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/24 17:05:24 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ static void parse_quote(token **cmd_tokens, char **s_cmds, int *i)
 	int		o;
 	int		p;
 	char	*al_s1;
+	char	*al_s2;
+	char	*al_s3;
 	token	*t;
 	int		quote_ix;
 
@@ -74,7 +76,7 @@ static void parse_quote(token **cmd_tokens, char **s_cmds, int *i)
 	ft_strlcpy(s_quote, s_cmds[(*i)], ft_strlen(s_cmds[(*i)]) + 1);
 	al_s1 = ft_substr(s_cmds[(*i)], 1, ft_strlen(s_cmds[(*i)]));
 	if(s_cmds[(*i) + 1] && (s_cmds[(*i)][ft_strlen(s_cmds[(*i)]) - 1] != '\"') && ft_strchr(al_s1, '\"') && ft_strchr(al_s1, ' '))
-	{	
+	{
 		(*i)++;
 		// CONCATENATE UNTIL NEW "
 		while(ft_strchr(s_cmds[(*i)], '\"') == NULL)
@@ -85,30 +87,35 @@ static void parse_quote(token **cmd_tokens, char **s_cmds, int *i)
 				break;
 		}
 		if((*i) != o + 1 && s_cmds[(*i)] != NULL)
-		{	
+		{
 			s_quote = fn_realloc_strcat(s_quote, s_cmds[(*i)], 1);
 			(*i)++;
 		}
 		p = (!s_cmds[(*i)]) ? ((*i) - 1) : (*i);
 		if((*i) != o + 1)
-		{
-			while (p > o)
+		{	
+			while (p >= o)
 			{
 				free(s_cmds[p]);
 				p--;
 			}
 		}
 	}
-	else if ( ft_strchr(ft_substr(s_cmds[(*i)], 1, ft_strlen(s_cmds[(*i)])), '\"')
-		&& (s_cmds[(*i)][ft_strlen(s_cmds[(*i)]) - 1] != '\"')
-	){	
-		quote_ix = ft_m_strchr_i(ft_substr(s_cmds[(*i)], 1, ft_strlen(s_cmds[(*i)]) - 1), '\"', '\"') + 2;
-		s_quote = ft_substr(s_cmds[(*i)], 0, quote_ix);	
-		token_push(cmd_tokens, token_new(s_quote, QUOTE));
+	else if (ft_strchr(al_s1, '\"') && (s_cmds[(*i)][ft_strlen(s_cmds[(*i)]) - 1] != '\"')
+	){
+		al_s2 = ft_substr(s_cmds[(*i)], 1, ft_strlen(s_cmds[(*i)]) - 1);
+		quote_ix = ft_m_strchr_i(al_s2, '\"', '\"') + 2;
+		token_push(cmd_tokens, token_new(ft_substr(s_cmds[(*i)], 0, quote_ix), QUOTE));
+		al_s3 = s_cmds[(*i)];
 		s_cmds[(*i)] = ft_substr(s_cmds[(*i)], quote_ix, ft_strlen(s_cmds[(*i)]));
+		free(al_s1);
+		free(s_quote);
+		free(al_s2);
+		free(al_s3);
 		return;
 	}else
-		free(s_cmds[(*i)]);	
+		free(s_cmds[(*i)]);
+	free(al_s1);
 	t = token_new(s_quote, QUOTE);
 	token_push(cmd_tokens, t);
 	(*i)++;
@@ -140,7 +147,7 @@ int	parse_tokens(char *cmd, token **cmd_tokens, t_minishell *t_m)
 				else
 				{
 					if (strlen(s_cmds[i]) >= 2 && (ft_strchr(s_cmds[i], '>') || ft_strchr(s_cmds[i], '<') || ft_strchr(s_cmds[i], '|')))
-						/*token_push(t_m->cmd_tokens, token_new(s_cmds[i], */switcher(s_cmds[i], t_m->cmd_tokens);//));
+						switcher(s_cmds[i], t_m->cmd_tokens);
 					else
 						token_push(t_m->cmd_tokens, token_new(s_cmds[i], switcher(s_cmds[i], t_m->cmd_tokens)));
 				}
@@ -158,7 +165,7 @@ int	parse_tokens(char *cmd, token **cmd_tokens, t_minishell *t_m)
 				if ((size_t)(ix + 1) == ft_strlen(s_cmds[i]))
 				{
 					free(s_cmds[i]);
-					i++;	
+					i++;
 				}else
 				{
 					temp = s_cmds[i];
@@ -189,6 +196,8 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 	for(int i = 0; i< MAX_CMDS ; i ++)
 	{
 		(&commands[i])->command = NULL;	
+		(&commands[i])->output = NULL;
+		(&commands[i])->input = NULL;
 		for(int j = 0; j < MAX_OUTFILES; j++)
 			(&commands[i])->appends[j] = 0;
 	}
@@ -288,6 +297,18 @@ void parse_free(t_minishell *t_m)
 	int	i;
 
 	i = 0;
-	free(t_m->splt_cat);
+	if(t_m->splt_cat)
+		free(t_m->splt_cat);
+	while (i < t_m->cmd_count)
+	{
+		if ((t_m->commands[i]).command != NULL)
+			free((t_m->commands[i]).command);
+		//if ((t_m->commands[i]).output != NULL)
+		//	free((t_m->commands[i]).output);
+		//if ((t_m->commands[i]).input != NULL)
+		//	free((t_m->commands[i]).input);
+		i++;
+	}
+	// free(t_m->commands);
 	free_tokens(t_m->cmd_tokens);
 }
