@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 17:46:03 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/24 13:20:39 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/24 15:03:14 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,13 +134,15 @@ int	parse_tokens(char *cmd, token **cmd_tokens, t_minishell *t_m)
 		{
 			// CMD HAS NO [; |] or is strict equal to [>, <, |, ;]
 			if (ft_strlen(s_cmds[i]) == 1 || (!ft_strchr(s_cmds[i], ';') && !ft_strchr(s_cmds[i], '|'))) 
-			{
-				printf("s[%s] i:%d \n", s_cmds[i], i);
+			{	
 				if (ft_strcmp(s_cmds[i], ">>") == 0)
-				{
 					token_dbl_push(t_m->cmd_tokens);
-				}else{
-					token_push(t_m->cmd_tokens, token_new(s_cmds[i], switcher(s_cmds[i], t_m->cmd_tokens)));
+				else
+				{
+					if (strlen(s_cmds[i]) >= 2 && (ft_strchr(s_cmds[i], '>') || ft_strchr(s_cmds[i], '<') || ft_strchr(s_cmds[i], '|')))
+						/*token_push(t_m->cmd_tokens, token_new(s_cmds[i], */switcher(s_cmds[i], t_m->cmd_tokens);//));
+					else
+						token_push(t_m->cmd_tokens, token_new(s_cmds[i], switcher(s_cmds[i], t_m->cmd_tokens)));
 				}
 				i++;
 			}	

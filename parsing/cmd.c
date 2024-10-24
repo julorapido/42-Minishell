@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:55:36 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/24 13:04:12 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/24 15:03:29 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,25 +54,23 @@ void	fn_revstr(char *up_s)
 }
 
 
+
 enum TOKEN_TYPE	switcher(char *tken, token **t_l)
 {	
 	int		a;
 	char	*s;
-	//char	*s2;
 	if (strlen(tken) >= 2 && (ft_strchr(tken, '>') || ft_strchr(tken, '<') || ft_strchr(tken, '|')))
 	{
 		a = ft_m_strchr_i(tken, '>', '<');
 		while (a != -1)
 		{
 			s = ft_substr(tken, 0, a);
-			if (ft_strlen(s) > 0)
+			if (ft_strlen(s))	
 				token_push(t_l, token_new(s, COMMAND));
 			else
-				free(s);
-			token_push(t_l, token_new("", char_to_token(tken[a])));
-			//s2 = tken;
+				free(s);	
+			token_push(t_l, token_new("", char_to_token(tken[a])));	
 			tken = ft_substr(tken, a + 1, ft_strlen(tken));
-			// free(s2);
 			a = ft_m_strchr_i(tken, '>', '<');
 		}	
 		if (ft_strlen(tken) > 0)
