@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/23 17:44:01 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/24 13:21:16 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ enum TOKEN_TYPE	char_to_token(char c);
 bool			str_is_onlysep(char *s);
 bool			is_char_operator(char c);
 void			show_tokens(token **cmd_tokens);
-void			token_dbl_push(token **token_lst, token *new_t);
+void			token_dbl_push(token **token_lst);
 void			free_tokens(token **t_arr);
 
 

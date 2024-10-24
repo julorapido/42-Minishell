@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 16:27:11 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/23 16:11:30 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/24 13:20:47 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,10 +84,10 @@ void	token_push(token **token_lst, token *new_t)
 	}
 }
 
-void	token_dbl_push(token **token_lst, token *new_t)
+void	token_dbl_push(token **token_lst)
 {
-	token_push(token_lst, new_t);
-	token_push(token_lst, new_t);
+	token_push(token_lst, token_new("", GREAT));
+	token_push(token_lst, token_new("", GREAT));
 }
 
 char	*token_type_to_str(enum TOKEN_TYPE t)
