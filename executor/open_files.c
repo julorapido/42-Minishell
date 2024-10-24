@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   open_files.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gchauvot <gchauvot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:49:14 by gchauvot          #+#    #+#             */
-/*   Updated: 2024/10/23 17:30:42 by gchauvot         ###   ########.fr       */
+/*   Updated: 2024/10/24 12:03:23 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,11 +93,7 @@ int	heredoc(char *eof, t_cmd *cmd, t_minishell *t_m)
 	}
 	if(pid)
 	{
-		rl_replace_line("",0);
 		waitpid(pid,0,0);
-		rl_replace_line("",0);
-		rl_on_new_line();
-		rl_redisplay();
 		dup2(fdin, 0);
 		rl_replace_line("",0);
 	}

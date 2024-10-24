@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 17:46:03 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/23 17:25:16 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/24 12:48:21 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,10 +136,9 @@ int	parse_tokens(char *cmd, token **cmd_tokens, t_minishell *t_m)
 			if (ft_strlen(s_cmds[i]) == 1 || (!ft_strchr(s_cmds[i], ';') && !ft_strchr(s_cmds[i], '|'))) 
 			{
 				if (ft_strcmp(s_cmds[i], ">>") == 0)
-					token_dbl_push(cmd_tokens, token_new("", GREAT));
+					token_dbl_push(t_m->cmd_tokens, token_new("", GREAT));
 				else
-					if (switcher_i(s_cmds[i]) != -1)
-						token_push(cmd_tokens, token_new(s_cmds[i], switcher(s_cmds[i], cmd_tokens)));	
+					token_push(t_m->cmd_tokens, token_new(s_cmds[i], switcher(s_cmds[i], t_m->cmd_tokens)));	
 				i++;
 			}	
 			else // CMD HAS SEPARATOR [; |]

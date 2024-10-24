@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:55:36 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/23 17:34:24 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/24 12:58:22 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,41 +53,38 @@ void	fn_revstr(char *up_s)
 	free(s_p);
 }
 
-int		switcher_i(char *tken)
-{
-	if (strlen(tken) >= 2 && (ft_strchr(tken, '>') || ft_strchr(tken, '<') || ft_strchr(tken, '|')))
-		return (-1);
-	else
-		return (10);
-}
 
 enum TOKEN_TYPE	switcher(char *tken, token **t_l)
 {	
 	int		a;
 	char	*s;
+	//char	*s2;
 	if (strlen(tken) >= 2 && (ft_strchr(tken, '>') || ft_strchr(tken, '<') || ft_strchr(tken, '|')))
 	{
 		a = ft_m_strchr_i(tken, '>', '<');
 		while (a != -1)
 		{
-			printf("ecume %s \n", tken);
 			s = ft_substr(tken, 0, a);
-			if (ft_strlen(s))
+			if (ft_strlen(s) > 0)
 				token_push(t_l, token_new(s, COMMAND));
 			else
 				free(s);
 			token_push(t_l, token_new("", char_to_token(tken[a])));
+			//s2 = tken;
 			tken = ft_substr(tken, a + 1, ft_strlen(tken));
+			// free(s2);
 			a = ft_m_strchr_i(tken, '>', '<');
 		}	
 		if (ft_strlen(tken) > 0)
 			token_push(t_l, token_new(tken, COMMAND));
-		else
+		else{
 			free(tken);
+			free(s);
+		}
 		return (-1);
 	}
 	else
-	{	
+	{
 		if (strlen(tken) == 1 || *tken == '|')
 			return (char_to_token(*tken));
 		if (strlen(tken) == 2 && (*tken == '<' && tken[1] == '<'))
