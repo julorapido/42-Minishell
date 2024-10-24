@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:55:36 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/24 16:32:57 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/24 17:23:34 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,14 +206,15 @@ void	print_commands(t_minishell *t_m)
 		}
 		if (cmd__->n_redirections > 1)
 		{
-			printf(" [%d out_files : {", cmd__->n_redirections);
-			for(int i = 0; i < cmd__->n_redirections; i++)
-				printf("%s%s", cmd__->appends[i] == 1 ? ">>": ">", i < cmd__->n_redirections - 1 ? ", "  : "");
-			printf("} ]");
-		}else{
-			if(cmd__->appends[0] == 1)
-				printf(" [>>]");
+			printf(" [%d out_files] ", cmd__->n_redirections);
+			//for(int i = 0; i < cmd__->n_redirections; i++)
+			//	printf("%s%s", cmd__->appends[i] == 1 ? ">>": ">", i < cmd__->n_redirections - 1 ? ", "  : "");
+			//printf("} ]");
+			if(cmd__->is_append)
+				printf("[>> append]");
 		}
+		if(cmd__->is_append)
+			printf(" [>> append] ");
 		printf("\n");
 		i++;
 	}

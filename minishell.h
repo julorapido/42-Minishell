@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/24 13:21:16 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/24 17:14:28 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,8 @@ typedef struct s_cmd
 	char	*input;
 	char	*output;
 	int		n_redirections;
-	int		appends[MAX_OUTFILES];
+	//int		appends[MAX_OUTFILES];
+	int		is_append;
 	bool	is_piped_out;
 	bool	is_stdin;
 	bool	is_heredoc;

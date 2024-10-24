@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 17:46:03 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/24 17:05:24 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/24 17:22:27 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,7 +188,7 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 	t_cmd	*commands;
 	t_cmd	*cmd__;
 	int		i;
-	int 	in = 0, ou = 0, s_ou_count = 0;
+	int 	in = 0, ou = 0, append = 0;
 	bool 	sp = false, lst_was_pipe = false;
 	i = 0;
 	t = token_last(*cmd_tokens);
@@ -198,8 +198,6 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 		(&commands[i])->command = NULL;	
 		(&commands[i])->output = NULL;
 		(&commands[i])->input = NULL;
-		for(int j = 0; j < MAX_OUTFILES; j++)
-			(&commands[i])->appends[j] = 0;
 	}
 	while(t)
 	{
@@ -224,21 +222,17 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 		// redirections [>] appends [>>]
 		if (t->t == GREAT_GREAT || t->t == GREAT)
 		{	
-			if(t->prev)
-				if((t->prev)->t == GREAT)
-					cmd__->appends[s_ou_count] = 1;
 			if((t->next) && (t->next)->cmd && (ft_strlen((t->next)->cmd) > 0))
 			{	
 				if(ou > 0)
-				{
 					cmd__->output = fn_realloc_strcat(cmd__->output, (t->next)->cmd, 1);
-					s_ou_count++;
-				}
 				else
 					cmd__->output = (t->next)->cmd;
 				ou++;
 			}	
 		}
+		if (!(t->t == GREAT_GREAT || t->t == GREAT))	
+			append = 0;
 		// input [<] heredoc [<<]
 		if ((t->t == LESS_LESS || t->t == LESS) && (in < 1))
 		{
@@ -264,17 +258,18 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 				else
 					cmd__->output = ft_strdup("STD_OUT");
 			}
-			if(!(ft_strcmp(cmd__->output, "STD_OUT") == 0) && ft_strcmp(cmd__->output, "pipe") != 0 
-					&& ft_strlen(cmd__->output) <= 1)
+			if(!(ft_strcmp(cmd__->output, "STD_OUT") == 0) && ft_strcmp(cmd__->output, "pipe") != 0 && ft_strlen(cmd__->output) <= 1)
 				fn_revstr(cmd__->output);
 			if (t->t == PIPE || t->t == SEPARATOR)
 			{
 				lst_was_pipe = (t->t == PIPE) ? (true) : (false);
+				if(append == 2)
+					cmd__->is_append = true;
 				//if(cmd__->command)
 				//{
 					i++;
 				//}
-				s_ou_count = ou = in = 0;
+				ou = in = append = 0;
 			}
 			fn_revstr(cmd__->command);
 		}
