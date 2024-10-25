@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 12:26:34 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/21 16:07:53 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/25 14:23:36 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,6 @@ static int	env_len(t_env *t)
 	return (i);
 }
 
-static int	left_part_len(t_env *t)
-{
-	int		i;
-
-	i = 0;
-	while(t->value[i] != '=')
-		i++;
-	return (i);
-}
-
 static void	display(int argc, char *argv[])
 {
 	int	i;
@@ -54,7 +44,6 @@ void	f__export(t_minishell *t)
 	t_env	*h;
 	char	**w;
 	int		i;
-	int		j;
 	int		l;
 
 	i = 0;

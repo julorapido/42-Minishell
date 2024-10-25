@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 15:43:14 by gchauvot          #+#    #+#             */
-/*   Updated: 2024/10/23 17:44:17 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/25 14:22:38 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void handler(int signum)
 
 void	int_heredoc(int signum)
 {
+	(void)(signum);
 	exit(1);
 }
 void shlvldetector(t_env *env)

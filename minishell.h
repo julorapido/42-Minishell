@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/25 11:52:40 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/25 17:30:07 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,10 @@
 # define MAX_CMDS 512
 # define MAX_OUTFILES 64
 
+# define M_TKEN(x) (x == ';') ? SEPARATOR : PIPE 
+# define M_CMD(x) (x) ? "STD_IN" : "pipe";
+
+
 /*
 {
 	PIPE = |
@@ -73,6 +77,14 @@ typedef struct s_token
 	struct s_token	*next;
 }	token;
 
+typedef struct s_cmd_parsing
+{
+	int		in;
+	int		ou;
+	int		append;
+	bool	s;
+}	parse_cmd;
+
 typedef struct s_cmd
 {
 	char	*command;	
@@ -94,17 +106,18 @@ typedef struct	s_env
 
 typedef struct s_minishell
 {
-	t_env	*env;		// saved environment
-	t_cmd	*commands;	// commands list
-	size_t	cmd_count;	// command count
-	char	**c_args;	// splited args (for built-ins)
-	bool	parse_error;	// parse error in current command
-	char	e_v[2];			// parse error info (zsh: parse error near `<.//>')
-	pid_t	*pid;			// array of all pids, one per command
-	int		(*pipes_fd)[2];	// array of pipes
-	int		*heredocs;		// array of heredocs
-	char 	*splt_cat;		// parseError splitcat
-	token	**cmd_tokens;	// arr of tokens
+	t_env				*env;		// saved environment
+	t_cmd				*commands;	// commands list
+	size_t				cmd_count;	// command count
+	char				**c_args;	// splited args (for built-ins)
+	bool				parse_error;	// parse error in current command
+	char				e_v[2];			// parse error info (zsh: parse error near `<.//>')
+	pid_t				*pid;			// array of all pids, one per command
+	int					(*pipes_fd)[2];	// array of pipes
+	int					*heredocs;		// array of heredocs
+	char 				*splt_cat;		// parseError splitcat
+	token				**cmd_tokens;	// arr of tokens
+	struct s_cmd_parsing	p_cmd;
 }	t_minishell;
 
 
@@ -171,7 +184,7 @@ int		parse_tokens(char *cmd, token **cmd_tokens, t_minishell *t_m);
 int		parse_commands(t_minishell *t_m, token **cmd_tokens);
 int		parse_errors(char *cmd, t_minishell *t_m);
 void	parse_free(t_minishell *t_m);
-
+void	parse_quote(token **cmd_tokens, char **s_cmds, int *i);
 
 
 

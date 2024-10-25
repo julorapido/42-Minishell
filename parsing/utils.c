@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd.c                                              :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:55:36 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/25 11:52:21 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/25 17:57:56 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ enum TOKEN_TYPE	switcher(char *tken, token **t_l)
 {	
 	int		a;
 	char	*s;
+	char	*tt;
 	if (strlen(tken) >= 2 && (ft_strchr(tken, '>') || ft_strchr(tken, '<') || ft_strchr(tken, '|')))
 	{
 		a = ft_m_strchr_i(tken, '>', '<');
@@ -70,7 +71,9 @@ enum TOKEN_TYPE	switcher(char *tken, token **t_l)
 			else
 				free(s);	
 			token_push(t_l, token_new("", char_to_token(tken[a])));	
+			tt = tken;
 			tken = ft_substr(tken, a + 1, ft_strlen(tken));
+			free(tt);
 			a = ft_m_strchr_i(tken, '>', '<');
 		}	
 		if (ft_strlen(tken) > 0)
@@ -199,13 +202,10 @@ void	apply_commands_reverse(t_minishell	*t_m)
 void	apply_is_stds(t_minishell *t_m)
 {
 	int		i;
-	t_cmd	temp;
 
 	i = 0;
 	while ((size_t)(i) < t_m->cmd_count / 2)
 	{
-		temp = t_m->commands[i];
-
 		if (!ft_strcmp((&t_m->commands[i])->input, "STD_IN"))
 			(&(t_m->commands[i]))->is_stdin = true;
 		if (!ft_strcmp((&t_m->commands[i])->input, "STD_OUT"))
@@ -213,6 +213,28 @@ void	apply_is_stds(t_minishell *t_m)
 		i++;
 	}
 }
+
+void parse_free(t_minishell *t_m)
+{
+	size_t	i;
+
+	i = 0;
+	if(t_m->splt_cat)
+		free(t_m->splt_cat);
+	while (i < t_m->cmd_count)
+	{
+		if ((t_m->commands[i]).command != NULL)
+			free((t_m->commands[i]).command);
+		//if (*((t_m->commands[i]).output))
+		//	free((t_m->commands[i]).output);
+		//if (*((t_m->commands[i]).input))
+		//	free((t_m->commands[i]).input);
+		i++;
+	}
+	// free(t_m->commands);
+	free_tokens(t_m->cmd_tokens);
+}
+
 
 /*
 void	apply_space_removal(t_minishell *t_m)

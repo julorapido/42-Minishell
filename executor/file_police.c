@@ -6,7 +6,7 @@
 /*   By: gchauvot <gchauvot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 16:41:20 by gchauvot          #+#    #+#             */
-/*   Updated: 2024/10/23 15:29:19 by gchauvot         ###   ########.fr       */
+/*   Updated: 2024/10/25 15:09:35 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int childbutt_handler(t_minishell *t_m, size_t i, t_cmd *c, char **outlist)
 	{		
 		while(x <= n_out)
 		{
-			fdout = open_file(outlist[x], 1, c->appends[x]);
+			fdout = open_file(outlist[x], 1, 0);
 			dup2(fdout, 1);
 			close(fdout);
 			x++;

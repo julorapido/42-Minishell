@@ -6,13 +6,11 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 16:27:11 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/24 17:33:07 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/25 18:04:18 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// https://medium.com/@abkabex/minishell-42-f680eadde592
 
 token	*token_last(token	*head)
 {
@@ -148,8 +146,9 @@ void	free_tokens(token **t_arr)
 	{
 		t = head;
 		head = head->next;
-		if (ft_strlen(t->cmd) > 0)
-			free(t->cmd);	
+		if(t->cmd)
+			if (ft_strlen(t->cmd) > 0)
+				free(t->cmd);	
 		free(t);
 	}
 	free(t_arr);

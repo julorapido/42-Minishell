@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 11:21:49 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/18 15:24:43 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/25 14:21:49 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,7 @@ void	free_node(t_minishell *t_m, t_env *env)
 
 int	f__unset(t_minishell *t_m)
 {
-	t_env	*h;
-	t_env	*tmp;
+	t_env	*h;	
 	char	**args;
 	int		i;
 
@@ -60,7 +59,7 @@ int	f__unset(t_minishell *t_m)
 				//tmp = (h)->next;
 				// free_node(t_m, h->next);
 				//h = tmp;
-				h->next=h->next->next;
+				h->next = h->next->next;
 			}
 			i++;
 		}
