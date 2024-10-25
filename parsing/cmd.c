@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:55:36 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/24 17:31:01 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/25 11:52:21 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,6 +192,24 @@ void	apply_commands_reverse(t_minishell	*t_m)
 
 		t_m->commands[i] = t_m->commands[(t_m->cmd_count - 1) - i];
 		t_m->commands[(t_m->cmd_count - 1) - i] = temp;
+		i++;
+	}
+}
+
+void	apply_is_stds(t_minishell *t_m)
+{
+	int		i;
+	t_cmd	temp;
+
+	i = 0;
+	while ((size_t)(i) < t_m->cmd_count / 2)
+	{
+		temp = t_m->commands[i];
+
+		if (!ft_strcmp((&t_m->commands[i])->input, "STD_IN"))
+			(&(t_m->commands[i]))->is_stdin = true;
+		if (!ft_strcmp((&t_m->commands[i])->input, "STD_OUT"))
+			(&(t_m->commands[i]))->is_stdout = true;
 		i++;
 	}
 }

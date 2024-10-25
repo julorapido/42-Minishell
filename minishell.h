@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/24 17:14:28 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/25 11:52:40 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,11 +78,11 @@ typedef struct s_cmd
 	char	*command;	
 	char	*input;
 	char	*output;
-	int		n_redirections;
-	//int		appends[MAX_OUTFILES];
+	int		n_redirections;	
 	int		is_append;
 	bool	is_piped_out;
 	bool	is_stdin;
+	bool	is_stdout;
 	bool	is_heredoc;
 }	t_cmd;
 
@@ -153,6 +153,7 @@ void	apply_space_removal(t_minishell *t_m);
 void	apply_is_piped_out(t_minishell *t_m);
 void	apply_appends_reverse(t_minishell *t_m);
 void	apply_commands_reverse(t_minishell	*t_m);
+void	apply_is_stds(t_minishell *t_m);
 bool	is_parse_error(char *s);
 enum TOKEN_TYPE	switcher(char *tken, token **t_l);
 char	*fn_realloc_strcat(char *filled_str, char *cncat_str, int space_it);
