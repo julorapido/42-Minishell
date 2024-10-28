@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/28 12:52:03 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/28 17:50:17 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ typedef struct s_cmd
 	bool	is_stdin;
 	bool	is_stdout;
 	bool	is_heredoc;
+	bool	continue_;
 }	t_cmd;
 
 typedef struct	s_env

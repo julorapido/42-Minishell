@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:55:36 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/25 17:57:56 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/28 17:54:24 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,6 +154,8 @@ void	print_commands(t_minishell *t_m)
 	printf("---------- EXECUTOR-COMMANDS ----------\n");
 	while((size_t)(i) < t_m->cmd_count)
 	{
+		if ((&(t_m->commands[i]))->continue_ == true)
+			continue ;
 		if(!(&(t_m->commands[i])))
 			break ;
 		cmd__ = &(t_m->commands[i]);
@@ -204,7 +206,7 @@ void	apply_is_stds(t_minishell *t_m)
 	int		i;
 
 	i = 0;
-	while ((size_t)(i) < t_m->cmd_count / 2)
+	while ((size_t)(i) < t_m->cmd_count)
 	{
 		if (!ft_strcmp((&t_m->commands[i])->input, "STD_IN"))
 			(&(t_m->commands[i]))->is_stdin = true;
