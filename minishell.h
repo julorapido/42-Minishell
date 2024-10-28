@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/25 17:30:07 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/28 12:52:03 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@
 
 # define MAX_CMDS 512
 # define MAX_OUTFILES 64
+# define MAX_EXPANDS 1024
 
 # define M_TKEN(x) (x == ';') ? SEPARATOR : PIPE 
 # define M_CMD(x) (x) ? "STD_IN" : "pipe";
@@ -80,10 +81,17 @@ typedef struct s_token
 typedef struct s_cmd_parsing
 {
 	int		in;
+
 	int		ou;
 	int		append;
 	bool	s;
 }	parse_cmd;
+
+typedef struct s_expand
+{
+	char	*key;
+	char	*value;
+}	t_expand;
 
 typedef struct s_cmd
 {
@@ -117,6 +125,7 @@ typedef struct s_minishell
 	int					*heredocs;		// array of heredocs
 	char 				*splt_cat;		// parseError splitcat
 	token				**cmd_tokens;	// arr of tokens
+	t_expand			expands[MAX_EXPANDS];
 	struct s_cmd_parsing	p_cmd;
 }	t_minishell;
 
@@ -185,7 +194,7 @@ int		parse_commands(t_minishell *t_m, token **cmd_tokens);
 int		parse_errors(char *cmd, t_minishell *t_m);
 void	parse_free(t_minishell *t_m);
 void	parse_quote(token **cmd_tokens, char **s_cmds, int *i);
-
+void	parse_expands(t_minishell *t);
 
 
 // BUILT-IN

@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 12:26:30 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/25 17:42:42 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/28 12:52:25 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,11 @@ static void	parse_commands4(token *t, t_cmd *cmd__, t_minishell *t_m)
 static void	parse_commands3(t_cmd *cmd__, token *t, t_minishell *t_m, int *i, bool *lst_was_pipe)
 {
 	cmd__->n_redirections = (t_m->p_cmd).ou;
-	if(!((t_m->p_cmd).in))
-		cmd__->input = M_CMD(t->t == SEPARATOR || t->prev == NULL); // ? "STD_IN" : "pipe";
-	if(!((t_m->p_cmd).ou))
+	if (!((t_m->p_cmd).in))
+		cmd__->input = M_CMD(t->t == SEPARATOR || t->prev == NULL);
+	if (!((t_m->p_cmd).ou))
 	{
-		if((*lst_was_pipe))
+		if ((*lst_was_pipe))
 		{
 			cmd__->output = ft_strdup("pipe");
 			(*lst_was_pipe) = false;
@@ -59,12 +59,12 @@ static void	parse_commands3(t_cmd *cmd__, token *t, t_minishell *t_m, int *i, bo
 		else
 			cmd__->output = ft_strdup("STD_OUT");
 	}
-	if(!(ft_strcmp(cmd__->output, "STD_OUT") == 0) && ft_strcmp(cmd__->output, "pipe") != 0 && ft_strlen(cmd__->output) <= 1)
+	if (!(ft_strcmp(cmd__->output, "STD_OUT") == 0) && ft_strcmp(cmd__->output, "pipe") != 0 && ft_strlen(cmd__->output) <= 1)
 		fn_revstr(cmd__->output);
 	if (t->t == PIPE || t->t == SEPARATOR)
 	{
 		(*lst_was_pipe) = (t->t == PIPE) ? (true) : (false);
-		if((t_m->p_cmd).append == 2)
+		if ((t_m->p_cmd).append == 2)
 			cmd__->is_append = true;
 		(*i)++;
 		reset(t_m);
@@ -98,7 +98,7 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 	token	*t;
 	t_cmd	*commands;
 	int		i;
-	bool 	lst_was_pipe = false;
+	bool 	lst_was_pipe;
 
 	i = 0;
 	(t_m->p_cmd).s = false;
@@ -124,5 +124,6 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 	t_m->cmd_count = i + 1;
 	apply_commands_reverse(t_m);
 	apply_is_stds(t_m);
+	parse_expands(t_m);
 	return (0);
 }
