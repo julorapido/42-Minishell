@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:55:36 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/29 12:29:38 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/29 13:28:19 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,6 +191,8 @@ void	apply_commands_reverse(t_minishell	*t_m)
 	t_cmd	temp;
 
 	i = 0;
+	if (t_m->cmd_count <= 1)
+		return ;
 	while ((size_t)(i) < t_m->cmd_count / 2)
 	{
 		temp = t_m->commands[i];
