@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:18:44 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/29 12:10:26 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/29 14:48:17 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ static void	modify_cmd(t_expand e, t_cmd *cmd, char *s, int ix)
 				j++;	
 				i++;
 			}
-			k += ft_strlen(e.key) + 1;
+			k += ft_strlen(e.key);
 		}
 		else
 		{
@@ -90,24 +90,44 @@ static void	modify_cmd(t_expand e, t_cmd *cmd, char *s, int ix)
 	cmd->command[i] = '\0';
 }
 
+static int	char_in_slice(int i, int j, char *s, char c)
+{
+	while (i < j)
+	{
+		if(s[i] == c)
+			return (i + 1);
+		i++;
+	}
+	return (-1);
+}
+
 static void	apply_expands(t_minishell *t, int i, int i2)
 {
 	int		e;
 	char	*s;
 	char	*sub_s;
+	char	*sus_s;
+	int		l_i;
 
 	while ((size_t)(i) < t->cmd_count && (size_t)(i) < i2)
 	{	
 		s = (&(t->commands[i]))->command;
 		e = 0;
 		if (ft_strchr(t->commands[i].command, '$'))
-		{	
+		{
 			while (t->expands[e].key)
-			{
-				sub_s = ft_substr(s, ft_m_strchr_i(s, '$', '$') + 1, ft_strlen(t->expands[e].key));	
-				if (ft_strcmp(sub_s, t->expands[e].key) == 0)
-					modify_cmd(t->expands[e], &(t->commands[i]), ft_strdup(s), ft_m_strchr_i(s, '$', '$'));
-				free(sub_s);
+			{	
+				l_i = 0;
+				while (l_i != -1)
+				{
+					sub_s = ft_substr(s, char_in_slice(l_i + 1, ft_strlen(s), s, '$'), ft_m_strchr_i(s, ' ', ' ') - 1);
+					sus_s = ft_substr(sub_s, 0, ft_m_strchr_i(sub_s, ' ', ' '));
+					if (ft_strcmp(sus_s, t->expands[e].key) == 0)
+						modify_cmd(t->expands[e], &(t->commands[i]), ft_strdup(s), char_in_slice(l_i + 1, ft_strlen(s), s, '$'));
+					free(sub_s);
+					free(sus_s);
+					l_i = char_in_slice(l_i + 1, ft_strlen(s), s, '$');	
+				}
 				e++;
 			}
 		}
@@ -154,7 +174,10 @@ void	parse_expands(t_minishell *t)
 	j = 0;
 	while ((size_t)(i) < t->cmd_count)
 	{
-		s_ = (&(t->commands[i]))->command;	
+		if (!(&(t->commands[i]))->command){
+			i++; continue ;
+		}
+		s_ = (&(t->commands[i]))->command;
 		if (!ft_strchr(s_, '\"') && ft_strchr(s_, '='))
 		{
 			(&(t->commands[i]))->continue_ = true;	
@@ -167,12 +190,12 @@ void	parse_expands(t_minishell *t)
 			// printf("expand[%d] = {%s : %s} \n", x, spl_[0], spl_[1]);
 			(t->expands[x]).key = spl_[0];
 			(t->expands[x]).value = spl_[1];
-			if (key_in_expand(t, spl_[0]) == -1)
+			if (x == j)
 				j++;
-		}else
-			(&(t->commands[i]))->continue_ = false;
+		}
+			else (&(t->commands[i]))->continue_ = false;
 		apply_expands(t, i, next_expand(t, i));
 		i++;
-	}	
+	}
 	// print_expands(t);
 }

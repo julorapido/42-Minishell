@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:55:36 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/29 13:28:19 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/29 14:24:41 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,8 +154,10 @@ void	print_commands(t_minishell *t_m)
 	printf("---------- EXECUTOR-COMMANDS ----------\n");
 	while((size_t)(i) < t_m->cmd_count)
 	{
-		if ((&(t_m->commands[i]))->continue_ == true)
-			continue ;
+		if ((&(t_m->commands[i]))->continue_)
+		{
+			i++; continue ;
+		}
 		if(!(&(t_m->commands[i])))
 			break ;
 		cmd__ = &(t_m->commands[i]);
