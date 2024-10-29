@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:55:36 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/28 17:54:24 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/29 12:29:38 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,7 +223,7 @@ void parse_free(t_minishell *t_m)
 	i = 0;
 	if(t_m->splt_cat)
 		free(t_m->splt_cat);
-	while (i < t_m->cmd_count)
+	/*while (i < t_m->cmd_count)
 	{
 		if ((t_m->commands[i]).command != NULL)
 			free((t_m->commands[i]).command);
@@ -232,7 +232,7 @@ void parse_free(t_minishell *t_m)
 		//if (*((t_m->commands[i]).input))
 		//	free((t_m->commands[i]).input);
 		i++;
-	}
+	}*/
 	// free(t_m->commands);
 	free_tokens(t_m->cmd_tokens);
 }

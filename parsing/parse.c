@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 17:46:03 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/25 18:05:27 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/29 12:18:00 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ int	parse_errors(char *cmd, t_minishell *t_m)
 						t_m->parse_error = true;
 			// >| <; |>
 			if (is_char_operator(s_cmds[i + 1]) && is_char_operator(s_cmds[i]))
-				if (s_cmds[i + 1] != s_cmds[i] && !(s_cmds[i + 1] == '|' || s_cmds[i + 1] == ';'))
+				if (s_cmds[i + 1] != s_cmds[i] && !(s_cmds[i + 1] == '|' || s_cmds[i + 1] == ';') 
+						&& !(s_cmds[i] == '.' || s_cmds[i] == '/'))
 					t_m->parse_error = true;
 			if (t_m->parse_error == true)
 				return (0, t_m->e_v[0] = s_cmds[i], t_m->e_v[1] = s_cmds[i + 1], t_m->parse_error = true);

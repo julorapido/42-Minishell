@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:18:44 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/28 17:51:12 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/29 12:10:26 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,8 @@ void	parse_expands(t_minishell *t)
 			(t->expands[x]).value = spl_[1];
 			if (key_in_expand(t, spl_[0]) == -1)
 				j++;
-		}	
+		}else
+			(&(t->commands[i]))->continue_ = false;
 		apply_expands(t, i, next_expand(t, i));
 		i++;
 	}	

@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 12:26:30 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/28 17:45:12 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/29 13:24:51 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	reset(t_minishell *t_m)
 }
 
 static void	parse_commands4(token *t, t_cmd *cmd__, t_minishell *t_m)
-{	
+{		
 	if (t->t == GREAT_GREAT || t->t == GREAT)
 	{
 		if ((t->next) && (t->next)->cmd && (ft_strlen((t->next)->cmd) > 0))
@@ -45,7 +45,7 @@ static void	parse_commands4(token *t, t_cmd *cmd__, t_minishell *t_m)
 }
 
 static void	parse_commands3(t_cmd *cmd__, token *t, t_minishell *t_m, int *i, bool *lst_was_pipe)
-{
+{	
 	cmd__->n_redirections = (t_m->p_cmd).ou;
 	if (!((t_m->p_cmd).in))
 		cmd__->input = M_CMD(t->t == SEPARATOR || t->prev == NULL);
@@ -64,7 +64,7 @@ static void	parse_commands3(t_cmd *cmd__, token *t, t_minishell *t_m, int *i, bo
 	if (t->t == PIPE || t->t == SEPARATOR)
 	{
 		(*lst_was_pipe) = (t->t == PIPE) ? (true) : (false);
-		if ((t_m->p_cmd).append == 2)
+		if ((t_m->p_cmd).append >= 2)
 			cmd__->is_append = true;
 		(*i)++;
 		reset(t_m);
@@ -73,7 +73,7 @@ static void	parse_commands3(t_cmd *cmd__, token *t, t_minishell *t_m, int *i, bo
 }
 
 static void	parse_commands2(t_cmd *cmd__, token *t, t_minishell *t_m)
-{
+{	
 	if ((t->t == COMMAND || t->t == COMMAND_FLAG) || t->t == QUOTE)
 	{
 		if (t->prev)
@@ -124,6 +124,6 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 	t_m->cmd_count = i + 1;
 	apply_commands_reverse(t_m);
 	apply_is_stds(t_m);
-	parse_expands(t_m);
+	// parse_expands(t_m);
 	return (0);
 }
