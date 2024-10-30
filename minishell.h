@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/30 14:14:16 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/30 15:11:31 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ typedef struct s_cmd
 	int		is_append;
 	bool	is_piped_out;
 	bool	is_stdin;
+	bool	is_piped_in;
 	bool	is_stdout;
 	bool	is_heredoc;
 	bool	continue_;

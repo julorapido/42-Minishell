@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:55:36 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/30 12:14:32 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/30 15:26:31 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,9 +168,13 @@ void	print_commands(t_minishell *t_m)
 		);
 		if(&(t_m->commands[i + 1]) && ((&(t_m->commands[i + 1]))->input))
 		{
-			if((cmd__->n_redirections > 0) && (ft_strcmp((&(t_m->commands[i + 1]))->input , "pipe") == 0) )
-				printf(" [piped out |] ");
+			//if((cmd__->n_redirections > 0) && (ft_strcmp((&(t_m->commands[i + 1]))->input , "pipe") == 0) )
+			//	printf(" [piped out |] ");
 		}
+		if(cmd__->is_piped_out)
+			printf(" [piped out |] ");
+		if(cmd__->is_piped_in)
+			printf(" [| piped-in] ");
 		if (cmd__->n_redirections >= 1)
 		{
 			printf(" [%d out_files] ", cmd__->n_redirections);
@@ -215,6 +219,8 @@ void	apply_is_stds(t_minishell *t_m)
 			(&(t_m->commands[i]))->is_stdout = true;
 		if (!ft_strcmp((&t_m->commands[i])->output, "pipe"))
 			(&(t_m->commands[i]))->is_piped_out = true;
+		if (!ft_strcmp((&t_m->commands[i])->input, "pipe"))
+			(&(t_m->commands[i]))->input = true;
 		i++;
 	}
 }

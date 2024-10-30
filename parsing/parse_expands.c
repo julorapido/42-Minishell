@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:18:44 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/30 14:42:31 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/30 14:52:41 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,10 +264,11 @@ static char *apply_expands(char *line, t_minishell *t)
 		{
 			j = 1;
 			while (line[i + j] != ' ' && line[i + j] != '\0' && line[i + j] != '$'
-				&& line[i + j] != ';' && line[i + j] != '|')
+				&& line[i + j] != ';' && line[i + j] != '|' && line[i + j] != '>'
+				&& line[i + j] != '<')
 				j++;
 			sub_s = ft_substr(line, i+1, j-1);
-			if (get_key(t, sub_s) != NULL)
+			if (get_key(t, sub_s) != NULL && j > 1)
 			{
 				line = insert_replace(i, j, line, get_key(t, sub_s));
 				i = 0;
