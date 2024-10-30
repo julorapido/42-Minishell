@@ -6,11 +6,12 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:18:44 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/29 14:48:17 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/29 17:28:47 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 
 static char	**eq_split(char *s)
 {
@@ -41,7 +42,7 @@ static char	**eq_split(char *s)
 	r[1][i] = '\0';
 	return (r);
 }
-
+/*
 static void print_expands(t_minishell *t)
 {
 	int	i;
@@ -198,4 +199,92 @@ void	parse_expands(t_minishell *t)
 		i++;
 	}
 	// print_expands(t);
+}
+
+*/
+
+static char *get_key(t_minishell *t, char *s)
+{
+	int	e;
+
+	e = 0;
+	while (t->expands[e].key)
+	{
+		if (ft_strcmp((t->expands[e]).key, s) == 0)
+			return ((t->expands[e]).value);
+		e++;
+	}
+}
+
+static char *insert_replace(int a, int b, char *s, char *insert_s)
+{
+	char	*ir;
+	int		i;
+	int		j;
+
+	ir = (char *) malloc((ft_strlen(s) - (b - a)) + ft_strlen(insert_s) + 1);
+	i = 0;
+	while (s[i] && i < a)
+	{
+		ir[i] = s[i];
+		i++;
+	}
+	j = i;
+	while (insert_s[i])
+	{
+		ir[i] = insert_s[i];
+		i++;
+	}
+	while (s[j])
+	{
+		ir[i] = s[j];
+		i++;
+		j++;
+	}
+	ir[i] = '\0';
+	return (ir);
+}
+
+void	parse_expands(char *line, t_minishell *t)
+{
+	char	**sl;
+	char	**w;
+	int		i;
+	int		e;
+
+	sl = ft_split(line, ';');
+	i = 0;
+	e = 0;
+	while (sl[i])
+	{
+		if (!ft_strchr(sl[i], '\"') && ft_strchr(sl[i], '='))
+		{
+			w = ft_split(sl[i], ' ');
+			int c = 0;
+			while(!ft_strchr(w[c], '='))
+			{
+				c++;
+			}
+			char **lol = ft_split(w[c], '=');
+			printf("expand[%d] = {%s : %s} \n", e, lol[0], lol[1]);
+			t->expands[e].key = lol[0];
+			t->expands[e].value = lol[1];
+			e++;
+		}
+		i++;
+	}
+	i = 0;
+	int j = 0;
+	while (line[i])
+	{
+		if (line[i] == '$')
+		{
+			j = 1;
+			while (line[i + j] != ' ' && line[i + j] != '\0' && line[i + j] != '$')
+				j++;
+			//printf("insert replace [%s] at {%d, %d} \n", ft_substr(line, i, (i+j) + -1), i, j);
+			insert_replace(i, j, line, get_key(t, ft_substr(line, i, (i+j)-1)));
+		}
+		i++;
+	}
 }

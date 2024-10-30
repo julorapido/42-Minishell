@@ -6,7 +6,7 @@
 /*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 16:27:11 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/25 18:04:18 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/29 15:23:43 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,8 +147,7 @@ void	free_tokens(token **t_arr)
 		t = head;
 		head = head->next;
 		if(t->cmd)
-			if (ft_strlen(t->cmd) > 0)
-				free(t->cmd);	
+			free(t->cmd);	
 		free(t);
 	}
 	free(t_arr);

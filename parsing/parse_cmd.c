@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_cmd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 12:26:30 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/29 14:23:19 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/30 12:26:27 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ static void	parse_commands4(token *t, t_cmd *cmd__, t_minishell *t_m)
 {		
 	if (t->t == GREAT_GREAT || t->t == GREAT)
 	{
+		(t_m->p_cmd).append++;	
 		if ((t->next) && (t->next)->cmd && (ft_strlen((t->next)->cmd) > 0))
 		{
 			if((t_m->p_cmd).ou > 0)
@@ -32,8 +33,6 @@ static void	parse_commands4(token *t, t_cmd *cmd__, t_minishell *t_m)
 			(t_m->p_cmd).ou++;
 		}
 	}
-	if (!(t->t == GREAT_GREAT || t->t == GREAT))	
-		(t_m->p_cmd).append = 0;	
 	if ((t->t == LESS_LESS || t->t == LESS) && ((t_m->p_cmd).in < 1))
 	{
 		if (t->prev)
@@ -61,11 +60,13 @@ static void	parse_commands3(t_cmd *cmd__, token *t, t_minishell *t_m, int *i, bo
 	}
 	if (!(ft_strcmp(cmd__->output, "STD_OUT") == 0) && ft_strcmp(cmd__->output, "pipe") != 0 && ft_strlen(cmd__->output) <= 1)
 		fn_revstr(cmd__->output);
+	
+	if (t->t == PIPE || t->t == SEPARATOR || !(t->prev))
+		if ((t_m->p_cmd).append >= 2)
+			cmd__->is_append = true;
 	if (t->t == PIPE || t->t == SEPARATOR)
 	{
 		(*lst_was_pipe) = (t->t == PIPE) ? (true) : (false);
-		if ((t_m->p_cmd).append >= 2)
-			cmd__->is_append = true;
 		(*i)++;
 		reset(t_m);
 	}
@@ -83,7 +84,7 @@ static void	parse_commands2(t_cmd *cmd__, token *t, t_minishell *t_m)
 		{
 			if (!(cmd__->command))
 			{
-				cmd__->command = (char *) malloc((ft_strlen(t->cmd) + 1) * sizeof(char));
+				cmd__->command = (char *) calloc((ft_strlen(t->cmd) + 1), sizeof(char));
 				ft_strlcpy(cmd__->command, t->cmd, ft_strlen(t->cmd) + 1);
 			}
 			else
@@ -98,16 +99,16 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 	token	*t;
 	t_cmd	*commands;
 	int		i;
-	bool 	lst_was_pipe;
+	bool 	lst_was_pipe = false;
 
-	i = 0;
-	(t_m->p_cmd).s = false;
+	i = 0;	
 	t = token_last(*cmd_tokens);
+	(t_m->p_cmd).s = false;
 	reset(t_m);
 	commands = (t_cmd *) malloc(sizeof(struct s_cmd) * MAX_CMDS);
 	for(int i = 0; i < MAX_CMDS; i++)
 	{
-		commands[i].input = commands[i].output = commands[i].command;
+		commands[i].input = commands[i].output = commands[i].command = NULL;
 	}
 	while (t)
 	{
@@ -124,6 +125,6 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 	t_m->cmd_count = i + 1;
 	apply_commands_reverse(t_m);
 	apply_is_stds(t_m);
-	parse_expands(t_m);
+	// parse_expands(t_m);
 	return (0);
 }

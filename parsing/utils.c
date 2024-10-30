@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:55:36 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/29 14:24:41 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/30 12:14:32 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,17 +171,14 @@ void	print_commands(t_minishell *t_m)
 			if((cmd__->n_redirections > 0) && (ft_strcmp((&(t_m->commands[i + 1]))->input , "pipe") == 0) )
 				printf(" [piped out |] ");
 		}
-		if (cmd__->n_redirections > 1)
+		if (cmd__->n_redirections >= 1)
 		{
 			printf(" [%d out_files] ", cmd__->n_redirections);
 			//for(int i = 0; i < cmd__->n_redirections; i++)
 			//	printf("%s%s", cmd__->appends[i] == 1 ? ">>": ">", i < cmd__->n_redirections - 1 ? ", "  : "");
-			//printf("} ]");
 			if(cmd__->is_append)
 				printf("[>> append]");
 		}
-		if(cmd__->is_append)
-			printf(" [>> append] ");
 		printf("\n");
 		i++;
 	}
@@ -216,6 +213,8 @@ void	apply_is_stds(t_minishell *t_m)
 			(&(t_m->commands[i]))->is_stdin = true;
 		if (!ft_strcmp((&t_m->commands[i])->input, "STD_OUT"))
 			(&(t_m->commands[i]))->is_stdout = true;
+		if (!ft_strcmp((&t_m->commands[i])->output, "pipe"))
+			(&(t_m->commands[i]))->is_piped_out = true;
 		i++;
 	}
 }
@@ -227,17 +226,17 @@ void parse_free(t_minishell *t_m)
 	i = 0;
 	if(t_m->splt_cat)
 		free(t_m->splt_cat);
-	/*while (i < t_m->cmd_count)
+	for (int i = 0; i < MAX_CMDS; i++)
 	{
-		if ((t_m->commands[i]).command != NULL)
-			free((t_m->commands[i]).command);
-		//if (*((t_m->commands[i]).output))
-		//	free((t_m->commands[i]).output);
-		//if (*((t_m->commands[i]).input))
-		//	free((t_m->commands[i]).input);
-		i++;
-	}*/
-	// free(t_m->commands);
+		/*if(t_m->commands[i].command)
+			free(t_m->commands[i].command);
+		if(t_m->commands[i].output)
+			free(t_m->commands[i].output);
+		if(t_m->commands[i].input)
+			free(t_m->commands[i].input);*/
+	}
+	return;
+	free(t_m->commands);
 	free_tokens(t_m->cmd_tokens);
 }
 

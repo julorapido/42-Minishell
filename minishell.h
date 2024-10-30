@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/28 17:50:17 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/29 16:52:24 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,8 +195,7 @@ int		parse_commands(t_minishell *t_m, token **cmd_tokens);
 int		parse_errors(char *cmd, t_minishell *t_m);
 void	parse_free(t_minishell *t_m);
 void	parse_quote(token **cmd_tokens, char **s_cmds, int *i);
-void	parse_expands(t_minishell *t);
-
+void	parse_expands(char *s, t_minishell *t);
 
 // BUILT-IN
 int		f__cd(char **args, t_minishell *t_m);
