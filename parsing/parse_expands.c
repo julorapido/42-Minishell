@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parse_expands.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:18:44 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/29 17:28:47 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/30 14:42:31 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
+/*
 static char	**eq_split(char *s)
 {
 	char	**r;
@@ -42,7 +42,7 @@ static char	**eq_split(char *s)
 	r[1][i] = '\0';
 	return (r);
 }
-/*
+
 static void print_expands(t_minishell *t)
 {
 	int	i;
@@ -203,6 +203,8 @@ void	parse_expands(t_minishell *t)
 
 */
 
+
+
 static char *get_key(t_minishell *t, char *s)
 {
 	int	e;
@@ -211,9 +213,10 @@ static char *get_key(t_minishell *t, char *s)
 	while (t->expands[e].key)
 	{
 		if (ft_strcmp((t->expands[e]).key, s) == 0)
-			return ((t->expands[e]).value);
+			return (ft_strdup((t->expands[e]).value));
 		e++;
 	}
+	return (NULL);
 }
 
 static char *insert_replace(int a, int b, char *s, char *insert_s)
@@ -222,7 +225,7 @@ static char *insert_replace(int a, int b, char *s, char *insert_s)
 	int		i;
 	int		j;
 
-	ir = (char *) malloc((ft_strlen(s) - (b - a)) + ft_strlen(insert_s) + 1);
+	ir = (char *) (malloc((ft_strlen(s) - (b) + ft_strlen(insert_s) + 1) * sizeof(char)));
 	i = 0;
 	while (s[i] && i < a)
 	{
@@ -230,14 +233,16 @@ static char *insert_replace(int a, int b, char *s, char *insert_s)
 		i++;
 	}
 	j = i;
-	while (insert_s[i])
+	int x = 0;
+	while (insert_s[x])
 	{
-		ir[i] = insert_s[i];
+		ir[i] = insert_s[x];
 		i++;
+		x++;
 	}
-	while (s[j])
+	while (s[j + b])
 	{
-		ir[i] = s[j];
+		ir[i] = s[j + b];
 		i++;
 		j++;
 	}
@@ -245,7 +250,36 @@ static char *insert_replace(int a, int b, char *s, char *insert_s)
 	return (ir);
 }
 
-void	parse_expands(char *line, t_minishell *t)
+static char *apply_expands(char *line, t_minishell *t)
+{
+	int		i;
+	int		j;
+	char	*sub_s;
+
+	i = 0;
+	j = 0;
+	while (line[i])
+	{
+		if (line[i] == '$')
+		{
+			j = 1;
+			while (line[i + j] != ' ' && line[i + j] != '\0' && line[i + j] != '$'
+				&& line[i + j] != ';' && line[i + j] != '|')
+				j++;
+			sub_s = ft_substr(line, i+1, j-1);
+			if (get_key(t, sub_s) != NULL)
+			{
+				line = insert_replace(i, j, line, get_key(t, sub_s));
+				i = 0;
+			}
+		}
+		i++;
+	}
+	return (line);
+}
+
+
+char	*parse_expands(char *line, t_minishell *t)
 {
 	char	**sl;
 	char	**w;
@@ -266,25 +300,15 @@ void	parse_expands(char *line, t_minishell *t)
 				c++;
 			}
 			char **lol = ft_split(w[c], '=');
-			printf("expand[%d] = {%s : %s} \n", e, lol[0], lol[1]);
+			printf("t->expands[%d] = {%s: %s} \n", e, lol[0], lol[1]);
 			t->expands[e].key = lol[0];
 			t->expands[e].value = lol[1];
 			e++;
 		}
 		i++;
 	}
-	i = 0;
-	int j = 0;
-	while (line[i])
-	{
-		if (line[i] == '$')
-		{
-			j = 1;
-			while (line[i + j] != ' ' && line[i + j] != '\0' && line[i + j] != '$')
-				j++;
-			//printf("insert replace [%s] at {%d, %d} \n", ft_substr(line, i, (i+j) + -1), i, j);
-			insert_replace(i, j, line, get_key(t, ft_substr(line, i, (i+j)-1)));
-		}
-		i++;
-	}
+	if(e == 0)
+		return (line);
+	line = apply_expands(line, t);
+	return (line);
 }
