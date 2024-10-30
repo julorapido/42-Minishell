@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 12:26:30 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/30 15:32:03 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/30 16:04:43 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,12 @@ static void	parse_commands3(t_cmd *cmd__, token *t, t_minishell *t_m, int *i, bo
 	{
 		if ((*lst_was_pipe))
 		{
-			cmd__->output = ft_strdup("pipe[|]");
+			cmd__->output = ft_strdup("-pipe-");
 			cmd__->is_piped_out = true;
 			(*lst_was_pipe) = false;
 		}
 		else{
-			cmd__->output = ft_strdup("STD_OUT");
+			cmd__->output = ft_strdup("-STD_OUT-");
 			cmd__->is_stdout = true;
 		}
 	}

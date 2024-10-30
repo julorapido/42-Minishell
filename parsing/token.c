@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 16:27:11 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/29 15:23:43 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/30 16:03:58 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ enum TOKEN_TYPE char_to_token(char c)
 
 bool	is_char_operator(char c)
 {	
-	if (c == ';' || c == '<' || c == '>' || c == '|' || c == '$' 
+	if (c == ';' || c == '<' || c == '>' || c == '|'
 		|| c == '.' || c == '/')
 		return (true);
 	else
