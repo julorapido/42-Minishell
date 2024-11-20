@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:18:44 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/30 14:52:41 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/20 17:48:05 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,10 +201,6 @@ void	parse_expands(t_minishell *t)
 	// print_expands(t);
 }
 
-*/
-
-
-
 static char *get_key(t_minishell *t, char *s)
 {
 	int	e;
@@ -218,6 +214,8 @@ static char *get_key(t_minishell *t, char *s)
 	}
 	return (NULL);
 }
+*/
+
 
 static char *insert_replace(int a, int b, char *s, char *insert_s)
 {
@@ -225,7 +223,7 @@ static char *insert_replace(int a, int b, char *s, char *insert_s)
 	int		i;
 	int		j;
 
-	ir = (char *) (malloc((ft_strlen(s) - (b) + ft_strlen(insert_s) + 1) * sizeof(char)));
+	ir = (char *) (malloc((ft_strlen(s) - (b) + (ft_strlen(insert_s) - 1) + 1) * sizeof(char)));
 	i = 0;
 	while (s[i] && i < a)
 	{
@@ -233,7 +231,7 @@ static char *insert_replace(int a, int b, char *s, char *insert_s)
 		i++;
 	}
 	j = i;
-	int x = 0;
+	int x = 1;
 	while (insert_s[x])
 	{
 		ir[i] = insert_s[x];
@@ -250,66 +248,54 @@ static char *insert_replace(int a, int b, char *s, char *insert_s)
 	return (ir);
 }
 
-static char *apply_expands(char *line, t_minishell *t)
+
+void	apply_expands(t_minishell *t)
 {
+	int		e;
 	int		i;
 	int		j;
 	char	*sub_s;
-
-	i = 0;
-	j = 0;
-	while (line[i])
-	{
-		if (line[i] == '$')
-		{
-			j = 1;
-			while (line[i + j] != ' ' && line[i + j] != '\0' && line[i + j] != '$'
-				&& line[i + j] != ';' && line[i + j] != '|' && line[i + j] != '>'
-				&& line[i + j] != '<')
-				j++;
-			sub_s = ft_substr(line, i+1, j-1);
-			if (get_key(t, sub_s) != NULL && j > 1)
-			{
-				line = insert_replace(i, j, line, get_key(t, sub_s));
-				i = 0;
-			}
-		}
-		i++;
-	}
-	return (line);
-}
-
-
-char	*parse_expands(char *line, t_minishell *t)
-{
-	char	**sl;
-	char	**w;
-	int		i;
-	int		e;
-
-	sl = ft_split(line, ';');
-	i = 0;
+	char	*cmd_line;
+	t_env	*tst;
+	
 	e = 0;
-	while (sl[i])
+	i = 0;
+	while((size_t)(e) < t->cmd_count)
 	{
-		if (!ft_strchr(sl[i], '\"') && ft_strchr(sl[i], '='))
+		if (! (&(t->commands[e]))->command)
 		{
-			w = ft_split(sl[i], ' ');
-			int c = 0;
-			while(!ft_strchr(w[c], '='))
-			{
-				c++;
-			}
-			char **lol = ft_split(w[c], '=');
-			printf("t->expands[%d] = {%s: %s} \n", e, lol[0], lol[1]);
-			t->expands[e].key = lol[0];
-			t->expands[e].value = lol[1];
 			e++;
+			continue;
 		}
-		i++;
+		i = 0;
+		cmd_line = (&(t->commands[e]))->command;
+		while (cmd_line[i])
+		{
+			if (cmd_line[i] == '$')
+			{
+				j = 1;
+				while (cmd_line[i + j] != ' ' && cmd_line[i + j] != '\0' && cmd_line[i + j] != '$'
+					&& cmd_line[i + j] != ';')
+					j++;
+				sub_s = ft_substr(cmd_line, i + 1, j - 1);
+				if (sub_s[0] == '?')
+					cmd_line = insert_replace(i, j, cmd_line, ft_itoa(t->exstat%255));
+				else
+				{
+					tst = findenv(sub_s, t->env);
+					if(tst)
+					{
+						if (ft_strchr(tst->value, '='))
+							cmd_line = insert_replace(i, j, cmd_line, ft_strchr(tst->value, '='));
+						else
+							cmd_line = insert_replace(i, j, cmd_line, "");
+					}
+				}
+				free(sub_s);
+			}
+			i++;
+			(&(t->commands[e]))->command = cmd_line;
+		}
+		e++;
 	}
-	if(e == 0)
-		return (line);
-	line = apply_expands(line, t);
-	return (line);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_handler.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gchauvot <gchauvot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 15:43:14 by gchauvot          #+#    #+#             */
-/*   Updated: 2024/10/25 14:22:38 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/04 16:10:53 by gchauvot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void handler(int signum)
 {	
 	if(signum == SIGINT)
 	{
+		sigcatch = 1;
 		write(2, "\n",1);
 		rl_replace_line("",0);
 		rl_on_new_line();

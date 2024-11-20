@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gchauvot <gchauvot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 16:27:11 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/30 16:03:58 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/07 11:33:30 by gchauvot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ enum TOKEN_TYPE char_to_token(char c)
 
 bool	is_char_operator(char c)
 {	
-	if (c == ';' || c == '<' || c == '>' || c == '|'
+	if (c == ';' || c == '<' || c == '>' || c == '|' || c == '$' 
 		|| c == '.' || c == '/')
 		return (true);
 	else
@@ -53,7 +53,7 @@ token	*token_new(char *s, enum TOKEN_TYPE ty)
 {
 	token	*new_t;
 
-	new_t = (token *) malloc(sizeof(token ));
+	new_t = ft_calloc(1, sizeof(token ));
 	if (!new_t)
 		return (NULL);
 	new_t->cmd = s;
@@ -147,8 +147,8 @@ void	free_tokens(token **t_arr)
 		t = head;
 		head = head->next;
 		if(t->cmd)
-			free(t->cmd);	
-		free(t);
+			ft_memdel(t->cmd);	
+		ft_memdel(t);
 	}
-	free(t_arr);
+	ft_memdel(t_arr);
 }

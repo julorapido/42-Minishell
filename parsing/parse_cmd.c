@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 12:26:30 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/30 16:04:43 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/20 15:20:40 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,24 +46,19 @@ static void	parse_commands4(token *t, t_cmd *cmd__, t_minishell *t_m)
 static void	parse_commands3(t_cmd *cmd__, token *t, t_minishell *t_m, int *i, bool *lst_was_pipe)
 {	
 	cmd__->n_redirections = (t_m->p_cmd).ou;
-	if (!((t_m->p_cmd).in)){
+	if (!((t_m->p_cmd).in))
 		cmd__->input = M_CMD(t->t == SEPARATOR || t->prev == NULL);
-		cmd__->is_stdin = (t->t == SEPARATOR || t->prev == NULL);	
-	}
 	if (!((t_m->p_cmd).ou))
 	{
 		if ((*lst_was_pipe))
 		{
-			cmd__->output = ft_strdup("-pipe-");
-			cmd__->is_piped_out = true;
+			cmd__->output = ft_strdup("pipe");
 			(*lst_was_pipe) = false;
 		}
-		else{
-			cmd__->output = ft_strdup("-STD_OUT-");
-			cmd__->is_stdout = true;
-		}
+		else
+			cmd__->output = ft_strdup("STD_OUT");
 	}
-	if (!(cmd__->is_stdout) && ft_strcmp(cmd__->output, "pipe") != 0 && ft_strlen(cmd__->output) <= 1)
+	if (!(ft_strcmp(cmd__->output, "STD_OUT") == 0) && ft_strcmp(cmd__->output, "pipe") != 0 && ft_strlen(cmd__->output) <= 1)
 		fn_revstr(cmd__->output);
 	
 	if (t->t == PIPE || t->t == SEPARATOR || !(t->prev))
@@ -73,7 +68,6 @@ static void	parse_commands3(t_cmd *cmd__, token *t, t_minishell *t_m, int *i, bo
 	{
 		(*lst_was_pipe) = (t->t == PIPE) ? (true) : (false);
 		(*i)++;
-		cmd__->is_piped_in = (t->t == PIPE);
 		reset(t_m);
 	}
 	fn_revstr(cmd__->command);
@@ -90,7 +84,7 @@ static void	parse_commands2(t_cmd *cmd__, token *t, t_minishell *t_m)
 		{
 			if (!(cmd__->command))
 			{
-				cmd__->command = (char *) calloc((ft_strlen(t->cmd) + 1), sizeof(char));
+				cmd__->command = ft_calloc((ft_strlen(t->cmd) + 1), sizeof(char));
 				ft_strlcpy(cmd__->command, t->cmd, ft_strlen(t->cmd) + 1);
 			}
 			else
@@ -111,7 +105,7 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 	t = token_last(*cmd_tokens);
 	(t_m->p_cmd).s = false;
 	reset(t_m);
-	commands = (t_cmd *) malloc(sizeof(struct s_cmd) * MAX_CMDS);
+	commands = ft_calloc(MAX_CMDS, sizeof(struct s_cmd));
 	for(int i = 0; i < MAX_CMDS; i++)
 	{
 		commands[i].input = commands[i].output = commands[i].command = NULL;
@@ -130,6 +124,6 @@ int parse_commands(t_minishell *t_m, token **cmd_tokens)
 	t_m->commands = commands;
 	t_m->cmd_count = i + 1;
 	apply_commands_reverse(t_m);
-	// apply_is_stds(t_m);
+	apply_is_stds(t_m);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 17:46:03 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/30 15:29:27 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/20 17:24:54 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,50 +18,54 @@ int	parse_errors(char *cmd, t_minishell *t_m)
 	char	*s_cmds;	
 	int		i;
 	int		q;
+	int		q_s;
 	int		l;
 
 	t_m->parse_error = false;	
-	t_m->splt_cat = ft_splitcat( ft_split(cmd, ' '));
+	t_m->splt_cat = ft_splitcat(ft_split(cmd, ' '));
 	s_cmds = t_m->splt_cat;
 	l = ft_strlen(s_cmds);
 	if(l == 0)
 		return (0);
 	i = 0;
-	q = 0;
+	q = q_s = 0;
 	if ((is_char_operator(s_cmds[0]) && ft_strlen(s_cmds) == 1) || s_cmds[0] == '|')
-		return (0, t_m->e_v[0] = '/', t_m->e_v[1] = 'n', t_m->parse_error = true);
+		return (t_m->e_v[0] = '/', t_m->e_v[1] = 'n', t_m->parse_error = true, 0);
 	while (i < l)
 	{
 		if (s_cmds[i] == '\"')
 			q++;
+		if (s_cmds[i] == '\'')
+			q_s++;
 		if (i + 1 < l)
 		{
 			// > ;
 			if (s_cmds[i] == '>' && s_cmds[i + 1] == ';')
 				 t_m->parse_error = true;
-			// triple >>> ;;; <<< /// 
+			// triple >>> ;;; <<< /// """
 			if (i + 1 + 1 < l)
 				if (is_char_operator(s_cmds[i]))
 					if (s_cmds[i] == s_cmds[i + 1] && s_cmds[i + 1] == s_cmds[i + 2])
 						t_m->parse_error = true;
 			// >| <; |>
 			if (is_char_operator(s_cmds[i + 1]) && is_char_operator(s_cmds[i]))
-				if (s_cmds[i + 1] != s_cmds[i] && !(s_cmds[i + 1] == '|' || s_cmds[i + 1] == ';') 
-						&& !(s_cmds[i] == '.' || s_cmds[i] == '/')
-						&& !(s_cmds[i] == '|' || s_cmds[i] == '>') && !(s_cmds[i] == '>' || s_cmds[i] == '|')
-						&& !(s_cmds[i] == '<' || s_cmds[i] == '|') && !(s_cmds[i] == '|' || s_cmds[i] == '<')
-					)
+				if (s_cmds[i + 1] != s_cmds[i]
+					&& !(s_cmds[i + 1] == '|' || s_cmds[i + 1] == ';') 
+					&& !(s_cmds[i] == '.' || s_cmds[i] == '/' || s_cmds[i] == '\"')
+				)
 					t_m->parse_error = true;
 			if (t_m->parse_error == true)
-				return (0, t_m->e_v[0] = s_cmds[i], t_m->e_v[1] = s_cmds[i + 1], t_m->parse_error = true);
+				return (t_m->e_v[0] = s_cmds[i], t_m->e_v[1] = s_cmds[i + 1], t_m->parse_error = true, 0);
 		}
 		i++;
 	}	
 	if (q % 2 != 0)
-		return (0, t_m->e_v[0] = '\"', t_m->parse_error = true);
+		return (t_m->e_v[0] = '\"', t_m->parse_error = true, 0);
+	if (q_s % 2 != 0)
+		return (t_m->e_v[0] = '\'', t_m->parse_error = true, 0);
 	if (i > 0)
 		if (s_cmds[i - 1] == '|' || s_cmds[i - 1] == '>' || s_cmds[i - 1] == '<')
-			return (0,t_m->e_v[0] = s_cmds[i - 1], t_m->e_v[1] = NULL, t_m->parse_error = true);
+			return (t_m->e_v[0] = s_cmds[i - 1], t_m->e_v[1] = 0, t_m->parse_error = true, 0);
 	return (0);
 }
 
@@ -92,13 +96,14 @@ static void	parse_tokens2(token **cmd_tokens, int *i, char **s_cmds)
 	}
 }
 
+
 int	parse_tokens(char *cmd, token **cmd_tokens, t_minishell *t_m)
 {
 	char	**s_cmds;
 	int		i;
 
-	s_cmds = ft_split(cmd, ' ');
 	i = 0;
+	s_cmds = ft_split(cmd, ' ');
 	while (s_cmds[i] != NULL)
 	{	
 		if(*s_cmds[i] == '\"')

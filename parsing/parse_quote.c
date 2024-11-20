@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parse_quote.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 12:32:38 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/25 18:07:34 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/20 18:30:48 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/*
 static void	parse_quote3(int *i, char **s_cmds, char *s_quote)
 {
 	int	p;
@@ -62,7 +63,7 @@ void	parse_quote(token **cmd_tokens, char **s_cmds, int *i)
 	char	*s_quote;
 	char	*al_s1;		
 
-	s_quote = malloc(ft_strlen(s_cmds[(*i)]) + 1);
+	s_quote = ft_calloc(ft_strlen(s_cmds[(*i)]) + 1, 1);
 	if (!s_quote)
 		return ;
 	ft_strlcpy(s_quote, s_cmds[(*i)], ft_strlen(s_cmds[(*i)]) + 1);
@@ -81,4 +82,42 @@ void	parse_quote(token **cmd_tokens, char **s_cmds, int *i)
 	free(al_s1);
 	token_push(cmd_tokens, token_new(s_quote, QUOTE));
 	(*i)++;
+}*/
+void	parse_quote(token **cmd_tokens, char **s_cmds, int *i)
+{
+	char *s;
+
+	s = ft_strdup(s_cmds[(*i)]);
+	(*i)++;
+	if (s_cmds[*i])
+	{
+		while (ft_m_strchr_i(s_cmds[*i], '\"', '\"') == -1)
+		{
+			s = fn_realloc_strcat(s, s_cmds[(*i)], 1);
+			(*i)++;
+		}
+		if(s_cmds[*i])
+		{
+			/*printf("LAST QUOTE {%s}(len %d) Q found at %d \n", 
+				s_cmds[*i], 
+				ft_strlen(s_cmds[*i]), ft_m_strchr_i(s_cmds[*i], '\"', '\"')
+			);*/
+			if (ft_m_strchr_i(s_cmds[*i], '\"', '\"') == ft_strlen(s_cmds[*i]) - 1)
+			{
+				s = fn_realloc_strcat(s, s_cmds[(*i)], 1);
+				(*i)++;	
+			}
+			else
+			{
+				char *str = ft_substr(s_cmds[(*i)], 0, ft_m_strchr_i(s_cmds[*i], '\"', '\"') + 1);
+				s = fn_realloc_strcat(s, str, 1);
+				s_cmds[(*i)] = ft_substr(s_cmds[(*i)], 
+					ft_m_strchr_i(s_cmds[*i], '\"', '\"') + 1, 
+					ft_strlen(s_cmds[(*i)])
+				);
+			}
+		}
+			
+	}
+	token_push(cmd_tokens, token_new(s, QUOTE));
 }

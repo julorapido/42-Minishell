@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:55:36 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/30 15:26:31 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/20 17:25:10 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ char	*fn_realloc_strcat(char *filled_str, char *cncat_str, int space_it)
 	char	*temp;
 
 	temp = filled_str;	
-	filled_str = (char *) ft_calloc((ft_strlen(temp) + ft_strlen(cncat_str) +  ((space_it) ? (2) : (1))), sizeof(char));
+	filled_str = (char *) ft_calloc((ft_strlen(temp) + ft_strlen(cncat_str) +  2), sizeof(char));
 	i = 0;
 	while(temp[i])
 	{
@@ -132,7 +132,7 @@ char	*cmd_remove_lstspace(char *s)
 	l = ft_strlen(s);
 	if (s[l - 1] == ' ')
 		i = 1;
-	new_s = (char *) malloc(((l - i) + 1) * sizeof(char));
+	new_s = ft_calloc(((l - i) + 1), sizeof(char));
 	if (!new_s)
 		return (NULL);
 	j = 0;
@@ -168,13 +168,9 @@ void	print_commands(t_minishell *t_m)
 		);
 		if(&(t_m->commands[i + 1]) && ((&(t_m->commands[i + 1]))->input))
 		{
-			//if((cmd__->n_redirections > 0) && (ft_strcmp((&(t_m->commands[i + 1]))->input , "pipe") == 0) )
-			//	printf(" [piped out |] ");
+			if((cmd__->n_redirections > 0) && (ft_strcmp((&(t_m->commands[i + 1]))->input , "pipe") == 0) )
+				printf(" [piped out |] ");
 		}
-		if(cmd__->is_piped_out)
-			printf(" [piped out |] ");
-		if(cmd__->is_piped_in)
-			printf(" [| piped-in] ");
 		if (cmd__->n_redirections >= 1)
 		{
 			printf(" [%d out_files] ", cmd__->n_redirections);
@@ -215,33 +211,34 @@ void	apply_is_stds(t_minishell *t_m)
 	{
 		if (!ft_strcmp((&t_m->commands[i])->input, "STD_IN"))
 			(&(t_m->commands[i]))->is_stdin = true;
-		if (!ft_strcmp((&t_m->commands[i])->input, "STD_OUT"))
+		if (!ft_strcmp((&t_m->commands[i])->output, "STD_OUT"))
 			(&(t_m->commands[i]))->is_stdout = true;
 		if (!ft_strcmp((&t_m->commands[i])->output, "pipe"))
 			(&(t_m->commands[i]))->is_piped_out = true;
 		if (!ft_strcmp((&t_m->commands[i])->input, "pipe"))
-			(&(t_m->commands[i]))->input = true;
+		(&(t_m->commands[i]))->is_piped_in = true;
+		
 		i++;
 	}
 }
 
 void parse_free(t_minishell *t_m)
 {
-	size_t	i;
+	// size_t	i;
 
-	i = 0;
+	// i = 0;
 	if(t_m->splt_cat)
 		free(t_m->splt_cat);
 	for (int i = 0; i < MAX_CMDS; i++)
 	{
-		/*if(t_m->commands[i].command)
-			free(t_m->commands[i].command);
+		if(t_m->commands[i].command)
+			ft_memdel(t_m->commands[i].command);
 		if(t_m->commands[i].output)
-			free(t_m->commands[i].output);
-		if(t_m->commands[i].input)
-			free(t_m->commands[i].input);*/
+			ft_memdel(t_m->commands[i].output);
+		// if(t_m->commands[i].input)
+		// 	free(t_m->commands[i].input);
 	}
-	return;
+	//return;
 	free(t_m->commands);
 	free_tokens(t_m->cmd_tokens);
 }

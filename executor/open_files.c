@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:49:14 by gchauvot          #+#    #+#             */
-/*   Updated: 2024/10/24 12:03:23 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/20 14:37:50 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,30 +15,22 @@
 int	dupclose(int fd2, int fd1)
 {
 	if (dup2(fd2, fd1) == -1)
-		return (perror("minishell: "), exit(1), 1);
+		return (perror("minishell: "), exit(126), 1);
 	if (close(fd2) == -1)
-		return (perror("minishell: "), exit(1), 1);
+		return (perror("minishell: "), exit(126), 1);
 	return (0);
-	
 }
 
-char *tmpnamer()
+char	*tmpnamer(void)
 {
-	size_t		i;
-	char *res;
+	size_t	i;
+	char	*res;
 
 	i = 0;
-	//fprintf(stderr, "name: %s\n", name);
-	//chdir("/home/gchauvot/Proj/Minishells/v7/temp/");
-	// name[0]='/';
-	// // if (name[0]=='a')
-	// // 	fprintf(stderr, "namqweqwee: %s\n", name);
-	// name[1]='a';
-	// name[2]=0;
-	while (i < 5000)
+	while (i < 10000)
 	{
 		res = ft_itoa(i);
-		if(access(res, F_OK))
+		if (access(res, F_OK))
 			break ;
 		else
 			free(res);
@@ -46,61 +38,71 @@ char *tmpnamer()
 	}
 	return (res);
 }
+int gbs=0;
+void	handler2(int signum)
+{	
+	if (signum == SIGINT)
+	{
+		rl_done = 1;
+		gbs = 1;
+		write(2, "\n", 1);
+		rl_replace_line("", 0);
+		rl_on_new_line();
 
-int	heredoc(char *eof, t_cmd *cmd, t_minishell *t_m)
+	}
+	return ;
+}
+
+int	heredoc(char *eof, t_cmd *cmd)
 {
-
 	char	*tempfile;
-
+	pid_t	pid;
+	char	*line;
+	int		docfd;
+	int		tmfr=0;
 
 	tempfile = tmpnamer();
 	if (!tempfile)
 		return (perror("join err: "), -1);
-	pid_t pid;
 	signalignore(SIGINT);
-	int fdin;
-	fdin=dup(0);
-	close(0);
 	pid = fork();
 	if (!pid)
 	{
-		dup2(fdin, 0);
-		close(fdin);
-		char	*line;
-		int		docfd;
 		signalsetter(SIGINT, SIG_DFL);
-		docfd = open(tempfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if(docfd == -1)
+		docfd = open(tempfile, O_WRONLY | O_CREAT | O_TRUNC, 777);
+		if (docfd == -1)
 			return (perror("openhere err: "), -1);
 		while (1)
 		{
 			line = readline("heredoc>");
 			if (line)
 			{
-				if(ft_strlen(eof) == ft_strlen(line))
+				if (ft_strlen(eof) == ft_strlen(line))
 				{
-					if(!ft_strncmp(eof,line, ft_strlen(eof)))
+					if (!ft_strncmp(eof, line, ft_strlen(eof)))
 						break ;
 				}
 				ft_putendl_fd(line, docfd);
 				free(line);
-			}			
+			}
+			else
+			{
+				//fprintf(stderr, "!line\n");
+				continue ;
+			}	
 		}
-		if (line)
-			free(line);
+		free(line);
 		close(docfd);
-		exit (0);
+		exit (1);
 	}
-	if(pid)
-	{
-		waitpid(pid,0,0);
-		dup2(fdin, 0);
-		rl_replace_line("",0);
-	}
+	if (pid)
+		waitpid(pid, &tmfr, 0);
 	signalsetter(SIGINT, handler);
-	free(cmd->input);
+	//fprintf(stderr, "tmfr= &%d&\n", tmfr);
+	if (tmfr == 2)
+		return (cmd->input = tempfile, -1);
 	cmd->input = tempfile;
-	return(3);
+	return (3);
 }
 
 int	heredocalloc(t_minishell *t_m)
@@ -109,19 +111,15 @@ int	heredocalloc(t_minishell *t_m)
 	size_t	i;
 
 	i = 0;
-	// t_m->heredocs = ft_calloc(t_m->cmd_count + 1, sizeof(int));
-	// if (!t_m->heredocs)
-	// 	return (perror ("minishell_heredocalloc:"), -1);
-	while(i <= t_m->cmd_count - 1)
+	while (i <= t_m->cmd_count - 1)
 	{
 		c = &(t_m->commands[i]);
-		if(c->is_heredoc)
-			heredoc(c->input, c, t_m);
-		// if(t_m->heredocs[i] == -1)
-		// 	return (-1);
+		if (c->is_heredoc)
+			if(heredoc(c->input, c)==-1)
+				return -1;
 		i++;
-
 	}
+	//write(2,"\n",1);
 	return (1);
 }
 
@@ -131,16 +129,21 @@ int	delete_heredocs(t_minishell *t_m)
 	t_cmd	*c;
 
 	i = 0;
-	while(i < t_m->cmd_count)
+	while (i < t_m->cmd_count)
 	{
 		c = &(t_m->commands[i]);
-		if(c->is_heredoc)
+		if (c && c->is_heredoc)
 		{
-			unlink(c->input);
-			free(c->input);
+			if (c->input)
+			{
+				if (access(c->input, F_OK) == 0)
+				{
+					if (unlink(c->input) == -1)
+						perror("unlink heredoc: ");
+				}
+			}
 		}
 		i++;
 	}
 	return (0);
 }
-

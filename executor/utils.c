@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gchauvot <gchauvot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:48:53 by gchauvot          #+#    #+#             */
-/*   Updated: 2024/10/22 15:05:29 by gchauvot         ###   ########.fr       */
+/*   Updated: 2024/11/20 15:17:28 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void free_c_args(t_minishell	*t_m)
+void	free_c_args(t_minishell	*t_m)
 {
-	int		i;
+	int	i;
 
 	i = 0;
 	while (t_m->c_args[i])
@@ -23,6 +23,7 @@ void free_c_args(t_minishell	*t_m)
 		i++;
 	}
 	free(t_m->c_args[i]);
+	free(t_m->c_args);
 }
 
 int	open_file(char *file, int in_out, int append)
@@ -37,19 +38,18 @@ int	open_file(char *file, int in_out, int append)
 		ret = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (ret == -1)
 	{
-		// fprintf(stderr, "inout: %d|append : %d\n", in_out,append);
 		perror("minishell open_file: ");
 		ft_putendl_fd(file, 2);
-		exit(0);
+		return (ret);
 	}
 	return (ret);
 }
 
 char	*get_env(char **env)
 {
-	int			i;
-	int			j;
-	char		*s;
+	int		i;
+	int		j;
+	char	*s;
 
 	i = 0;
 	while (env[i])
@@ -79,20 +79,21 @@ char	*bget_path2(char *cmd, char **env)
 
 	i = -1;
 	b_path = ft_split(get_env(env), ':');
-	e_cmd = ft_split(cmd, ' ');
+	e_cmd = cmd;
 	while (b_path[++i])
 	{
 		str_path = ft_strjoin(b_path[i], "/");
-		exec_cmd = ft_strjoin(str_path, e_cmd[0]);
+		// exec_cmd = ft_strjoin(str_path, e_cmd[0]);
+		exec_cmd = ft_strjoin(str_path, e_cmd);
 		free(str_path);
 		if (access(exec_cmd, F_OK | X_OK) == 0)
 		{
-			ft_free_tab(e_cmd);
+			//ft_free_tab(e_cmd);
 			return (exec_cmd);
 		}
 		free(exec_cmd);
 	}
-	ft_free_tab(e_cmd);
+	//ft_free_tab(e_cmd);
 	ft_free_tab(b_path);
 	return (cmd);
 }
@@ -112,10 +113,10 @@ void	ft_free_tab(char **tab)
 
 char	**pipe_env(t_minishell *t_m)
 {
-	int	i;
-	int	x;
-	char **env;
-	t_env *temp;
+	int		i;
+	int		x;
+	char	**env;
+	t_env	*temp;
 
 	i = 0;
 	x = 0;

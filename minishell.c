@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:07:22 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/30 14:43:09 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/20 17:55:12 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,31 @@
 
 #include <readline/readline.h>
 #include <readline/history.h>
+int sigcatch = 0;
 
 void	minishell(t_minishell *t_m)
 {
 	char 	*line;
 	signalignore(SIGQUIT);
 	signalsetter(SIGINT, handler);
+	t_m->exstat = 0;
+	t_m->is_expand = 0;
+	t_m->n_expand = 0;
+	t_m->exp_starter = 0;
 	
 	line = readline("$ ");
 	add_history(line);
 	while(line)
 	{
+		t_m->exp_starter = 0;
 		if(ft_strlen(line) < 1)
 		{
 			line = readline("$ ");
 			add_history(line);
 			continue ;
 		}
-		t_m->cmd_tokens = (token **) malloc(sizeof(token **));
+		t_m->cmd_tokens = ft_calloc(1, sizeof(token **));
 		*(t_m->cmd_tokens) = NULL;
-		line = parse_expands(line, t_m);
 		parse_errors(line, t_m);
 		if(t_m->parse_error)
 		{
@@ -46,8 +51,10 @@ void	minishell(t_minishell *t_m)
 		show_tokens(t_m->cmd_tokens);
 		parse_commands(t_m, t_m->cmd_tokens);
 		print_commands(t_m);
-		// exec_cmds(t_m);
-		// parse_free(t_m);
+		apply_expands(t_m);
+		exec_cmds(t_m);
+		//parse_free(t_m);
+		
 		line = readline("$ ");
 		add_history(line);
 	}
@@ -61,7 +68,7 @@ int main(int argc, char **argv, char **env)
 	if(!env || argc > 1)
 		return (0);
 	shlvlhandler(env);
-	t_m = (t_minishell *) malloc(sizeof(t_minishell));
+	t_m = ft_calloc(1, sizeof(t_minishell));
 	if(!t_m)
 		return (EXIT_FAILURE);
 	env_init(t_m, env);

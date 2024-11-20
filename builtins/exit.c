@@ -3,34 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: gchauvot <gchauvot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 14:30:09 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/23 14:32:52 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/07 11:23:08 by gchauvot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-/*
-void	mini_exit(t_mini *mini, char **cmd)
+
+void	f__exit(t_minishell *t_m, t_cmd *c)
 {
-	mini->exit = 1;
-	ft_putstr_fd("exit ", STDERR);
-	cmd[1] ? ft_putendl_fd("❤️", STDERR) : ft_putendl_fd("💚", STDERR);
-	if (cmd[1] && cmd[2])
-	{
-		mini->ret = 1;
-		ft_putendl_fd("minishell: exit: too many arguments", STDERR);
-	}
-	else if (cmd[1] && ft_strisnum(cmd[1]) == 0)
-	{
-		mini->ret = 255;
-		ft_putstr_fd("minishell: exit: ", STDERR);
-		ft_putstr_fd(cmd[1], STDERR);
-		ft_putendl_fd(": numeric argument required", STDERR);
-	}
-	else if (cmd[1])
-		mini->ret = ft_atoi(cmd[1]);
-	else
-		mini->ret = 0;
-}*/
+	char **tmp;
+
+	tmp = ft_split(c->command, ' ');
+	if (tmp[1])
+		t_m->exstat = ft_atoi(tmp[1]);
+	//fprintf(stderr, "exit status tmp[1]: %s, t_,exsitat: %d\n", tmp[1], t_m->exstat);
+	ft_free_tab(tmp);
+	free_c_args(t_m);
+	delete_heredocs(t_m);
+	free(t_m->pipes_fd);
+	free(t_m->pid);
+	parse_free(t_m);
+	exit(t_m->exstat);
+}

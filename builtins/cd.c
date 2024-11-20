@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: gchauvot <gchauvot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 11:37:15 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/14 14:43:54 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/04 16:01:21 by gchauvot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,19 @@ static int	go_to(int n, t_minishell *t_m)
 
 static void update_oldpwd(t_minishell *t_m)
 {
-	
+	t_env	*tmp;
+
+	tmp = t_m->env;
+	while(tmp)
+	{
+		if (ft_strncmp(tmp->value, "OLDPWD=", 8))
+		{
+			free(tmp->value);
+			tmp->value = ft_strjoin("OLDPWD=", getenv("PWD"));
+			break ;
+		}
+		tmp = tmp->next;
+	}
 }
 
 int	f__cd(char **args, t_minishell *t_m)

@@ -1,9 +1,9 @@
-OUT = MINISHELL
+OUT = minishell
 
 SRC = ./parsing/*.c  *.c ./builtins/*.c ./env/*.c ./executor/*.c ./signals/*.c
 SRC_OBJS = $(SRC.c=.o)
 
-FLAGS = -Wall -Wextra
+FLAGS = -Wall -Wextra -g
 HEADER = -I. -I$(LIBFT_DIR)
 
 LIBFT_DIR = Libft/

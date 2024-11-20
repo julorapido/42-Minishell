@@ -3,87 +3,62 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gchauvot <gchauvot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 12:08:14 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/23 16:15:57 by gchauvot         ###   ########.fr       */
+/*   Updated: 2024/11/20 17:26:47 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void shlvladd(char *env)
-{
-	size_t	j;
-	char	*res;
-	j = 0;
-	if(!ft_strncmp(env, "SHLVL=", 6))
-	{
-		res = ft_itoa(ft_atoi(&env[6]) + 1 ) ;
-		while (j < ft_strlen(res))
-		{
-			env[6 + j] = res[j];
-			j++;
-		}
-		env[6 + j] = '\0';
-	}
-	if(!ft_strcmp(env, "SHELL=/bin/zsh"))
-	{
-		// printf("brosat,env: $%s$\n", env);
-		// // char *lolo=ft_strdup("SHELL=/home/gchauvot/Proj/Minishells/v8/MINISHELL");
-		// char *lolo="SHELL=/home/gchauvot/Proj/Minishells/v8/MINISHELL";
-		// strcat(env,lolo);
-		// printf("brosat,env: $%s$\n", env);
-	}
-
-}
-
 void	shlvlhandler(char **env)
 {
 	int		i;
 	size_t	j;
+	int		mark;
 	char	*res;
-	char	*pwd;
 
 	i = 0;
 	j = 0;
-	while(env[i])
+	mark = 0;
+	while (env[i])
 	{	
-		if(!ft_strncmp(env[i], "SHLVL=", 6))
+		if (!ft_strncmp(env[i], "SHLVL=", 6))
 		{
-			res = ft_itoa(ft_atoi(&env[i][6]) + 1) ;
+			res = ft_itoa(ft_atoi(&env[i][6]) + 1);
 			while (j < ft_strlen(res))
 			{
 				env[i][6 + j] = res[j];
 				j++;
 			}
 			free(res);
-			env[i][6+j] = '\0';
-		}
-		if(!ft_strcmp(env[i], "SHELL=/bin/zsh"))
-		{
-			pwd = ft_strdup(getenv("_"));
-			char *temp=ft_strjoin("SHELL=", pwd);
-			free(pwd);
-			env[i] = temp;
+			env[i][6 + j] = '\0';
+			mark = -1;
 		}
 		i++;
 	}
+	if (mark != -1)
+	{
+		env[i] = "SHLVL=0";
+		env[i + 1] = 0;
+	}
 }
-void	ft_exec2(char *cmd, char **env)
+
+void	ft_exec2(char *cmd, char **env, t_minishell *tm)
 {
 	char	**ft_cmd;
 	char	*path;
 
 	ft_cmd = ft_split(cmd, ' ');
+	//trim_tab(ft_cmd, tm);
 	path = bget_path2(ft_cmd[0], env);
-	signalsetter(SIGINT, SIG_DFL);		
 	if (execve(path, ft_cmd, env) == -1)
 	{
 		ft_putstr_fd("solo: command not found: ", STDERR_FILENO);
 		ft_putendl_fd(ft_cmd[0], 2);
 		ft_free_tab(ft_cmd);
-		exit(0);
+		exit(127);
 	}
 }
 
@@ -91,98 +66,105 @@ int	ft_soloexec(t_minishell *t_m, size_t i, int c_int)
 {
 	t_cmd	*c;
 	char	**outlist;
-	char 	**nenv;
+	char	**nenv;
+	int 	pass=0;
 
 	c = &(t_m->commands[i]);
-	outlist = ft_split(c->output,' ');
+	outlist = ft_split(c->output, ' ');
 	nenv = pipe_env(t_m);
-	if (!ft_strcmp(c->output, "pipe"))
+	if (i < t_m->cmd_count)//c->is_piped_out)
 		pipe(t_m->pipes_fd[i]);
 	signalignore(SIGINT);
 	t_m->pid[i] = fork();
-	if(!t_m->pid[i])
-		child_molestor(t_m, c, i, c_int,outlist, nenv);
-	if(i>0)
+	if (!t_m->pid[i])
+		child_molestor(t_m, c, i, c_int, outlist, nenv);
+	if (i > 0)
 	{
-		c = &(t_m->commands[i-1]);
-		if(!ft_strcmp(c->output, "pipe"))
-			close(t_m->pipes_fd[i-1][0]);
-		if(!ft_strcmp(c->output, "pipe"))
-			close(t_m->pipes_fd[i-1][1]);
+		c = &(t_m->commands[i - 1]);
+			close(t_m->pipes_fd[i - 1][0]);
+		if (pass==0)
+			close(t_m->pipes_fd[i - 1][1]);
+	}
+	if (i == t_m->cmd_count-1)
+	{
+		c = &(t_m->commands[i]);
+		close(t_m->pipes_fd[i][0]);
+		close(t_m->pipes_fd[i][1]);
 	}
 	free(nenv);
 	ft_free_tab(outlist);
 	return (1);
 }
 
-int	nullcommand(t_minishell *t_m, size_t i)
-{
-	ft_soloexec(t_m, i, -1);
-	return (0);
-}
-
 int	ft_waiter(t_minishell *t_m)
 {
 	size_t	i;
-	int		pid_exnum;
-	int		balance;
 
 	i = 0;
-	pid_exnum = 0;
-	balance = 0;
-	while(i < (t_m->cmd_count))
+	t_m->exstat = 0;
+	while (i < (t_m->cmd_count))
 	{
-		waitpid(t_m->pid[i], &pid_exnum, 0);
-		if(pid_exnum == 2 && balance == 0)
+		waitpid(t_m->pid[i], &t_m->exstat, 0);
+		if(WIFSIGNALED(t_m->exstat))
 		{
-			write(2,"\n",1);
-			balance = 1;
+			t_m->exstat = WEXITSTATUS(t_m->exstat);
+			write(2, "\n", 1);
 		}
 		i++;
 	}
 	return (0);
 }
-void	exec_cmds(t_minishell *t_m)
-{
-	t_cmd	*c;
-	size_t	i;
-	int		c_int;
-	
 
-	i = 0;
-	fprintf(stderr,"--------- COMMANDS EXECUTION ---------\n");
+int	exec_init(t_minishell *t_m)
+{
 	t_m->pid = ft_calloc(t_m->cmd_count + 1, sizeof(pid_t));
 	if (!t_m->pid)
-		return (perror("pid array creation error."), exit(1));
-	t_m->pipes_fd = ft_calloc(t_m->cmd_count + 1, sizeof(int[2]));
+		return (perror("pid array creation error."), exit(1), -1);
+	t_m->pipes_fd = ft_calloc(t_m->cmd_count + 1, sizeof(int [2]));
 	if (!t_m->pipes_fd)
-		return (perror("pipes array creation error."), exit(1));
-	if(heredocalloc(t_m) == -1)
-		return ;
-	while(i < t_m->cmd_count )
-	{
-		c = &(t_m->commands[i]);
-		if(c->command == NULL)
-		{
-			//FREE C_ARGS impossible si command nulle;
-			//fprintf(stderr, "c->command: $%s$, i: $%ld$\n", c->command, i);
+		return (perror("pipes array creation error."), exit(1), -1);
+	return (0);
+}
+
+
+int	executions(t_minishell *t_m, size_t i)
+{
+	t_cmd	*c;
+	int		c_int;
+
+	c = &(t_m->commands[i]);
+	if (c->command == NULL)
 			ft_soloexec(t_m, i, -1);
-			i++;
-			continue ;
-		}
+	else if (t_m->is_expand && ft_strchr(c->command, '=') && !ft_strchr(c->command, ' '))
+	{
+		free(c->command);
+		c->command = NULL;
+		ft_soloexec(t_m, i, -1);
+	}
+	else
+	{
 		t_m->c_args = ft_split(c->command, ' ');
 		c_int = is_builtin(t_m->c_args[0]);
-		if (c_int != -1 && ft_strcmp(c->input, "pipe") && ft_strcmp(c->output, "pipe"))
-			run_builtin(t_m, c_int, 1);
+		if (c_int != -1 && !c->is_piped_in && !c->is_piped_out)
+			builtindirector(t_m, c, c_int);
 		else
 			ft_soloexec(t_m, i, c_int);
-		i++;
-		free_c_args(t_m);
 	}
+	return (0);
+}
+
+void	exec_cmds(t_minishell *t_m)
+{
+	size_t	i;
+
+	i = 0;
+	exec_init(t_m);
+	if (heredocalloc(t_m) != -1)
+		while (i < t_m->cmd_count)
+			executions(t_m, i++);
+	else
+		write(2,"\n",1);
 	ft_waiter(t_m);
-	signalsetter(SIGINT, handler);
 	delete_heredocs(t_m);
-	free(t_m->pipes_fd);
-	free(t_m->pid);
-	//free(t_m->heredocs);
+	signalsetter(SIGINT, handler);
 }

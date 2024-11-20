@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: gchauvot <gchauvot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 13:45:02 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/15 13:16:15 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/10/30 16:57:31 by gchauvot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	env_init(t_minishell *t_m, char **argv)
 	t_env	*new;
 	int		i;
 
-	if (!(env = malloc(sizeof(t_env))))
+	if (!(env = ft_calloc(1, sizeof(t_env))))
 		return (1);
 	env->value = ft_strdup(argv[0]);
 	env->next = NULL;
@@ -65,7 +65,7 @@ int	env_init(t_minishell *t_m, char **argv)
 	i = 1;
 	while (argv && argv[0] && argv[i])
 	{
-		if (!(new = malloc(sizeof(t_env))))
+		if (!(new = ft_calloc(1, sizeof(t_env))))
 			return (1);
 		new->value = ft_strdup(argv[i]);
 		new->next = NULL;
