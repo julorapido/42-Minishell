@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 01:13:37 by julessainth       #+#    #+#             */
-/*   Updated: 2024/11/21 15:36:06 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/25 15:30:50 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ long	ft_atoi_l(const char *str);
 char	*ft_splitcat(char **ft_split);
 char	**ft_split_ignoreQuote(char const *s, char c);
 int		ft_last_strchr_i(const char *string, char a, char b);
-
+char	*ft_strjoin_free(char *s1, char *s2);
 
 
 /* additional functions */

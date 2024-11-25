@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/25 12:46:22 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/25 14:21:59 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ typedef struct s_token
 {
 	char 			*cmd;
 	enum TOKEN_TYPE	t;
+	bool	quote_ignoreSpace;
 	struct s_token	*prev;
 	struct s_token	*next;
 }	token;

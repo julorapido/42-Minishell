@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 12:26:30 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/21 14:31:27 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/25 14:22:29 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,9 @@ static void	parse_commands2(t_cmd *cmd__, token *t, t_minishell *t_m)
 				ft_strlcpy(cmd__->command, t->cmd, ft_strlen(t->cmd) + 1);
 			}
 			else
-				cmd__->command = fn_realloc_strcat(cmd__->command, t->cmd, 1);	
+				cmd__->command = fn_realloc_strcat(cmd__->command, t->cmd, 
+					t->quote_ignoreSpace ? 0 : 1 //(t->t == QUOTE || ( (t->next) && ((t->next)->t == QUOTE)) ? (0) : (1))
+				);	
 		}
 	}
 }

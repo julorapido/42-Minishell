@@ -6,12 +6,58 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:55:36 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/25 12:46:40 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/25 16:02:28 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+static char *fn_revaround_quote(char *str)
+{
+	int		i;
+	int		j;
+	char	left[ft_strlen(str) / 2];
+	char	right[ft_strlen(str) / 2];
+	char	*new_s;
+
+	new_s = (char *) malloc(ft_strlen(str));
+	j = 0;
+	i = 0;	
+	while (str[i] != '\0' && str[i] != '\"')
+	{
+		left[j] = str[i];
+		i++;
+		j++;
+	}
+	i++;
+	left[j] = '\0';
+	while(str[i] != '\0' && str[i] != '\"')
+		i++;
+	i++;
+	j = 0;
+	while (str[i])
+	{
+		right[j] = str[i];
+		j++;
+		i++;
+	}
+	right[j] = '\0';
+	/*printf("\nLEFT: %s     RIGHT: %s    MIDDLE: %s\n", 
+		left, right, ft_substr(str, 
+			ft_strlen(left) + 1,
+			((ft_strlen(str) - ft_strlen(right)) - ft_strlen(left)) - 2
+		)
+	);*/
+	return (ft_strjoin(ft_strlen(right) ? ft_strdup(right) : "", 
+		ft_strjoin(
+			ft_substr(str, 
+				ft_strlen(left) + 1,
+				((ft_strlen(str) - ft_strlen(right)) - ft_strlen(left)) - 2
+			),		
+			ft_strdup(left)
+		)
+	));
+}
 
 void	fn_revstr(char *up_s)
 {
@@ -25,9 +71,14 @@ void	fn_revstr(char *up_s)
 	i = 0;
 	if (!up_s || up_s == NULL || ft_strlen(up_s) <= 1)
 		return ;
-	s_p = ft_split_quotes(up_s, ' ', 1);
+	s_p = ft_split_quotes(up_s, ' ', 0);
 	while (s_p[i])
+	{
+		if(ft_m_strchr_i(s_p[i], '\"', '\"') != -1)
+			if(*s_p[i] != '\"' || s_p[ft_strlen(s_p[i]) - 1] != '\"')
+				s_p[i] = fn_revaround_quote(s_p[i]);
 		i++;
+	}
 	i--;
 	while (i >= 0)
 	{
