@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 12:18:44 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/20 17:48:05 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/25 12:10:31 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -275,7 +275,7 @@ void	apply_expands(t_minishell *t)
 			{
 				j = 1;
 				while (cmd_line[i + j] != ' ' && cmd_line[i + j] != '\0' && cmd_line[i + j] != '$'
-					&& cmd_line[i + j] != ';')
+					&& cmd_line[i + j] != ';' && cmd_line[i + j] != '\"')
 					j++;
 				sub_s = ft_substr(cmd_line, i + 1, j - 1);
 				if (sub_s[0] == '?')

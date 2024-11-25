@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 12:32:38 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/25 11:55:47 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/25 12:22:06 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,43 +132,20 @@ void	parse_quote(token **cmd_tokens, char **s_cmds, int *i)
 					);
 				}
 			}
-				
 		}
 		token_push(cmd_tokens, token_new(s, QUOTE));
 	}
 	// doesnt start with quote ""
 	else
 	{
+		// ex: $ echo ab"cd efg"
 		int x = ft_m_strchr_i(s, '\"', '\"');
 		char *left = ft_substr(s, 0, x);
 		
-		char *quoted_subs = ft_substr(s, x + 1, ft_strlen(s));
-		int x2 = ft_m_strchr_i(quoted_subs, '\"', '\"');
+		char *quoted_subs = ft_substr(s, x, ft_strlen(s));
 		token_push(cmd_tokens, token_new(left, COMMAND));
-		// ex: $ echo ab"c de fg"
-		if (x2 == -1)
-		{
-			quoted_subs = ft_strjoin( ft_strjoin("\"", quoted_subs), " ");
-			(*i)++;
-			while(ft_m_strchr_i(s_cmds[(*i)], '\"', '\"') == -1)
-			{
-				quoted_subs = ft_strjoin(ft_strjoin(quoted_subs, s_cmds[(*i)]), " ");
-				(*i)++;
-			}
-			x2 = ft_m_strchr_i(s_cmds[(*i)], '\"', '\"');
-			quoted_subs = ft_strjoin(quoted_subs, ft_substr(s_cmds[(*i)], 0, x2));
-			quoted_subs = ft_strjoin(quoted_subs, "\"");
-			token_push(cmd_tokens, token_new(quoted_subs, QUOTE));
-			s_cmds[(*i)] = ft_substr(s_cmds[(*i)], x2 + 1, ft_strlen(s_cmds[(*i)]));
-		}
-		// ex: $ echo ab"cd" e
-		else
-		{
-			char *right = ft_strjoin("\"", ft_substr(quoted_subs, 0, x2 + 1));
-			char *rest = ft_substr(quoted_subs, x2 + 1, ft_strlen(s));
-			token_push(cmd_tokens, token_new(right, QUOTE));
-			s_cmds[(*i)] = rest;
-		}
+		s_cmds[(*i)] = quoted_subs;
+		return;
 	}
 }
 
