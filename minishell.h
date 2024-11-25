@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/25 14:21:59 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/25 17:51:33 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,9 @@
 # define MAX_CMDS 512
 # define MAX_OUTFILES 64
 # define MAX_EXPANDS 1024
+
+# define TOKEN_STOCK_SIZE 128
+
 
 # define M_TKEN(x) (x == ';') ? SEPARATOR : PIPE 
 # define M_CMD(x) (x) ? "STD_IN" : "pipe";
@@ -130,6 +133,7 @@ typedef struct s_minishell
 	token				**cmd_tokens;	// arr of tokens
 	t_expand			expands[MAX_EXPANDS];
 	struct s_cmd_parsing	p_cmd;
+	token				*stocked_token;
 	int					exstat;
 	int					is_expand;
 	int					n_expand;
@@ -159,7 +163,7 @@ void	apply_appends_reverse(t_minishell *t_m);
 void	apply_commands_reverse(t_minishell	*t_m);
 void	apply_is_stds(t_minishell *t_m);
 bool	is_parse_error(char *s);
-enum TOKEN_TYPE	switcher(char *tken, token **t_l);
+enum TOKEN_TYPE	switcher(t_minishell *t_m, char *tken, token **t_l);
 char	*fn_realloc_strcat(char *filled_str, char *cncat_str, int space_it);
 int		switcher_i(char *tken);
 
@@ -175,7 +179,7 @@ int		parse_tokens(char *cmd, token **cmd_tokens, t_minishell *t_m);
 int		parse_commands(t_minishell *t_m, token **cmd_tokens);
 int		parse_errors(char *cmd, t_minishell *t_m);
 void	parse_free(t_minishell *t_m);
-void	parse_quote(token **cmd_tokens, char **s_cmds, int *i);
+void	parse_quote(t_minishell *t_m, token **cmd_tokens, char **s_cmds, int *i);
 void	apply_expands(t_minishell *t);
 char	**ft_split_quotes(char *s, char c, int remove_quote);
 

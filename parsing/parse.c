@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 17:46:03 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/25 16:57:33 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/25 17:53:55 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int	parse_errors(char *cmd, t_minishell *t_m)
 }
 
 // PARSE [TOKENS]
-static void	parse_tokens2(token **cmd_tokens, int *i, char **s_cmds)
+static void	parse_tokens2(token **cmd_tokens, int *i, char **s_cmds, t_minishell *t_m)
 {
 	int		ix;
 	char	*temp;
@@ -81,7 +81,7 @@ static void	parse_tokens2(token **cmd_tokens, int *i, char **s_cmds)
 	ix = ft_m_strchr_i(s_cmds[(*i)], ';', '|');
 	saved_s = ft_substr(s_cmds[(*i)], 0, ix);	
 	if (ft_strlen(saved_s) > 0)
-		token_push(cmd_tokens, token_new(saved_s, switcher(saved_s, cmd_tokens)));
+		token_push(cmd_tokens, token_new(saved_s, switcher(t_m, saved_s, cmd_tokens)));
 	else
 		free(saved_s);
 	token_push(cmd_tokens, token_new("", M_TKEN( s_cmds[(*i)][ix] )));
@@ -109,7 +109,7 @@ int	parse_tokens(char *cmd, token **cmd_tokens, t_minishell *t_m)
 	while (s_cmds[i] != NULL)
 	{	
 		if(ft_m_strchr_i(s_cmds[i], '\"', '\"') != -1)
-			parse_quote(cmd_tokens, s_cmds, &i);
+			parse_quote(t_m, cmd_tokens, s_cmds, &i);
 		else
 		{
 			if (ft_strlen(s_cmds[i]) == 1 || (!ft_strchr(s_cmds[i], ';') && !ft_strchr(s_cmds[i], '|'))) 
@@ -119,14 +119,14 @@ int	parse_tokens(char *cmd, token **cmd_tokens, t_minishell *t_m)
 				else
 				{
 					if (strlen(s_cmds[i]) >= 2 && (ft_strchr(s_cmds[i], '>') || ft_strchr(s_cmds[i], '<') || ft_strchr(s_cmds[i], '|')))
-						switcher(s_cmds[i], t_m->cmd_tokens);
+						switcher(t_m, s_cmds[i], t_m->cmd_tokens);
 					else
-						token_push(t_m->cmd_tokens, token_new(s_cmds[i], switcher(s_cmds[i], t_m->cmd_tokens)));
+						token_push(t_m->cmd_tokens, token_new(s_cmds[i], switcher(t_m, s_cmds[i], t_m->cmd_tokens)));
 				}
 				i++;
 			}
 			else
-				parse_tokens2(t_m->cmd_tokens, &i, s_cmds);
+				parse_tokens2(t_m->cmd_tokens, &i, s_cmds, t_m);
 		}
 	}
 	if(s_cmds[i])

@@ -6,14 +6,14 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 12:32:38 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/25 17:06:33 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/25 17:54:40 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 
-void	parse_quote(token **cmd_tokens, char **s_cmds, int *i)
+void	parse_quote(t_minishell *t_m, token **cmd_tokens, char **s_cmds, int *i)
 {
 	char *s;
 
@@ -51,11 +51,11 @@ void	parse_quote(token **cmd_tokens, char **s_cmds, int *i)
 		int x = ft_m_strchr_i(s, '\"', '\"');
 		char *left = ft_substr(s, 0, x);
 		
-		char *quoted_subs = ft_substr(s, x, ft_strlen(s));
-		token *t = token_new(left, COMMAND);
+		token *t = token_new(ft_substr(s, x, ft_strlen(s)), QUOTE);
 		t->quote_ignoreSpace = true;
-		token_push(cmd_tokens, t);
-		s_cmds[(*i)] = quoted_subs;
+		t_m->stocked_token = t;
+		// token_push(cmd_tokens, t);
+		s_cmds[(*i)] = left;
 	}
 }
 

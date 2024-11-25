@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:55:36 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/25 17:02:34 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/25 17:51:47 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ void	fn_revstr(char *up_s)
 
 
 
-enum TOKEN_TYPE	switcher(char *tken, token **t_l)
+enum TOKEN_TYPE	switcher(t_minishell *t_m, char *tken, token **t_l)
 {	
 	int		a;
 	char	*s;
@@ -125,6 +125,8 @@ enum TOKEN_TYPE	switcher(char *tken, token **t_l)
 			token_push(t_l, token_new(tken, COMMAND));
 		else
 			free(tken);
+		if(t_m->stocked_token)
+			token_push(t_l, t_m->stocked_token);
 		return (-1);
 	}
 	if (strlen(tken) == 1 || *tken == '|')
