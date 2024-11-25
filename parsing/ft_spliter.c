@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 11:09:49 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/25 12:46:08 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/25 12:51:17 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,9 +99,7 @@ static void	apply_quote_removal(char **t)
 	i = 0;
 	while (t[i])
 	{
-		// t[i] = ft_strtrim(t[i], "\'\"");
 		t[i] =  rm_quotes(t[i], ' ');
-		fprintf(stderr, "tab[%d]: &%s&\n",i,t[i]);
 		i++;
 	}
 	return ;
