@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:55:36 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/21 16:43:49 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/25 12:46:40 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	fn_revstr(char *up_s)
 	i = 0;
 	if (!up_s || up_s == NULL || ft_strlen(up_s) <= 1)
 		return ;
-	s_p = ft_split_quotes(up_s, ' ');
+	s_p = ft_split_quotes(up_s, ' ', 1);
 	while (s_p[i])
 		i++;
 	i--;

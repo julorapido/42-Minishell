@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 17:46:03 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/21 16:53:45 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/25 12:46:49 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ int	parse_tokens(char *cmd, token **cmd_tokens, t_minishell *t_m)
 	int		i;
 
 	i = 0;
-	s_cmds = ft_split(cmd, ' ');
+	s_cmds = ft_split_quotes(cmd, ' ', 0);
 	while (s_cmds[i] != NULL)
 	{	
 		// if(*s_cmds[i] == '\"')

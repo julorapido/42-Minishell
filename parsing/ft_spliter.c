@@ -6,49 +6,11 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 11:09:49 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/21 16:41:05 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/25 12:46:08 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	ft_char_in_set(char c, char const *set)
-{
-	size_t	i;
-
-	i = 0;
-	while (set[i])
-	{
-		if (set[i] == c)
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-char	*ft_strtrim(char const *s1, char const *set)
-{
-	char	*str;
-	size_t	i;
-	size_t	start;
-	size_t	end;
-
-	start = 0;
-	while (s1[start] && ft_char_in_set(s1[start], set))
-		start++;
-	end = ft_strlen(s1);
-	while (end > start && ft_char_in_set(s1[end - 1], set))
-		end--;
-	str = (char *) malloc(sizeof(*s1) * (end - start + 1));
-	if (!str)
-		return (NULL);
-	i = 0;
-	while (start < end)
-		str[i++] = s1[start++];
-	str[i] = '\0';
-	return (str);
-}
-
 
 static size_t	count_words(char const *s, char c)
 {
@@ -81,9 +43,70 @@ static size_t	count_words(char const *s, char c)
 			sq = !sq;
 		i++;
 	}
-	fprintf(stderr,"cwords: %d\n",words);
 	return (words);
 }
+
+static char *rm_quotes(char *s, char c)
+{
+	size_t	words;
+	size_t	i;
+	bool	dq;
+	bool	sq;
+	int		offset;
+
+	words = 0;
+	i = 0;
+	sq = 0;
+	dq = 0;
+	offset = 0;
+	while (s[i + offset])
+	{
+		if (s[i + offset] == '"' && !sq)
+		{
+			dq = !dq;
+			offset++;
+		}
+		else if (s[i + offset] == '\'' && !dq)
+		{
+			sq = !sq;
+			offset++;
+		}
+		if (sq != dq)
+		{
+			if (sq)
+			{
+				if (s[i + offset] == '\'')
+					offset++;
+			}
+			else if (dq)
+			{
+				if (s[i + offset] == '"')
+					offset++;
+			}
+		}
+		s[i] = s[i + offset];
+		i++;
+	}
+	s[i] = '\0';
+	return (s);
+}
+
+
+static void	apply_quote_removal(char **t)
+{
+	size_t	i;
+
+	i = 0;
+	while (t[i])
+	{
+		// t[i] = ft_strtrim(t[i], "\'\"");
+		t[i] =  rm_quotes(t[i], ' ');
+		fprintf(stderr, "tab[%d]: &%s&\n",i,t[i]);
+		i++;
+	}
+	return ;
+}
+
 
 static void	fill_tab(char *new, char const *s, char c)
 {
@@ -98,21 +121,9 @@ static void	fill_tab(char *new, char const *s, char c)
 	new[i] = '\0';
 }
 
-static void	free_tab(char **t)
-{
-	size_t	i;
-
-	i = 0;
-	while (t[i])
-	{
-		free(t[i++]);
-	}
-	free(t);
-	return ;
-}
 
 
-int	filler(char *src, int words, char **splitted, char c)
+static int	filler(char *src, int words, char **splitted, char c)
 {
 	char	**res;
 	int		i;
@@ -163,7 +174,7 @@ int	filler(char *src, int words, char **splitted, char c)
 }
 
 
-char	**ft_split_quotes(char const *s, char c)
+char	**ft_split_quotes(char *s, char c, int remove_quote)
 {
 	size_t	words;
 	char	**tab;
@@ -174,6 +185,8 @@ char	**ft_split_quotes(char const *s, char c)
 	if (!tab)
 		return (NULL);
 	filler(s, words, tab, c);
-	//print_tab(tab);
+	if(remove_quote)
+		apply_quote_removal(tab);
 	return (tab);
 }
+

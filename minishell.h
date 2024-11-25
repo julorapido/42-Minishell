@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/21 16:37:16 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/25 12:46:22 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,6 +176,8 @@ int		parse_errors(char *cmd, t_minishell *t_m);
 void	parse_free(t_minishell *t_m);
 void	parse_quote(token **cmd_tokens, char **s_cmds, int *i);
 void	apply_expands(t_minishell *t);
+char	**ft_split_quotes(char *s, char c, int remove_quote);
+
 
 // BUILT-IN
 int		f__cd(char **args, t_minishell *t_m);
@@ -235,7 +237,6 @@ int	restorefds(t_cmd *c, int fd_stds[2]);
 int	openfds(t_cmd *c, int fd_stds[2], int fd_duped[2]);
 int	builtindirector(t_minishell *t_m, t_cmd *c, int n_builtin);
 t_env	*findenv(char *name, t_env *env);
-char	**ft_split_quotes(char const *s, char c);
 void	trim_tab(char **t, t_minishell *tm);
 
 #endif
