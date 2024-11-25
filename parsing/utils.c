@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:55:36 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/25 16:02:28 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/25 16:34:34 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static char *fn_revaround_quote(char *str)
 	}
 	i++;
 	left[j] = '\0';
-	while(str[i] != '\0' && str[i] != '\"')
+	while(str[i] != '\0' && i < ft_last_strchr_i(str, '\"', '\"'))
 		i++;
 	i++;
 	j = 0;
