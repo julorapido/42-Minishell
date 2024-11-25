@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:07:22 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/20 17:55:12 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/21 15:40:33 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ void	minishell(t_minishell *t_m)
 		show_tokens(t_m->cmd_tokens);
 		parse_commands(t_m, t_m->cmd_tokens);
 		print_commands(t_m);
-		apply_expands(t_m);
-		exec_cmds(t_m);
+		//apply_expands(t_m);
+		// exec_cmds(t_m);
 		//parse_free(t_m);
 		
 		line = readline("$ ");

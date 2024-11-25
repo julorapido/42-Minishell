@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 12:32:38 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/20 18:30:48 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/25 11:55:47 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,41 +83,92 @@ void	parse_quote(token **cmd_tokens, char **s_cmds, int *i)
 	token_push(cmd_tokens, token_new(s_quote, QUOTE));
 	(*i)++;
 }*/
+
 void	parse_quote(token **cmd_tokens, char **s_cmds, int *i)
 {
 	char *s;
 
 	s = ft_strdup(s_cmds[(*i)]);
-	(*i)++;
-	if (s_cmds[*i])
+	// start w quote
+	if(*s == '\"')
 	{
-		while (ft_m_strchr_i(s_cmds[*i], '\"', '\"') == -1)
+		// ex: $ echo "acbde"
+		int ix = ft_m_strchr_i(ft_substr(s_cmds[*i], 1, ft_strlen(s_cmds[*i]) - 1), '\"', '\"');
+		if (ix != -1)
 		{
-			s = fn_realloc_strcat(s, s_cmds[(*i)], 1);
-			(*i)++;
+			s = ft_substr(s_cmds[(*i)], 0, ix + 2);
+			token_push(cmd_tokens, token_new(s, QUOTE));
+			if(ix + 1 != ft_strlen(s_cmds[(*i)]) - 1)
+			{
+				s_cmds[(*i)] = ft_substr(s_cmds[(*i)], ix + 2, ft_strlen(s_cmds[(*i)]));
+			}else
+				(*i)++;
+			return ;
 		}
-		if(s_cmds[*i])
+		(*i)++;
+		if (s_cmds[*i])
 		{
-			/*printf("LAST QUOTE {%s}(len %d) Q found at %d \n", 
-				s_cmds[*i], 
-				ft_strlen(s_cmds[*i]), ft_m_strchr_i(s_cmds[*i], '\"', '\"')
-			);*/
-			if (ft_m_strchr_i(s_cmds[*i], '\"', '\"') == ft_strlen(s_cmds[*i]) - 1)
+			while (ft_m_strchr_i(s_cmds[*i], '\"', '\"') == -1)
 			{
 				s = fn_realloc_strcat(s, s_cmds[(*i)], 1);
-				(*i)++;	
+				(*i)++;
 			}
-			else
+			if(s_cmds[*i])
 			{
-				char *str = ft_substr(s_cmds[(*i)], 0, ft_m_strchr_i(s_cmds[*i], '\"', '\"') + 1);
-				s = fn_realloc_strcat(s, str, 1);
-				s_cmds[(*i)] = ft_substr(s_cmds[(*i)], 
-					ft_m_strchr_i(s_cmds[*i], '\"', '\"') + 1, 
-					ft_strlen(s_cmds[(*i)])
-				);
+				// ex: $ echo "ab ce a"
+				if (ft_m_strchr_i(s_cmds[*i], '\"', '\"') == ft_strlen(s_cmds[*i]) - 1)
+				{
+					s = fn_realloc_strcat(s, s_cmds[(*i)], 1);
+					(*i)++;	
+				}
+				// ex: $ echo "ac f v"f e
+				else
+				{
+					char *str = ft_substr(s_cmds[(*i)], 0, ft_m_strchr_i(s_cmds[*i], '\"', '\"') + 1);
+					s = fn_realloc_strcat(s, str, 1);
+					s_cmds[(*i)] = ft_substr(s_cmds[(*i)], 
+						ft_m_strchr_i(s_cmds[*i], '\"', '\"') + 1, 
+						ft_strlen(s_cmds[(*i)])
+					);
+				}
 			}
+				
 		}
-			
+		token_push(cmd_tokens, token_new(s, QUOTE));
 	}
-	token_push(cmd_tokens, token_new(s, QUOTE));
+	// doesnt start with quote ""
+	else
+	{
+		int x = ft_m_strchr_i(s, '\"', '\"');
+		char *left = ft_substr(s, 0, x);
+		
+		char *quoted_subs = ft_substr(s, x + 1, ft_strlen(s));
+		int x2 = ft_m_strchr_i(quoted_subs, '\"', '\"');
+		token_push(cmd_tokens, token_new(left, COMMAND));
+		// ex: $ echo ab"c de fg"
+		if (x2 == -1)
+		{
+			quoted_subs = ft_strjoin( ft_strjoin("\"", quoted_subs), " ");
+			(*i)++;
+			while(ft_m_strchr_i(s_cmds[(*i)], '\"', '\"') == -1)
+			{
+				quoted_subs = ft_strjoin(ft_strjoin(quoted_subs, s_cmds[(*i)]), " ");
+				(*i)++;
+			}
+			x2 = ft_m_strchr_i(s_cmds[(*i)], '\"', '\"');
+			quoted_subs = ft_strjoin(quoted_subs, ft_substr(s_cmds[(*i)], 0, x2));
+			quoted_subs = ft_strjoin(quoted_subs, "\"");
+			token_push(cmd_tokens, token_new(quoted_subs, QUOTE));
+			s_cmds[(*i)] = ft_substr(s_cmds[(*i)], x2 + 1, ft_strlen(s_cmds[(*i)]));
+		}
+		// ex: $ echo ab"cd" e
+		else
+		{
+			char *right = ft_strjoin("\"", ft_substr(quoted_subs, 0, x2 + 1));
+			char *rest = ft_substr(quoted_subs, x2 + 1, ft_strlen(s));
+			token_push(cmd_tokens, token_new(right, QUOTE));
+			s_cmds[(*i)] = rest;
+		}
+	}
 }
+

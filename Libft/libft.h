@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 01:13:37 by julessainth       #+#    #+#             */
-/*   Updated: 2024/10/17 15:14:48 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/21 15:36:06 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,9 @@ char	*get_next_line(int fd);
 char	*ft_strchr(const char *string, int searchedChar );
 long	ft_atoi_l(const char *str);
 char	*ft_splitcat(char **ft_split);
+char	**ft_split_ignoreQuote(char const *s, char c);
+int		ft_last_strchr_i(const char *string, char a, char b);
+
 
 
 /* additional functions */

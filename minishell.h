@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/20 17:20:08 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/21 16:37:16 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ void			token_dbl_push(token **token_lst);
 void			free_tokens(token **t_arr);
 
 
-// [PARSING] UTILITES
+// [PARSING] UTILITESreturn ;
 void	fn_revstr(char *up_s);
 char	*cmd_remove_lstspace(char *s);
 void	print_commands(t_minishell *t_m);
@@ -176,7 +176,6 @@ int		parse_errors(char *cmd, t_minishell *t_m);
 void	parse_free(t_minishell *t_m);
 void	parse_quote(token **cmd_tokens, char **s_cmds, int *i);
 void	apply_expands(t_minishell *t);
-
 
 // BUILT-IN
 int		f__cd(char **args, t_minishell *t_m);
