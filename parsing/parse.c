@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 17:46:03 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/25 16:32:23 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/25 16:57:33 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ int	parse_errors(char *cmd, t_minishell *t_m)
 				if (s_cmds[i + 1] != s_cmds[i]
 					&& !(s_cmds[i + 1] == '|' || s_cmds[i + 1] == ';') 
 					&& !(s_cmds[i] == '.' || s_cmds[i] == '/' || s_cmds[i] == '\"')
+					&& !(s_cmds[i] == '\"' && s_cmds[i + 1] == '\'')
+					&& !(s_cmds[i] == '\'' && s_cmds[i + 1] == '\"')
 				)
 					t_m->parse_error = true;
 			if (t_m->parse_error == true)

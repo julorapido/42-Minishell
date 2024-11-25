@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:55:36 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/25 16:34:34 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/25 16:57:48 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,17 +42,11 @@ static char *fn_revaround_quote(char *str)
 		i++;
 	}
 	right[j] = '\0';
-	/*printf("\nLEFT: %s     RIGHT: %s    MIDDLE: %s\n", 
-		left, right, ft_substr(str, 
-			ft_strlen(left) + 1,
-			((ft_strlen(str) - ft_strlen(right)) - ft_strlen(left)) - 2
-		)
-	);*/
 	return (ft_strjoin(ft_strlen(right) ? ft_strdup(right) : "", 
 		ft_strjoin(
 			ft_substr(str, 
-				ft_strlen(left) + 1,
-				((ft_strlen(str) - ft_strlen(right)) - ft_strlen(left)) - 2
+				ft_strlen(left),
+				((ft_strlen(str) - ft_strlen(right)) - ft_strlen(left))
 			),		
 			ft_strdup(left)
 		)
@@ -196,14 +190,7 @@ char	*cmd_remove_lstspace(char *s)
 	return (new_s);
 }
 
-void	print_commands(t_minishell *t_m)
-{
-	int		i;
-	t_cmd	*cmd__;
-
-	i = 0;
-	printf("---------- EXECUTOR-COMMANDS ----------\n");
-	while((size_t)(i) < t_m->cmd_count)
+void	print_commands(t_minishell *t_m)a
 	{
 		if ((&(t_m->commands[i]))->continue_)
 		{
