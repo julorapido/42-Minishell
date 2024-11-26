@@ -6,22 +6,24 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:55:36 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/25 17:51:47 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/26 17:54:40 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char *fn_revaround_quote(char *str)
+static char *fn_revaround_quote(char *str, char _quote)
 {
 	int		i;
 	int		j;
 	char	left[ft_strlen(str) / 2];
 	char	right[ft_strlen(str) / 2];
+	char	*new_s;
 
+	new_s = (char *) malloc(ft_strlen(str));
 	j = 0;
 	i = 0;	
-	while (str[i] != '\0' && str[i] != '\"')
+	while (str[i] != '\0' && str[i] != _quote)
 	{
 		left[j] = str[i];
 		i++;
@@ -29,7 +31,7 @@ static char *fn_revaround_quote(char *str)
 	}
 	i++;
 	left[j] = '\0';
-	while(str[i] != '\0' && i < ft_last_strchr_i(str, '\"', '\"'))
+	while(str[i] != '\0' && i < ft_last_strchr_i(str, _quote, _quote))
 		i++;
 	i++;
 	j = 0;
@@ -40,8 +42,8 @@ static char *fn_revaround_quote(char *str)
 		i++;
 	}
 	right[j] = '\0';
-	return (ft_strjoin_free(ft_strlen(right) ? ft_strdup(right) : "", 
-		ft_strjoin_free(
+	return (ft_strjoin(ft_strlen(right) ? ft_strdup(right) : "", 
+		ft_strjoin(
 			ft_substr(str, 
 				ft_strlen(left),
 				((ft_strlen(str) - ft_strlen(right)) - ft_strlen(left)) 
@@ -66,9 +68,13 @@ void	fn_revstr(char *up_s)
 	s_p = ft_split_quotes(up_s, ' ', 0);
 	while (s_p[i])
 	{
-		if(ft_m_strchr_i(s_p[i], '\"', '\"') != -1)
-			if(*s_p[i] != '\"' || s_p[ft_strlen(s_p[i]) - 1] != '\"')
-				s_p[i] = fn_revaround_quote(s_p[i]);
+		if(ft_m_strchr_i(s_p[i], '\"', '\'') != -1)
+			if(*s_p[i] != '\"' || *s_p[i] != '\'' 
+				// || 
+				// s_p[ft_strlen(s_p[i]) - 1] != '\"'
+			){
+				s_p[i] = fn_revaround_quote(s_p[i], s_p[i][ft_m_strchr_i(s_p[i], '\"', '\'')]);
+			}
 		i++;
 	}
 	i--;
