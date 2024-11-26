@@ -18,9 +18,7 @@ static char *fn_revaround_quote(char *str)
 	int		j;
 	char	left[ft_strlen(str) / 2];
 	char	right[ft_strlen(str) / 2];
-	char	*new_s;
 
-	new_s = (char *) malloc(ft_strlen(str));
 	j = 0;
 	i = 0;	
 	while (str[i] != '\0' && str[i] != '\"')
@@ -42,8 +40,8 @@ static char *fn_revaround_quote(char *str)
 		i++;
 	}
 	right[j] = '\0';
-	return (ft_strjoin(ft_strlen(right) ? ft_strdup(right) : "", 
-		ft_strjoin(
+	return (ft_strjoin_free(ft_strlen(right) ? ft_strdup(right) : "", 
+		ft_strjoin_free(
 			ft_substr(str, 
 				ft_strlen(left),
 				((ft_strlen(str) - ft_strlen(right)) - ft_strlen(left)) 

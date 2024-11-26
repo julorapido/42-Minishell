@@ -58,6 +58,7 @@ void	parse_quote(t_minishell *t_m, token **cmd_tokens, char **s_cmds, int *i)
 			t_m->stocked_scmdsi = ft_substr(s, ft_last_strchr_i(s, '\"', '\"') + 1,
 			ft_strlen(s) - ft_last_strchr_i(s, '\"', '\"'));
 		}
+		free(s);
 		s_cmds[(*i)] = left;
 	}
 }
