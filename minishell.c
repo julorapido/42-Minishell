@@ -39,7 +39,7 @@ void	minishell(t_minishell *t_m)
 		}
 		t_m->cmd_tokens = ft_calloc(1, sizeof(token **));
 		*(t_m->cmd_tokens) = NULL;
-		parse_errors(line, t_m);
+		//parse_errors(line, t_m);
 		if(t_m->parse_error)
 		{
 			printf("zsh: parse error near `%c%c' \n", t_m->e_v[0], t_m->e_v[1]);
