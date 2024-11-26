@@ -87,10 +87,9 @@ static void	parse_commands2(t_cmd *cmd__, token *t, t_minishell *t_m)
 				cmd__->command = ft_calloc((ft_strlen(t->cmd) + 1), sizeof(char));
 				ft_strlcpy(cmd__->command, t->cmd, ft_strlen(t->cmd) + 1);
 			}
-			else
-				cmd__->command = fn_realloc_strcat(cmd__->command, t->cmd, 
-					t->quote_ignoreSpace ? 0 : 1 //(t->t == QUOTE || ( (t->next) && ((t->next)->t == QUOTE)) ? (0) : (1))
-				);	
+			else{
+				cmd__->command = fn_realloc_strcat(cmd__->command, t->cmd, (t->quote_ignoreSpace_aft) ? 0 : 1);
+			}
 		}
 	}
 }

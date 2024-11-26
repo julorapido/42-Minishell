@@ -60,6 +60,8 @@ token	*token_new(char *s, enum TOKEN_TYPE ty)
 	new_t->t = ty;
 	new_t->next = NULL;
 	new_t->prev = NULL;
+	new_t->quote_ignoreSpace_aft = false;
+	new_t->quote_ignoreSpace_befr = false;
 	return (new_t);
 }
 

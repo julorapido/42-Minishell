@@ -22,26 +22,21 @@ void	parse_quote(t_minishell *t_m, token **cmd_tokens, char **s_cmds, int *i)
 	if(*s == '\"')
 	{
 		bool ign_space = false;
-		int ix = ft_m_strchr_i(ft_substr(s_cmds[*i], 1, ft_strlen(s_cmds[*i]) - 1), '\"', '\"');
 		// ex: $ echo "acbde"
-		if (ix == ft_strlen(s_cmds[(*i)]) - 2)
+		if (s[ft_strlen(s) - 1] == '\"')
 		{
-			s = ft_substr(s_cmds[(*i)], 0, ix + 2);
-			if(ix + 1 != ft_strlen(s_cmds[(*i)]) - 1)
-			{
-				s_cmds[(*i)] = ft_substr(s_cmds[(*i)], ix + 2, ft_strlen(s_cmds[(*i)]));
-			}else
-				(*i)++;
+			(*i)++;
 		}
 		// ex: $ echo ab"c "de
 		else
 		{
-			s = ft_substr(s_cmds[*i], 0, ix + 2);
-			s_cmds[*i] = ft_substr(s_cmds[*i], ix + 2, ft_strlen(s_cmds[*i]));
+			int ix = ft_last_strchr_i(s, '\"', '\"');
+			s = ft_substr(s_cmds[*i], 0, ix + 1);
+			s_cmds[*i] = ft_substr(s_cmds[*i], ix + 1, ft_strlen(s_cmds[*i]) - (ix + 1));
 			ign_space = true;
 		}
 		token *t = token_new(s, QUOTE);
-		t->quote_ignoreSpace = (ign_space);
+		t->quote_ignoreSpace_aft = (ign_space);
 		token_push(cmd_tokens, t);
 	}
 	// doesnt start with quote ""
@@ -53,14 +48,16 @@ void	parse_quote(t_minishell *t_m, token **cmd_tokens, char **s_cmds, int *i)
 		
 		int len = ( ft_last_strchr_i(s, '\"', '\"') - x) + 1;
 		token *t = token_new(ft_substr(s, x, len), QUOTE);
-		t->quote_ignoreSpace = true;
+		if(ft_last_strchr_i(s, '\"', '\"') != ft_strlen(s) - 1)
+			t->quote_ignoreSpace_aft = true;
+		if(ft_strlen(left))
+			t->quote_ignoreSpace_befr = true;
 		t_m->stocked_token = t;
-		if(len != ft_strlen(s) - 1)
+		if(ft_last_strchr_i(s, '\"', '\"') != ft_strlen(s) - 1)
 		{
 			t_m->stocked_scmdsi = ft_substr(s, ft_last_strchr_i(s, '\"', '\"') + 1,
 			ft_strlen(s) - ft_last_strchr_i(s, '\"', '\"'));
 		}
-		// token_push(cmd_tokens, t);
 		s_cmds[(*i)] = left;
 	}
 }

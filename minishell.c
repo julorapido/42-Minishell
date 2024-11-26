@@ -49,9 +49,10 @@ void	minishell(t_minishell *t_m)
 		}
 		parse_tokens(line, t_m->cmd_tokens, t_m);
 		show_tokens(t_m->cmd_tokens);
-		//parse_commands(t_m, t_m->cmd_tokens);
-		//apply_expands(t_m);
-		//print_commands(t_m);
+		apply_ignoredSpace_beforeQuote(t_m);
+		parse_commands(t_m, t_m->cmd_tokens);
+		apply_expands(t_m);
+		print_commands(t_m);
 		//exec_cmds(t_m);
 		//parse_free(t_m);
 		

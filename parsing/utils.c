@@ -267,6 +267,23 @@ void	apply_is_stds(t_minishell *t_m)
 	}
 }
 
+void 	apply_ignoredSpace_beforeQuote(t_minishell *t_m)
+{
+	token	*t;
+
+	t = *(t_m->cmd_tokens);
+	while(t)
+	{
+		if(t->quote_ignoreSpace_befr)
+		{
+			if(t->prev)
+				(t->prev)->quote_ignoreSpace_aft = true;
+		}
+		t = t->next;
+	}
+}
+
+
 void parse_free(t_minishell *t_m)
 {
 	// size_t	i;

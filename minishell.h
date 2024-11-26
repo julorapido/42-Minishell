@@ -77,7 +77,8 @@ typedef struct s_token
 {
 	char 			*cmd;
 	enum TOKEN_TYPE	t;
-	bool	quote_ignoreSpace;
+	bool	quote_ignoreSpace_aft;
+	bool	quote_ignoreSpace_befr;
 	struct s_token	*prev;
 	struct s_token	*next;
 }	token;
@@ -182,6 +183,7 @@ int		parse_errors(char *cmd, t_minishell *t_m);
 void	parse_free(t_minishell *t_m);
 void	parse_quote(t_minishell *t_m, token **cmd_tokens, char **s_cmds, int *i);
 void	apply_expands(t_minishell *t);
+void 	apply_ignoredSpace_beforeQuote(t_minishell *t_m);
 char	**ft_split_quotes(char *s, char c, int remove_quote);
 
 
