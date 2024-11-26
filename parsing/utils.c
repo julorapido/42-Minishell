@@ -125,8 +125,6 @@ enum TOKEN_TYPE	switcher(t_minishell *t_m, char *tken, token **t_l)
 			token_push(t_l, token_new(tken, COMMAND));
 		else
 			free(tken);
-		if(t_m->stocked_token)
-			token_push(t_l, t_m->stocked_token);
 		return (-1);
 	}
 	if (strlen(tken) == 1 || *tken == '|')

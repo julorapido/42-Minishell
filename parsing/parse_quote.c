@@ -51,9 +51,15 @@ void	parse_quote(t_minishell *t_m, token **cmd_tokens, char **s_cmds, int *i)
 		int x = ft_m_strchr_i(s, '\"', '\"');
 		char *left = ft_substr(s, 0, x);
 		
-		token *t = token_new(ft_substr(s, x, ft_strlen(s)), QUOTE);
+		int len = ( ft_last_strchr_i(s, '\"', '\"') - x) + 1;
+		token *t = token_new(ft_substr(s, x, len), QUOTE);
 		t->quote_ignoreSpace = true;
 		t_m->stocked_token = t;
+		if(len != ft_strlen(s) - 1)
+		{
+			t_m->stocked_scmdsi = ft_substr(s, ft_last_strchr_i(s, '\"', '\"') + 1,
+			ft_strlen(s) - ft_last_strchr_i(s, '\"', '\"'));
+		}
 		// token_push(cmd_tokens, t);
 		s_cmds[(*i)] = left;
 	}

@@ -123,7 +123,18 @@ int	parse_tokens(char *cmd, token **cmd_tokens, t_minishell *t_m)
 					else
 						token_push(t_m->cmd_tokens, token_new(s_cmds[i], switcher(t_m, s_cmds[i], t_m->cmd_tokens)));
 				}
-				i++;
+				if(t_m->stocked_token)
+				{
+					token_push(cmd_tokens, t_m->stocked_token);
+					t_m->stocked_token = NULL;	
+				}
+				if(t_m->stocked_scmdsi)
+				{
+					s_cmds[i] = t_m->stocked_scmdsi;
+					t_m->stocked_scmdsi = NULL;
+				}
+				else
+					i++;
 			}
 			else
 				parse_tokens2(t_m->cmd_tokens, &i, s_cmds, t_m);

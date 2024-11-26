@@ -134,6 +134,7 @@ typedef struct s_minishell
 	t_expand			expands[MAX_EXPANDS];
 	struct s_cmd_parsing	p_cmd;
 	token				*stocked_token;
+	char				*stocked_scmdsi;
 	int					exstat;
 	int					is_expand;
 	int					n_expand;
