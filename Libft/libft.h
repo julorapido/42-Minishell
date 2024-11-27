@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 01:13:37 by julessainth       #+#    #+#             */
-/*   Updated: 2024/11/25 15:30:50 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/27 15:34:17 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,12 @@ typedef struct s_list
 	void			*content;
 	struct s_list	*next;
 }				t_list;
+
+typedef struct s_mltsplit
+{
+	int		ix;
+	char	*s;
+}				t_mltsplit;
 
 void	*ft_memdel(void *ptr);
 void	*ft_memset(void *b, int c, size_t len);
@@ -67,6 +73,7 @@ char	*ft_splitcat(char **ft_split);
 char	**ft_split_ignoreQuote(char const *s, char c);
 int		ft_last_strchr_i(const char *string, char a, char b);
 char	*ft_strjoin_free(char *s1, char *s2);
+t_mltsplit	*ft_multisplit(char *s, char *set);
 
 
 /* additional functions */

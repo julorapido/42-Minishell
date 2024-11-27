@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/25 17:51:33 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/27 18:14:11 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,6 +168,9 @@ bool	is_parse_error(char *s);
 enum TOKEN_TYPE	switcher(t_minishell *t_m, char *tken, token **t_l);
 char	*fn_realloc_strcat(char *filled_str, char *cncat_str, int space_it);
 int		switcher_i(char *tken);
+void	fdp_parsing(char *cmd);
+char	parse_errors(char **s);
+int		quote_errors(char	*s_cmds);
 
 
 // ENV
@@ -179,7 +182,6 @@ int		env_init(t_minishell *t_m, char **argv);
 // PARSING
 int		parse_tokens(char *cmd, token **cmd_tokens, t_minishell *t_m);
 int		parse_commands(t_minishell *t_m, token **cmd_tokens);
-int		parse_errors(char *cmd, t_minishell *t_m);
 void	parse_free(t_minishell *t_m);
 void	parse_quote(t_minishell *t_m, token **cmd_tokens, char **s_cmds, int *i);
 void	apply_expands(t_minishell *t);
