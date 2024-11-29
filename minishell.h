@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/29 12:44:00 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/29 14:56:16 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ typedef struct s_minishell
 	int					exp_starter;
 	t_cmd				*cmds;	// commands list
 	size_t				cmd_count;
+	char				*set;
 }	t_minishell;
 
 // [PARSING] 
