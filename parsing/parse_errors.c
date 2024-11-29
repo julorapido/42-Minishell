@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 18:13:14 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/29 16:56:55 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/29 17:13:18 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,18 +53,20 @@ char parse_errors(t_mltsplit *s)
 {
     int     i;
     int     j;
-    bool    in_q;
+    char    c;
 
-    in_q = false;
+    c = '\0';
     i = 0;
     while (s[i].s)
     {
         j = 0;
         while(s[i].s[j] != '\0')
         {
-            if(s[i].s[j] == '\'' || s[i].s[j] == '\"')
-                in_q = !(in_q);
-            if(s[i].s[j + 1] && !(in_q))
+            if(!c && (s[i].s[j] == '\'' || s[i].s[j] == '\"'))
+				c = s[i].s[j];
+			else if(c == s[i].s[j])
+				c = '\0';
+            if(s[i].s[j + 1] && !(c))
             {
                 if(((s[i].s)[j] == '>' && (s[i].s)[j + 1] == '<')
                     || ((s[i].s)[j] == '<' && (s[i].s)[j + 1] == '|')

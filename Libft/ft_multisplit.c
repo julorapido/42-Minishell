@@ -6,10 +6,9 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 14:14:13 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/29 16:15:27 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/29 18:11:00 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "libft.h"
 #include <stdio.h>
@@ -33,14 +32,14 @@ static size_t	count_words(char *s, char *set)
 {
 	size_t	words;
 	size_t	i;
-	bool	q = false;
+	char	q = '\0';
 
 	words = 0;
 	i = 0;
 	while (s[i])
 	{
 		if(s[i] == '\'' || s[i] == '\"')
-			q = !(q);
+			q = (!q) ? (s[i]) : ((s[i] == q) ? ('\0') : (q));
 		if (((char_in_set(s[i], set) >= 0 && !q) && s[i + 1] != '\0'))
 			words++;
 		i++;
@@ -51,13 +50,13 @@ static size_t	count_words(char *s, char *set)
 int	fill_tab(t_mltsplit *new, char *s, char *set)
 {
 	size_t	i;
-	bool	q = false;
+	char	q = '\0';
 
 	i = 0;
-	while (s[i] && ((char_in_set(s[i], set) < 0 || q)))
+	while (s[i] && (char_in_set(s[i], set) < 0 || q))
 	{
 		if(s[i] == '\'' || s[i] == '\"')
-			q = !(q);
+			q = (!q) ? (s[i]) : ((s[i] == q) ? ('\0') : (q));
 		new->s[i] = s[i];
 		i++;
 	}
@@ -87,17 +86,17 @@ static int	set_mem(t_mltsplit *tab, char *s, char *set)
 	size_t	ix;
 	size_t	i;
 	int		is_skip = 0;
-	bool	q = false;
+	char	q = '\0';
 
 	ix = 0;
 	i = 0;
 	while (s[ix])
 	{
 		count = 0;
-		while (s[ix + count] && (char_in_set(s[ix + count], set) < 0 || (q)))
+		while (s[ix + count] && (char_in_set(s[ix + count], set) < 0 || q) )
 		{
 			if(s[ix + count] == '\'' || s[ix + count] == '\"')
-				q = !(q);
+				q = (!q) ? (s[ix + count]) : ((s[ix + count] == q) ? ('\0') : (q));
 			count++;
 		}
 		if(count > 0 || (is_skip))
@@ -133,7 +132,8 @@ t_mltsplit	*ft_multisplit(char *s, char *set)
 	if (!tab)
 		return (NULL);
 	(*tab).mltsplit_l = words;
-
+	if(!ft_strcmp(set, "><"))
+		printf("MULTISPLIT has [%zu words] \n", words);
 	a = set_mem(tab, s, set);
 	if (a == -1)
 	{
