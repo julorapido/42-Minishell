@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 18:13:14 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/29 12:53:17 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/29 16:56:55 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 static  bool triple_operator(char a, char b, char c)
 {
-    if(a == '>' || a == '<' || a == '|')
+    if (a == '>' || a == '<' || a == '|')
     {
-        if(a == b && b == c)
+        if (a == b && b == c)
             return (true);
     }
-    if(a == '<' && b == '>' && c == '|')
+    if (a == '<' && b == '>' && c == '|')
         return (true);
     return (false);
 }
@@ -37,7 +37,6 @@ int  quote_errors(char	*s_cmds)
 	{
 		if (s_cmds[i] == '\"' && (!in_sq))
 			in_q = !(in_q);
-	
 		if (s_cmds[i] == '\'' && (!in_q))
 			in_sq = !(in_sq);
 		i++;
@@ -69,6 +68,7 @@ char parse_errors(t_mltsplit *s)
             {
                 if(((s[i].s)[j] == '>' && (s[i].s)[j + 1] == '<')
                     || ((s[i].s)[j] == '<' && (s[i].s)[j + 1] == '|')
+                    || ((s[i].s)[j] == '|' && (s[i].s)[j + 1] == '|')
                 )
                     return ((s[i].s)[j + 1]);
                 if((s[i].s)[j + 1 + 1])

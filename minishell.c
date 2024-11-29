@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:07:22 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/29 14:56:08 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/29 16:53:13 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ void	minishell(t_minishell *t_m)
 	{
 		t_m->exp_starter = 0;
 		t_m->set = ft_strdup("><");
-
 		if(ft_strlen(line) < 1)
 		{
 			line = readline("$ ");
@@ -45,6 +44,7 @@ void	minishell(t_minishell *t_m)
 			continue ;
 		}
 		fdp_parsing(line, t_m);
+		// exec_cmds(t_minishell *t_m)
 		line = readline("$ ");
 		add_history(line);
 	}

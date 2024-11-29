@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 13:05:20 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/29 15:29:00 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/29 16:26:57 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,13 @@ static void p_commands(t_cmd *t, int l)
 
 static char *handle_spaces(char *str_token, t_cmd *cmd_to_modify)
 {
-    t_mltsplit *s = ft_multisplit(str_token, " ");
-    int     i;
-    int     c;
+    t_mltsplit  *s;
+    int         i;
+    int         c;
 
     c = 0;
     i = 0;
+    s = ft_multisplit(str_token, " ");
     while(s[c].s && ft_strlen(s[c].s) == 0)
         c++;
     while(s[i].s)
@@ -51,13 +52,6 @@ static char *handle_spaces(char *str_token, t_cmd *cmd_to_modify)
     if(i == 0)
         return (str_token);
     i = c + 1;
-    if(!cmd_to_modify->command)
-    {
-        if(ft_strlen(s[i].s) == 0)
-            s[i].s = ft_strdup(" ");
-        cmd_to_modify->command = ft_strdup(s[i].s);
-        i++;
-    }
     while(s[i].s)
     {
         if(ft_strlen(s[i].s) == 0)
@@ -100,6 +94,7 @@ void	fdp_parsing(char *cmd, t_minishell *t)
 {
     int         i;
     int         a;
+    bool        T;
 
     t_mltsplit *s = ft_multisplit(cmd, "|");
     t->cmds = (t_cmd*) malloc((*s).mltsplit_l * sizeof(t_cmd));
@@ -107,32 +102,27 @@ void	fdp_parsing(char *cmd, t_minishell *t)
     i = 0;
     while(s[i].s)
     {
-        printf("S[%d].s = %s \n", i, s[i].s);
         if(ft_m_strchr_i(s[i].s, '>', '<') != -1)
         {
-            a = 0;
             t_mltsplit *sq = ft_multisplit(s[i].s, t->set);
+            T = (*s[i].s) == '>' || (*s[i].s == '<');
+            a = T ? 0 : 1;
+            t->cmds[i].command = T ? ft_strdup(" ") : ft_strdup((sq[0]).s);
             while((sq[a]).s)
             {
-                printf("-s[%d].s = {%s}{%c} \n",i, sq[a].s, t->set[(sq[a]).ix]);
-                if(a == 0)
-                    t->cmds[i].command = ft_strdup((sq[a]).s);   
-                else
+                if(t->set[(sq[a]).ix] == '<' && (a - 1 >= 0))
+                    if(t->set[(sq[a - 1]).ix] == '<')
+                        t->cmds[i].files[t->cmds[i].f_i].heredoc = true; 
+                if(t->set[(sq[a]).ix] == '>' && ft_strlen(sq[a].s) && (a - 1 >= 0))
+                    if((!ft_strlen(sq[a - 1].s)) && (t->set[(sq[a - 1]).ix] == '>'))
+                        t->cmds[i].files[t->cmds[i].f_i].append = true;
+                if(ft_strlen(sq[a].s))
                 {
-                    if(t->set[(sq[a]).ix] == '<' && (a - 1 > 0))
-                        if(t->set[(sq[a - 1]).ix] == '<')
-                            t->cmds[i].files[t->cmds[i].f_i].heredoc = true; 
-                    if(t->set[(sq[a]).ix] == '>' && ft_strlen(sq[a].s) && (a - 1 > 0))
-                        if((!ft_strlen(sq[a - 1].s)) && (t->set[(sq[a - 1]).ix] == '>'))
-                            t->cmds[i].files[t->cmds[i].f_i].append = true;
-                    if(ft_strlen(sq[a].s))
-                    {
-                        t->cmds[i].files[t->cmds[i].f_i].f_name = handle_spaces((sq[a]).s, &(t->cmds[i]));
-                        t->cmds[i].files[t->cmds[i].f_i]._out = (t->set[(sq[a]).ix] == '<') ? false : true;
-                        t->cmds[i].n_out +=  (t->set[(sq[a]).ix] == '>') ? 1 : 0;
-                        t->cmds[i].n_in +=  (t->set[(sq[a]).ix] == '<') ? 1 : 0;
-                        t->cmds[i].f_i++;
-                    }
+                    t->cmds[i].files[t->cmds[i].f_i].f_name = handle_spaces((sq[a]).s, &(t->cmds[i]));
+                    t->cmds[i].files[t->cmds[i].f_i]._out = (t->set[(sq[a]).ix] == '<') ? false : true;
+                    t->cmds[i].n_out +=  (t->set[(sq[a]).ix] == '>') ? 1 : 0;
+                    t->cmds[i].n_in +=  (t->set[(sq[a]).ix] == '<') ? 1 : 0;
+                    t->cmds[i].f_i++;
                 }
                 a++;
             }
@@ -140,6 +130,6 @@ void	fdp_parsing(char *cmd, t_minishell *t)
             t->cmds[i].command = s[i].s;
         i++;
     }
-    apply_gauthier(t);
+    //apply_gauthier(t);
     p_commands(t->cmds, (*s).mltsplit_l);
 }

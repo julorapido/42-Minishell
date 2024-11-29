@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 14:14:13 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/29 14:50:38 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/29 16:15:27 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,18 +129,18 @@ t_mltsplit	*ft_multisplit(char *s, char *set)
 	int			a;
 
 	words = count_words(s, set);
-	//printf("====> MULTISPLIT <====\n");
-	//printf("SPLIT:{%s}     WITH:{%s} \n", s, set);
 	tab = malloc((words + 1) * sizeof(t_mltsplit));
 	if (!tab)
 		return (NULL);
-	//printf("W_COUNT: %zu \n", words);
 	(*tab).mltsplit_l = words;
+
 	a = set_mem(tab, s, set);
 	if (a == -1)
 	{
 		free_tab(tab);
 		return (NULL);
 	}
+	if(!ft_strlen(tab[0].s))
+		tab[0].ix = char_in_set(*s, set);
 	return (tab);
 }

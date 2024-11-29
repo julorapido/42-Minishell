@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:49:14 by gchauvot          #+#    #+#             */
-/*   Updated: 2024/11/29 12:04:25 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/29 16:47:03 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 int	dupclose(int fd2, int fd1)
 {
 	if (dup2(fd2, fd1) == -1)
-		return (perror("minishell: "), exit(126), 1);
+		return (perror("minishell: dup2: "), exit(126), 1);
 	if (close(fd2) == -1)
-		return (perror("minishell: "), exit(126), 1);
+		return (perror("minishell: close: "), exit(126), 1);
 	return (0);
 }
 
@@ -38,28 +38,41 @@ char	*tmpnamer(void)
 	}
 	return (res);
 }
-int gbs=0;
-void	handler2(int signum)
-{	
-	if (signum == SIGINT)
-	{
-		rl_done = 1;
-		gbs = 1;
-		write(2, "\n", 1);
-		rl_replace_line("", 0);
-		rl_on_new_line();
 
+int	heredoc_writer(char *eof, char *tempfile)
+{
+	char	*line;
+	int		docfd;
+
+	signalsetter(SIGINT, SIG_DFL);
+	docfd = open(tempfile, O_WRONLY | O_CREAT | O_TRUNC, 777);
+	if (docfd == -1)
+		return (perror("openheredoc err: "), -1);
+	while (1)
+	{
+		line = readline("heredoc>");
+		if (line)
+		{
+			if (ft_strlen(eof) == ft_strlen(line))
+			{
+				if (!ft_strncmp(eof, line, ft_strlen(eof)))
+					break ;
+			}
+			ft_putendl_fd(line, docfd);
+			free(line);
+		}
 	}
-	return ;
+	free(line);
+	close(docfd);
+	exit (1);
+	return (1);
 }
 
-int	heredoc(char *eof, t_cmd *cmd)
+int	heredoc(t_file *f)
 {
 	char	*tempfile;
 	pid_t	pid;
-	char	*line;
-	int		docfd;
-	int		tmfr=0;
+	int		tmfr = 0;
 
 	tempfile = tmpnamer();
 	if (!tempfile)
@@ -67,41 +80,13 @@ int	heredoc(char *eof, t_cmd *cmd)
 	signalignore(SIGINT);
 	pid = fork();
 	if (!pid)
-	{
-		signalsetter(SIGINT, SIG_DFL);
-		docfd = open(tempfile, O_WRONLY | O_CREAT | O_TRUNC, 777);
-		if (docfd == -1)
-			return (perror("openhere err: "), -1);
-		while (1)
-		{
-			line = readline("heredoc>");
-			if (line)
-			{
-				if (ft_strlen(eof) == ft_strlen(line))
-				{
-					if (!ft_strncmp(eof, line, ft_strlen(eof)))
-						break ;
-				}
-				ft_putendl_fd(line, docfd);
-				free(line);
-			}
-			else
-			{
-				//fprintf(stderr, "!line\n");
-				continue ;
-			}	
-		}
-		free(line);
-		close(docfd);
-		exit (1);
-	}
+		heredoc_writer(f->f_name, tempfile);
 	if (pid)
 		waitpid(pid, &tmfr, 0);
 	signalsetter(SIGINT, handler);
-	//fprintf(stderr, "tmfr= &%d&\n", tmfr);
 	if (tmfr == 2)
-		return (cmd->input = tempfile, -1);
-	cmd->input = tempfile;
+		return (f->f_name = tempfile, -1);
+	f->f_name = tempfile;
 	return (3);
 }
 
@@ -109,17 +94,22 @@ int	heredocalloc(t_minishell *t_m)
 {
 	t_cmd	*c;
 	size_t	i;
+	int		a;
 
 	i = 0;
 	while (i <= t_m->cmd_count - 1)
 	{
 		c = &(t_m->cmds[i]);
-		if (c->is_heredoc)
-			if(heredoc(c->input, c)==-1)
-				return -1;
+		a = 0;
+		while (a < c->f_i)
+		{
+			if ((c->files[a]).heredoc)
+				if(heredoc(&(c->files[a])) ==-1)
+					return -1;
+			a++;
+		}
 		i++;
 	}
-	//write(2,"\n",1);
 	return (1);
 }
 
@@ -127,21 +117,22 @@ int	delete_heredocs(t_minishell *t_m)
 {
 	size_t	i;
 	t_cmd	*c;
+	int		a;
 
 	i = 0;
 	while (i < t_m->cmd_count)
 	{
 		c = &(t_m->cmds[i]);
-		if (c && c->is_heredoc)
+		a = 0;
+		while (a < c->f_i)
 		{
-			if (c->input)
+			if ((c->files[a]).heredoc)
 			{
-				if (access(c->input, F_OK) == 0)
-				{
-					if (unlink(c->input) == -1)
+				if (access((c->files[a]).f_name, F_OK) == 0)
+					if (unlink((c->files[a]).f_name) == -1)
 						perror("unlink heredoc: ");
-				}
 			}
+			a++;
 		}
 		i++;
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gchauvot <gchauvot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:48:53 by gchauvot          #+#    #+#             */
-/*   Updated: 2024/11/20 15:17:28 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/29 16:01:46 by gchauvot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ int	open_file(char *file, int in_out, int append)
 		ret = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (ret == -1)
 	{
+		// fprintf(stderr, "inout: %d|append : %d\n", in_out,append);
 		perror("minishell open_file: ");
 		ft_putendl_fd(file, 2);
 		return (ret);
@@ -78,13 +79,14 @@ char	*bget_path2(char *cmd, char **env)
 	int		i;
 
 	i = -1;
-	b_path = ft_split(get_env(env), ':');
-	e_cmd = cmd;
+	b_path = ft_split_quotes(get_env(env), ':', 0);
+	e_cmd = ft_split_quotes(cmd, ' ', 0);
+	// e_cmd = cmd;
 	while (b_path[++i])
 	{
 		str_path = ft_strjoin(b_path[i], "/");
-		// exec_cmd = ft_strjoin(str_path, e_cmd[0]);
-		exec_cmd = ft_strjoin(str_path, e_cmd);
+		exec_cmd = ft_strjoin(str_path, e_cmd[0]);
+		// exec_cmd = ft_strjoin(str_path, e_cmd);
 		free(str_path);
 		if (access(exec_cmd, F_OK | X_OK) == 0)
 		{
@@ -93,7 +95,7 @@ char	*bget_path2(char *cmd, char **env)
 		}
 		free(exec_cmd);
 	}
-	//ft_free_tab(e_cmd);
+	ft_free_tab(e_cmd);
 	ft_free_tab(b_path);
 	return (cmd);
 }
@@ -137,4 +139,37 @@ char	**pipe_env(t_minishell *t_m)
 		x++;
 	}
 	return (env);
+}
+
+void	shlvlhandler(char **env)
+{
+	int		i;
+	size_t	j;
+	int		mark;
+	char	*res;
+
+	i = 0;
+	j = 0;
+	mark = 0;
+	while (env[i])
+	{	
+		if (!ft_strncmp(env[i], "SHLVL=", 6))
+		{
+			res = ft_itoa(ft_atoi(&env[i][6]) + 1);
+			while (j < ft_strlen(res))
+			{
+				env[i][6 + j] = res[j];
+				j++;
+			}
+			free(res);
+			env[i][6 + j] = '\0';
+			mark = -1;
+		}
+		i++;
+	}
+	if (mark != -1)
+	{
+		env[i] = "SHLVL=0";
+		env[i + 1] = 0;
+	}
 }

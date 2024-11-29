@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/29 14:56:16 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/29 16:58:11 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,12 @@ typedef struct s_minishell
 	char				*set;
 }	t_minishell;
 
+// gautoier
+char *rm_quotes(char *s);
+char	**ft_split_quotes(char *s, char c, int remove_quote);
+void	apply_quote_removal(char **t);
+
+
 // [PARSING] 
 void	fdp_parsing(char *cmd, t_minishell *t);
 char	parse_errors(t_mltsplit *s);
@@ -149,7 +155,7 @@ void	exec_cmds(t_minishell *t_m);
 int	child_molestor(t_minishell *t_m, t_cmd *c, size_t i, int c_int, char **nenv);
 int	dupclose(int fd2, int fd1);
 int	ft_waiter(t_minishell *t_m);
-void	ft_exec2(char *cmd, char **env, t_minishell *tm);
+void	ft_exec2(char *cmd, char **env);
 int	nullcommand(t_minishell *t_m, size_t i);
 int		open_file(char *file, int n, int append);
 char	*my_getenv(char *name, char **env);
@@ -157,7 +163,7 @@ char	*bget_path2(char *cmd, char **env);
 void	ft_free_tab(char **tab);
 
 // heredoc
-int		heredoc(char *eof, t_cmd *cmd);
+int	heredoc(t_file *f);
 int		heredocalloc(t_minishell *t_m);
 int		delete_heredocs(t_minishell *t_m);
 int		childhead_handler(t_minishell *t_m, size_t i, t_cmd *c);
