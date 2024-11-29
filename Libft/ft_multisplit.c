@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 14:14:13 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/27 18:21:43 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/28 13:49:10 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,10 @@ static size_t	count_words(char *s, char *set)
 	i = 0;
 	while (s[i])
 	{
-		if (((char_in_set(s[i], set) >= 0 || q) && s[i + 1] != '\0'))
-			words++;
 		if(s[i] == '\'' || s[i] == '\"')
 			q = !(q);
+		if (((char_in_set(s[i], set) >= 0 && !q) && s[i + 1] != '\0'))
+			words++;
 		i++;
 	}
 	return (words+1);
@@ -128,12 +128,10 @@ t_mltsplit	*ft_multisplit(char *s, char *set)
 	int			a;
 
 	words = count_words(s, set);
-	//printf("====> MULTISPLIT <====\n");
-	//printf("SPLIT:{%s}     WITH:{%s} \n", s, set);
 	tab = malloc((words + 1) * sizeof(t_mltsplit));
 	if (!tab)
 		return (NULL);
-	//printf("W_COUNT: %zu \n", words);
+	(*tab).mltsplit_l = words;
 	a = set_mem(tab, s, set);
 	if (a == -1)
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gchauvot <gchauvot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 14:30:09 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/07 11:23:08 by gchauvot         ###   ########.fr       */
+/*   Updated: 2024/11/28 15:12:02 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,5 @@ void	f__exit(t_minishell *t_m, t_cmd *c)
 	delete_heredocs(t_m);
 	free(t_m->pipes_fd);
 	free(t_m->pid);
-	parse_free(t_m);
 	exit(t_m->exstat);
 }

@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 18:13:14 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/27 18:14:47 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/28 14:08:40 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ static  bool triple_operator(char a, char b, char c)
         if(a == b && b == c)
             return (true);
     }
+    if(a == '<' && b == '>' && c == '|')
+        return (true);
     return (false);
 }
 
@@ -48,32 +50,36 @@ int  quote_errors(char	*s_cmds)
 }
 
 
-char parse_errors(char **s)
+char parse_errors(t_mltsplit *s)
 {
-    int i;
-    int j;
-    
+    int     i;
+    int     j;
+    bool    in_q;
+
+    in_q = false;
     i = 0;
-    while (s[i])
+    while (s[i].s)
     {
         j = 0;
-        while(s[i][j] != '\0')
+        while(s[i].s[j] != '\0')
         {
-            if(s[i][j + 1])
+            if(s[i].s[j] == '\'' || s[i].s[j] == '\"')
+                in_q = !(in_q);
+            if(s[i].s[j + 1] && !(in_q))
             {
-                if((s[i][j] == '>' && s[i][j + 1] == '<')
-                    || (s[i][j] == '<' && s[i][j + 1] == '|')
+                if(((s[i].s)[j] == '>' && (s[i].s)[j + 1] == '<')
+                    || ((s[i].s)[j] == '<' && (s[i].s)[j + 1] == '|')
                 )
-                    return (s[i][j + 1]);
-                
-                if(s[i][j + 1 + 1])
-                    if(triple_operator(s[i][j], s[i][j + 1], s[i][j + 2]))
-                        return(s[i][j]);
+                    return ((s[i].s)[j + 1]);
+                if((s[i].s)[j + 1 + 1])
+                    if(triple_operator((s[i].s)[j], (s[i].s)[j + 1], (s[i].s)[j + 2]))
+                        return((s[i].s)[j]);
             }
             j++;
         }
         i++;
     }
+    printf("CHECK LAST {%s} \n", s[i-1].s);
     //if(s[i][j - 1] == '>' || s[i][j - 1] == '<')
     //    return (s[i][j]);
     return ('\0');

@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 01:13:37 by julessainth       #+#    #+#             */
-/*   Updated: 2024/11/27 15:34:17 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/28 13:43:23 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ typedef struct s_mltsplit
 {
 	int		ix;
 	char	*s;
+	int		mltsplit_l;
 }				t_mltsplit;
 
 void	*ft_memdel(void *ptr);

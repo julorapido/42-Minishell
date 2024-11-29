@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built-in.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gchauvot <gchauvot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 12:15:52 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/07 11:23:24 by gchauvot         ###   ########.fr       */
+/*   Updated: 2024/11/28 15:15:01 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	openfds(t_cmd *c, int fd_stds[2], int fd_duped[2])
 	if (!c->is_stdout)
 	{
 		fd_stds[1] = dup(1);
-		fd_duped[1] = open_file(c->output, 1, c->is_append);
+		fd_duped[1] = open_file(c->output, 1, c->files[c->f_i-1].append);
 		if (fd_duped[0] == -1)
 			return (-1);
 		dup2(fd_duped[1], 1);

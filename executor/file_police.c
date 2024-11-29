@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   file_police.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gchauvot <gchauvot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 16:41:20 by gchauvot          #+#    #+#             */
-/*   Updated: 2024/11/20 13:18:08 by gchauvot         ###   ########.fr       */
+/*   Updated: 2024/11/29 11:51:21 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ int	childhead_handler(t_minishell *t_m, size_t i, t_cmd *c)
 
 int	childbutt_handler(t_minishell *t_m, size_t i, t_cmd *c, char **outlist)
 {
+	
 	int		fdout;
 	int		x;
 	int		n_out;
@@ -83,5 +84,6 @@ int	childbutt_handler(t_minishell *t_m, size_t i, t_cmd *c, char **outlist)
 		dupclose(t_m->pipes_fd[i][1], 1);
 	else
 		close(t_m->pipes_fd[i][1]);
+	
 	return (0);
 }

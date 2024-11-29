@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_splitcat.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 14:35:01 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/23 17:18:45 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/28 12:37:19 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,6 @@ char	*ft_splitcat(char **ft_split)
 		free(ft_split[i]);
 		i++;
 	}
-	free(ft_split[i]);
-	free(ft_split);
 	ret[k] = '\0';
 	return (ret);
 }
