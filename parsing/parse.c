@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 13:05:20 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/29 11:54:48 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/29 12:47:29 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,27 @@ static char *handle_spaces(char *str_token, t_cmd *cmd_to_modify)
 
 static void apply_gauthier(t_minishell *t)
 {
-    
+    int     i;
+    int     j;
+    t_cmd   *c;
+
+    i = 0;
+    while ((size_t)i < t->cmd_count)
+    {
+        c = &(t->cmds[i]);
+        j = 0;
+        while (j < (c)->f_i)
+        {
+            if (c->files[j]._out)
+                c->output = c->files[j].f_name;
+            else
+                c->input = c->files[j].f_name;
+            j++;
+        }
+        c->is_piped_in = MACRO_ZERO(c->n_in > 0);
+        c->is_piped_out = MACRO_ZERO(c->n_out > 0);
+        i++;
+    }
 }
 
 
@@ -88,18 +108,18 @@ void	fdp_parsing(char *cmd, t_minishell *t)
                     t->cmds[i].command = ft_strdup((sq[a]).s);   
                 else
                 {
-                    if(set[(sq[a]).ix] == '<')
-                        if(a - 1 > 0)
-                            if(set[(sq[a - 1]).ix] == '<')
-                                t->cmds[i].files[t->cmds[i].f_i].heredoc = true; 
-                    if(set[(sq[a]).ix] == '>' && ft_strlen(sq[a].s))
-                        if(a - 1 > 0)
-                            if((!ft_strlen(sq[a - 1].s)) && (set[(sq[a - 1]).ix] == '>'))
-                                t->cmds[i].files[t->cmds[i].f_i].append = true;
+                    if(set[(sq[a]).ix] == '<' && (a - 1 > 0))
+                        if(set[(sq[a - 1]).ix] == '<')
+                            t->cmds[i].files[t->cmds[i].f_i].heredoc = true; 
+                    if(set[(sq[a]).ix] == '>' && ft_strlen(sq[a].s) && (a - 1 > 0))
+                        if((!ft_strlen(sq[a - 1].s)) && (set[(sq[a - 1]).ix] == '>'))
+                            t->cmds[i].files[t->cmds[i].f_i].append = true;
                     if(ft_strlen(sq[a].s))
                     {
                         t->cmds[i].files[t->cmds[i].f_i].f_name = handle_spaces((sq[a]).s, &(t->cmds[i]));
                         t->cmds[i].files[t->cmds[i].f_i]._out = (set[(sq[a]).ix] == '<') ? false : true;
+                        t->cmds[i].n_out +=  (set[(sq[a]).ix] == '>') ? 1 : 0;
+                        t->cmds[i].n_in +=  (set[(sq[a]).ix] == '<') ? 1 : 0;
                         t->cmds[i].f_i++;
                     }
                 }
@@ -110,5 +130,6 @@ void	fdp_parsing(char *cmd, t_minishell *t)
         i++;
     }
     t->cmd_count = (*s).mltsplit_l;
+    apply_gauthier(t);
     p_commands(t->cmds, (*s).mltsplit_l);
 }

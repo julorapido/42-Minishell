@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 18:13:14 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/28 14:08:40 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/29 12:53:17 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,7 @@ char parse_errors(t_mltsplit *s)
         }
         i++;
     }
-    printf("CHECK LAST {%s} \n", s[i-1].s);
-    //if(s[i][j - 1] == '>' || s[i][j - 1] == '<')
-    //    return (s[i][j]);
+    if(s[i-1].s[ft_strlen(s[i-1].s) - 1] == '>' || s[i-1].s[ft_strlen(s[i-1].s) - 1] == '<')
+        return (*(s[i - 1].s));
     return ('\0');
 }

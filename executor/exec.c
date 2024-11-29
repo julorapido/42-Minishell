@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 12:08:14 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/20 17:26:47 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/29 12:40:53 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	ft_soloexec(t_minishell *t_m, size_t i, int c_int)
 	char	**nenv;
 	int 	pass=0;
 
-	c = &(t_m->commands[i]);
+	c = &(t_m->cmds[i]);
 	outlist = ft_split(c->output, ' ');
 	nenv = pipe_env(t_m);
 	if (i < t_m->cmd_count)//c->is_piped_out)
@@ -77,17 +77,17 @@ int	ft_soloexec(t_minishell *t_m, size_t i, int c_int)
 	signalignore(SIGINT);
 	t_m->pid[i] = fork();
 	if (!t_m->pid[i])
-		child_molestor(t_m, c, i, c_int, outlist, nenv);
+		child_molestor(t_m, c, i, c_int, nenv);
 	if (i > 0)
 	{
-		c = &(t_m->commands[i - 1]);
+		c = &(t_m->cmds[i - 1]);
 			close(t_m->pipes_fd[i - 1][0]);
 		if (pass==0)
 			close(t_m->pipes_fd[i - 1][1]);
 	}
 	if (i == t_m->cmd_count-1)
 	{
-		c = &(t_m->commands[i]);
+		c = &(t_m->cmds[i]);
 		close(t_m->pipes_fd[i][0]);
 		close(t_m->pipes_fd[i][1]);
 	}
@@ -132,15 +132,15 @@ int	executions(t_minishell *t_m, size_t i)
 	t_cmd	*c;
 	int		c_int;
 
-	c = &(t_m->commands[i]);
+	c = &(t_m->cmds[i]);
 	if (c->command == NULL)
 			ft_soloexec(t_m, i, -1);
-	else if (t_m->is_expand && ft_strchr(c->command, '=') && !ft_strchr(c->command, ' '))
+	/*else if (t_m->is_expand && ft_strchr(c->command, '=') && !ft_strchr(c->command, ' '))
 	{
 		free(c->command);
 		c->command = NULL;
 		ft_soloexec(t_m, i, -1);
-	}
+	}*/
 	else
 	{
 		t_m->c_args = ft_split(c->command, ' ');

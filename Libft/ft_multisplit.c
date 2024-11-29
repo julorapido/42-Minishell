@@ -6,13 +6,19 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 14:14:13 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/28 13:49:10 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/29 13:03:17 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include <stdio.h>
 #include <stdbool.h>
+
+typedef struct s_quote
+{
+	bool	q;
+	char	q_t;
+}			t_quote;
 
 static int char_in_set(char c, char *set)
 {
@@ -32,15 +38,22 @@ static size_t	count_words(char *s, char *set)
 {
 	size_t	words;
 	size_t	i;
-	bool	q = false;
+	t_quote q;
 
+	q.q = false;
 	words = 0;
 	i = 0;
 	while (s[i])
 	{
-		if(s[i] == '\'' || s[i] == '\"')
-			q = !(q);
-		if (((char_in_set(s[i], set) >= 0 && !q) && s[i + 1] != '\0'))
+		if((s[i] == '\'' || s[i] == '\"') && !(q.q))
+		{
+			q.q = true;
+			q.q_t = s[i];
+		}
+		if(q.q)
+			if( (s[i] == '\'' && q.q_t == '\'') || (s[i] == '\"' && q.q_t == '\"'))
+				q.q = !(q.q);
+		if (((char_in_set(s[i], set) >= 0 && !q.q) && s[i + 1] != '\0'))
 			words++;
 		i++;
 	}
@@ -50,13 +63,20 @@ static size_t	count_words(char *s, char *set)
 int	fill_tab(t_mltsplit *new, char *s, char *set)
 {
 	size_t	i;
-	bool	q = false;
+	t_quote q;
 
+	q.q = false;
 	i = 0;
-	while (s[i] && ((char_in_set(s[i], set) < 0 || q)))
+	while (s[i] && ((char_in_set(s[i], set) < 0 || q.q)))
 	{
-		if(s[i] == '\'' || s[i] == '\"')
-			q = !(q);
+		if((s[i] == '\'' || s[i] == '\"') && !(q.q))
+		{
+			q.q = true;
+			q.q_t = s[i];
+		}
+		if (q.q)
+			if((s[i] == '\'' && q.q_t == '\'') || (s[i] == '\"' && q.q_t == '\"'))
+				q.q = !(q.q);
 		new->s[i] = s[i];
 		i++;
 	}
@@ -86,17 +106,23 @@ static int	set_mem(t_mltsplit *tab, char *s, char *set)
 	size_t	ix;
 	size_t	i;
 	int		is_skip = 0;
-	bool	q = false;
+	t_quote q;
 
+	q.q = false;
 	ix = 0;
 	i = 0;
 	while (s[ix])
 	{
 		count = 0;
-		while (s[ix + count] && (char_in_set(s[ix + count], set) < 0 || (q)))
+		while (s[ix + count] && (char_in_set(s[ix + count], set) < 0 || (q.q)))
 		{
+			if((s[ix + count]  == '\'' || s[ix + count] == '\"') && !(q.q))
+			{
+				q.q = true;
+				q.q_t = s[ix + count];
+			}
 			if(s[ix + count] == '\'' || s[ix + count] == '\"')
-				q = !(q);
+				q.q = !(q.q);
 			count++;
 		}
 		if(count > 0 || (is_skip))

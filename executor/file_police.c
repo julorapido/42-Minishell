@@ -6,18 +6,17 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 16:41:20 by gchauvot          #+#    #+#             */
-/*   Updated: 2024/11/29 11:51:21 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/29 12:48:27 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	child_molestor(t_minishell *t_m, t_cmd *c, size_t i, int c_int,
-	char **outlist, char **nenv)
+int	child_molestor(t_minishell *t_m, t_cmd *c, size_t i, int c_int, char **nenv)
 {
 	signalsetter(SIGINT, SIG_DFL);
-	childhead_handler(t_m, i, c);
-	childbutt_handler(t_m, i, c, outlist);
+	//childhead_handler(t_m, i, c);
+	//childbutt_handler(t_m, i, c);
 	// fermeture du precedent pipe dans le current child dans le cas ou
 	if (i > 0)
 	{
@@ -33,7 +32,7 @@ int	child_molestor(t_minishell *t_m, t_cmd *c, size_t i, int c_int,
 		ft_exec2(c->command, nenv,t_m);
 	exit(0);
 }
-
+/*
 int	childhead_handler(t_minishell *t_m, size_t i, t_cmd *c)
 {
 	int	fdin;
@@ -56,7 +55,7 @@ int	childhead_handler(t_minishell *t_m, size_t i, t_cmd *c)
 	return (0);
 }
 
-int	childbutt_handler(t_minishell *t_m, size_t i, t_cmd *c, char **outlist)
+int	childbutt_handler(t_minishell *t_m, size_t i, t_cmd *c)
 {
 	
 	int		fdout;
@@ -64,17 +63,17 @@ int	childbutt_handler(t_minishell *t_m, size_t i, t_cmd *c, char **outlist)
 	int		n_out;
 
 	x = 0;
-	if (c->n_redirections)
-		n_out = c->n_redirections - 1;
+	if (c->f_i)
+		n_out = c->f_i - 1;
 	else
-		n_out = c->n_redirections;
+		n_out = c->f_i;
 	if (!c->output)
 		return (-1);
 	if (!c->is_stdout && !c->is_piped_out)
 	{
 		while (x <= n_out)
 		{
-			fdout = open_file(outlist[x], 1, c->is_append);
+			fdout = open_file(c->files[x].f_name, 1, c->files[x].append);
 			dupclose(fdout, 1);
 			x++;
 		}
@@ -87,3 +86,4 @@ int	childbutt_handler(t_minishell *t_m, size_t i, t_cmd *c, char **outlist)
 	
 	return (0);
 }
+*/

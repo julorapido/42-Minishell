@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:07:22 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/29 11:48:34 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/29 12:02:51 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	minishell(t_minishell *t_m)
 			add_history(line);
 			continue ;
 		}
-		/*
+		
 		if (quote_errors(line) != -1 || parse_errors(ft_multisplit(line, " ")) != '\0')
 		{
 			printf("zsh: parse error near `' \n");
@@ -43,9 +43,7 @@ void	minishell(t_minishell *t_m)
 			add_history(line);
 			continue ;
 		}
-		*/
 		fdp_parsing(line, t_m);
-		//parse_free(t_m);
 		line = readline("$ ");
 		add_history(line);
 	}

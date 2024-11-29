@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/29 11:50:19 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/29 12:44:00 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@
 
 # define MAX_EXPANDS 1024
 
+# define MACRO_ZERO(x) ( (x) > 0 ? (1) : (0))
 /*
 {
 	PIPE = |
@@ -63,13 +64,13 @@ typedef struct s_command
     char        *command;
     t_file      files[300];
     int         f_i;
-	//int			is_piped_in;
-	//int			is_piped_out;
-	//int			is_stdin;
-	//int			is_stdout;
-	//int			is_heredoc;
-	//char		*output;
-	//char		*input;
+	int			n_out;
+	int			n_in;
+	int			is_piped_in;
+	int			is_piped_out;
+	int			is_heredoc;
+	char		*output;
+	char		*input;
 }       t_cmd;
 
 enum TOKEN_TYPE
@@ -144,8 +145,7 @@ char *delchar(char *src, char rmv);
 extern int	sigcatch;
 void free_c_args(t_minishell	*t_m);
 void	exec_cmds(t_minishell *t_m);
-int	child_molestor(t_minishell *t_m, t_cmd *c, size_t i, int c_int,
-char	**outlist, char **nenv);
+int	child_molestor(t_minishell *t_m, t_cmd *c, size_t i, int c_int, char **nenv);
 int	dupclose(int fd2, int fd1);
 int	ft_waiter(t_minishell *t_m);
 void	ft_exec2(char *cmd, char **env, t_minishell *tm);
@@ -160,7 +160,7 @@ int		heredoc(char *eof, t_cmd *cmd);
 int		heredocalloc(t_minishell *t_m);
 int		delete_heredocs(t_minishell *t_m);
 int		childhead_handler(t_minishell *t_m, size_t i, t_cmd *c);
-int		childbutt_handler(t_minishell *t_m, size_t i, t_cmd *c, char **outlist);
+int	childbutt_handler(t_minishell *t_m, size_t i, t_cmd *c);
 
 // UTILS
 char	**pipe_env(t_minishell *t_m);

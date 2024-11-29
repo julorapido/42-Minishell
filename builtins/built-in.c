@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 12:15:52 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/28 15:15:01 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/29 12:47:45 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 int	restorefds(t_cmd *c, int fd_stds[2])
 {
-	if (!c->is_stdin)
+	if (!c->is_piped_in)
 	{
 		dup2(fd_stds[0], 0);
 		close(fd_stds[0]);
 	}
-	if (!c->is_stdout)
+	if (!c->n_out == 0)
 	{
 		dup2(fd_stds[1], 1);
 		close(fd_stds[1]);
@@ -29,7 +29,7 @@ int	restorefds(t_cmd *c, int fd_stds[2])
 
 int	openfds(t_cmd *c, int fd_stds[2], int fd_duped[2])
 {
-	if (!c->is_stdin)
+	if (!c->is_piped_in)
 	{
 		fd_stds[0] = dup(0);
 		fd_duped[0] = open_file(c->input, 0, 0);
@@ -38,7 +38,7 @@ int	openfds(t_cmd *c, int fd_stds[2], int fd_duped[2])
 		dup2(fd_duped[0], 0);
 		close(fd_duped[0]);
 	}
-	if (!c->is_stdout)
+	if (!c->n_out == 0)
 	{
 		fd_stds[1] = dup(1);
 		fd_duped[1] = open_file(c->output, 1, c->files[c->f_i-1].append);

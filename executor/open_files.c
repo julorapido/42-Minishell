@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:49:14 by gchauvot          #+#    #+#             */
-/*   Updated: 2024/11/20 14:37:50 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/11/29 12:04:25 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ int	heredocalloc(t_minishell *t_m)
 	i = 0;
 	while (i <= t_m->cmd_count - 1)
 	{
-		c = &(t_m->commands[i]);
+		c = &(t_m->cmds[i]);
 		if (c->is_heredoc)
 			if(heredoc(c->input, c)==-1)
 				return -1;
@@ -131,7 +131,7 @@ int	delete_heredocs(t_minishell *t_m)
 	i = 0;
 	while (i < t_m->cmd_count)
 	{
-		c = &(t_m->commands[i]);
+		c = &(t_m->cmds[i]);
 		if (c && c->is_heredoc)
 		{
 			if (c->input)
