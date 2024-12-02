@@ -6,13 +6,13 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 18:13:14 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/02 14:42:35 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/02 15:10:54 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static  bool triple_operator(char a, char b, char c)
+static bool triple_operator(char a, char b, char c)
 {
     if (a == '>' || a == '<' || a == '|')
     {
@@ -80,9 +80,9 @@ void    free_multisplit(t_mltsplit *s)
 
 char parse_errors(t_mltsplit *s, char *line)
 {
-    int     i;
-    int     j;
-    char    c;
+    int		i;
+    int		j;
+    char	c;
 
     c = '\0';
     i = 0;
@@ -93,13 +93,13 @@ char parse_errors(t_mltsplit *s, char *line)
         j = 0;
         while(s[i].s[j] != '\0')
         {
-            if(!c && (s[i].s[j] == '\'' || s[i].s[j] == '\"'))
+            if (!c && (s[i].s[j] == '\'' || s[i].s[j] == '\"'))
 				c = s[i].s[j];
-			else if(c == s[i].s[j])
+	        else if(c == s[i].s[j])
 				c = '\0';
             if (s[i].s[j + 1] && !(c))
                 if (cmd_verif(s, i, j) != '\0')
-                    return  (cmd_verif(s, i, j));
+                    return (cmd_verif(s, i, j));
             j++;
         }
         i++;

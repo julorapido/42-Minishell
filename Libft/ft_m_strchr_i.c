@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_m_strchr_i.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsaintho <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 12:39:32 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/04 14:33:29 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/02 15:02:38 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,3 @@ int	ft_m_strchr_i(const char *string, char a, char b)
 	else
 		return (-1);
 }
-
