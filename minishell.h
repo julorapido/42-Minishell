@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/29 16:58:11 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/02 14:41:45 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,8 +124,8 @@ void	apply_quote_removal(char **t);
 
 // [PARSING] 
 void	fdp_parsing(char *cmd, t_minishell *t);
-char	parse_errors(t_mltsplit *s);
-int		quote_errors(char	*s_cmds);
+char	parse_errors(t_mltsplit *s, char *line);
+void	free_multisplit(t_mltsplit *s);
 
 // ENV
 char	*get_env(char **env);
@@ -166,7 +166,6 @@ void	ft_free_tab(char **tab);
 int	heredoc(t_file *f);
 int		heredocalloc(t_minishell *t_m);
 int		delete_heredocs(t_minishell *t_m);
-int		childhead_handler(t_minishell *t_m, size_t i, t_cmd *c);
 int	childbutt_handler(t_minishell *t_m, size_t i, t_cmd *c);
 
 // UTILS

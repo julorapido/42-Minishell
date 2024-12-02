@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:07:22 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/29 16:53:13 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/02 14:41:54 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,18 @@ void	minishell(t_minishell *t_m)
 			add_history(line);
 			continue ;
 		}
-		if (quote_errors(line) != -1 || parse_errors(ft_multisplit(line, " ")) != '\0')
+		t_mltsplit *s = ft_multisplit(line, " ");
+		if (parse_errors(s, line) != '\0')
 		{
-			printf("zsh: parse error near `' \n");
+			printf("zsh: parse error near `%c' \n", parse_errors(s, line));
+			free_multisplit(s);
 			line = readline("$ ");
 			add_history(line);
 			continue ;
 		}
 		fdp_parsing(line, t_m);
-		// exec_cmds(t_minishell *t_m)
+		// exec_cmds(t_m);
+		free_multisplit(s);
 		line = readline("$ ");
 		add_history(line);
 	}

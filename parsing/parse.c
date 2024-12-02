@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 13:05:20 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/29 16:26:57 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/02 14:28:43 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ static char *handle_spaces(char *str_token, t_cmd *cmd_to_modify)
     t_mltsplit  *s;
     int         i;
     int         c;
+    char        *a;
 
     c = 0;
     i = 0;
@@ -61,33 +62,10 @@ static char *handle_spaces(char *str_token, t_cmd *cmd_to_modify)
         );
         i++;
     }
-    return (s[c].s);
+    a = ft_strdup(s[c].s);
+    return (free_multisplit(s), a);
 }
 
-static void apply_gauthier(t_minishell *t)
-{
-    int     i;
-    int     j;
-    t_cmd   *c;
-
-    i = 0;
-    while ((size_t)i < t->cmd_count)
-    {
-        c = &(t->cmds[i]);
-        j = 0;
-        while (j < (c)->f_i)
-        {
-            if (c->files[j]._out)
-                c->output = c->files[j].f_name;
-            else
-                c->input = c->files[j].f_name;
-            j++;
-        }
-        c->is_piped_in = MACRO_ZERO(c->n_in > 0);
-        c->is_piped_out = MACRO_ZERO(c->n_out > 0);
-        i++;
-    }
-}
 
 
 void	fdp_parsing(char *cmd, t_minishell *t)
@@ -102,6 +80,7 @@ void	fdp_parsing(char *cmd, t_minishell *t)
     i = 0;
     while(s[i].s)
     {
+        t->cmds[i].n_out = t->cmds[i].n_in = t->cmds[i].f_i = 0;
         if(ft_m_strchr_i(s[i].s, '>', '<') != -1)
         {
             t_mltsplit *sq = ft_multisplit(s[i].s, t->set);
@@ -126,10 +105,11 @@ void	fdp_parsing(char *cmd, t_minishell *t)
                 }
                 a++;
             }
+            free_multisplit(sq);
         }else
             t->cmds[i].command = s[i].s;
         i++;
     }
-    //apply_gauthier(t);
-    p_commands(t->cmds, (*s).mltsplit_l);
+    free_multisplit(s);
+    // p_commands(t->cmds, (*s).mltsplit_l);
 }

@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 15:28:51 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/25 15:30:37 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/02 14:46:34 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char	*ft_strjoin_free(char *s1, char *s2)
 		j++;
 	}
 	new[i + j] = '\0';
-    free(s1);
-    free(s2);
+	free(s1);
+	free(s2);
 	return (new);
 }

@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 14:14:13 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/29 18:11:00 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/02 14:44:47 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,8 +132,6 @@ t_mltsplit	*ft_multisplit(char *s, char *set)
 	if (!tab)
 		return (NULL);
 	(*tab).mltsplit_l = words;
-	if(!ft_strcmp(set, "><"))
-		printf("MULTISPLIT has [%zu words] \n", words);
 	a = set_mem(tab, s, set);
 	if (a == -1)
 	{

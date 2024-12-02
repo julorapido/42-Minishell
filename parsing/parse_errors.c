@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 18:13:14 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/29 17:13:18 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/02 14:42:35 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static  bool triple_operator(char a, char b, char c)
     return (false);
 }
 
-int  quote_errors(char	*s_cmds)
+static int  quote_errors(char *s_cmds)
 {
 	bool	in_q;
 	bool	in_sq;
@@ -42,14 +42,43 @@ int  quote_errors(char	*s_cmds)
 		i++;
 	}
 	if (in_q)
-		return (1);
+		return ('\"');
 	if (in_sq)
-		return (0);
-	return -1;
+		return ('\'');
+	return '\0';
 }
 
+static char cmd_verif(t_mltsplit *s, int i, int j)
+{
+    char    c;
 
-char parse_errors(t_mltsplit *s)
+    c = '\0';
+    if (((s[i].s)[j] == '>' && (s[i].s)[j + 1] == '<')
+        || ((s[i].s)[j] == '<' && (s[i].s)[j + 1] == '|')
+        || ((s[i].s)[j] == '|' && (s[i].s)[j + 1] == '|')
+    )
+        c = ((s[i].s)[j + 1]);
+    if ((s[i].s)[j + 1 + 1])
+        if (triple_operator((s[i].s)[j], (s[i].s)[j + 1], (s[i].s)[j + 2]))
+            c = ((s[i].s)[j]);
+    return (c);
+}
+
+void    free_multisplit(t_mltsplit *s)
+{
+    int i;
+
+    i = 0;
+    while (i <= (*s).mltsplit_l)
+    {
+        if (s[i].s)
+            free(s[i].s);
+        i++;
+    }
+    free(s);
+}
+
+char parse_errors(t_mltsplit *s, char *line)
 {
     int     i;
     int     j;
@@ -57,6 +86,8 @@ char parse_errors(t_mltsplit *s)
 
     c = '\0';
     i = 0;
+    if (quote_errors(line) != '\0')
+        return (quote_errors(line));
     while (s[i].s)
     {
         j = 0;
@@ -66,22 +97,14 @@ char parse_errors(t_mltsplit *s)
 				c = s[i].s[j];
 			else if(c == s[i].s[j])
 				c = '\0';
-            if(s[i].s[j + 1] && !(c))
-            {
-                if(((s[i].s)[j] == '>' && (s[i].s)[j + 1] == '<')
-                    || ((s[i].s)[j] == '<' && (s[i].s)[j + 1] == '|')
-                    || ((s[i].s)[j] == '|' && (s[i].s)[j + 1] == '|')
-                )
-                    return ((s[i].s)[j + 1]);
-                if((s[i].s)[j + 1 + 1])
-                    if(triple_operator((s[i].s)[j], (s[i].s)[j + 1], (s[i].s)[j + 2]))
-                        return((s[i].s)[j]);
-            }
+            if (s[i].s[j + 1] && !(c))
+                if (cmd_verif(s, i, j) != '\0')
+                    return  (cmd_verif(s, i, j));
             j++;
         }
         i++;
     }
-    if(s[i-1].s[ft_strlen(s[i-1].s) - 1] == '>' || s[i-1].s[ft_strlen(s[i-1].s) - 1] == '<')
+    if (s[i-1].s[ft_strlen(s[i-1].s) - 1] == '>' || s[i-1].s[ft_strlen(s[i-1].s) - 1] == '<')
         return (*(s[i - 1].s));
     return ('\0');
 }
