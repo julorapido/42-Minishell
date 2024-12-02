@@ -28,7 +28,7 @@
 #  define BUFFER_SIZE 12
 # endif
 
-# define QUOTE(q, si) ( (!q) ? (si) : ((si == q) ? '\0' : q) )
+#define INC(q, si) ((!q) ? (si) : ((si == q) ? ('\0') : (q)))
 
 typedef struct s_list
 {
@@ -91,7 +91,6 @@ void	ft_putnbr_fd(int n, int fd);
 void	ft_striteri(char *s, void (*f)(unsigned int, char *));
 int		ft_m_strchr_i(const char *string, char a, char b);
 void	ft_putendl(char *s);
-int		ft_inset(char c, char *set);
 
 /* bonus */
 t_list	*ft_lstnew(void *content);

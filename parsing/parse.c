@@ -80,7 +80,6 @@ void	fdp_parsing(char *cmd, t_minishell *t)
     i = 0;
     while(s[i].s)
     {
-        t->cmds[i].n_out = t->cmds[i].n_in = t->cmds[i].f_i = 0;
         if(ft_m_strchr_i(s[i].s, '>', '<') != -1)
         {
             t_mltsplit *sq = ft_multisplit(s[i].s, t->set);
