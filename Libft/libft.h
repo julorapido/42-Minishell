@@ -28,7 +28,8 @@
 #  define BUFFER_SIZE 12
 # endif
 
-#define INC(q, si) ((!q) ? (si) : ((si == q) ? ('\0') : (q)))
+# define Q(x) x < 0 ? -x : x
+# define INC(q, si)	((!q) ? (si) : ((si == q) ? ('\0') : (q)))
 
 typedef struct s_list
 {
@@ -93,16 +94,16 @@ int		ft_m_strchr_i(const char *string, char a, char b);
 void	ft_putendl(char *s);
 
 /* bonus */
-t_list	*ft_lstnew(void *content);
-void		ft_lstadd_front(t_list **lst, t_list *new);
-int			ft_lstsize(t_list *lst);
-t_list		*ft_lstlast(t_list *lst);
-void		ft_lstadd_back(t_list **lst, t_list *new);
-void		ft_lstdelone(t_list *lst, void (*del)(void*));
-void		ft_lstclear(t_list **lst, void (*del)(void*));
-t_list		*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
-void		ft_lstiter(t_list *lst, void (*f)(void *));
-t_mltsplit	*ft_multisplit(char *s, char *set);
+t_list			*ft_lstnew(void *content);
+void			ft_lstadd_front(t_list **lst, t_list *new);
+int				ft_lstsize(t_list *lst);
+t_list			*ft_lstlast(t_list *lst);
+void			ft_lstadd_back(t_list **lst, t_list *new);
+void			ft_lstdelone(t_list *lst, void (*del)(void*));
+void			ft_lstclear(t_list **lst, void (*del)(void*));
+t_list			*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
+void			ft_lstiter(t_list *lst, void (*f)(void *));
+t_mltsplit		*ft_multisplit(char *s, char *set);
 
 /* gnl */
 char	*get_next_line(int fd);

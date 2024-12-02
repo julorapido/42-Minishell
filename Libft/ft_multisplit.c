@@ -45,7 +45,7 @@ static size_t	count_words(char *s, char *set)
 			words++;
 		i++;
 	}
-	return (words+1);
+	return (words + 1);
 }
 
 static void	fill_tab(t_mltsplit *tab, char *s, char *set, size_t *i)
@@ -58,7 +58,7 @@ static void	fill_tab(t_mltsplit *tab, char *s, char *set, size_t *i)
 	while (s[j] && (char_in_set(s[j], set) < 0 || q))
 	{
 		if (s[j] == '\'' || s[j] == '\"')
-			q = INC(q, s[j]); 
+			q = INC(q, s[j]);
 		(tab[(*i)]).s[j] = s[j];
 		j++;
 	}

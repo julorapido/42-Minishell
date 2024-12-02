@@ -46,7 +46,7 @@ void	minishell(t_minishell *t_m)
 			continue ;
 		}
 		fdp_parsing(line, t_m);
-		// exec_cmds(t_m);
+		exec_cmds(t_m);
 		free_multisplit(s);
 		line = readline("$ ");
 		add_history(line);

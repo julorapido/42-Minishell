@@ -40,7 +40,14 @@
 
 # define MAX_EXPANDS 1024
 
-# define MACRO_ZERO(x) ( (x) > 0 ? (1) : (0))
+# define M_1(a, b) ((a) ? (" ") : (b))
+
+# define fT ft_strlen
+# define hS handle_spaces
+# define fSf ft_strjoin_free
+# define fsr ft_strdup
+# define tO t->cmds
+
 /*
 {
 	PIPE = |
@@ -73,27 +80,11 @@ typedef struct s_command
 	char		*input;
 }       t_cmd;
 
-enum TOKEN_TYPE
-{
-	COMMAND,
-	COMMAND_FLAG,
-	PIPE,
-	LESS,
-	LESS_LESS,
-	GREAT,
-	GREAT_GREAT,
-	QUOTE,
-	SEPARATOR,
-	PARSE_ERROR,
-	ARGUMENT
-};
-
 typedef struct s_expand
 {
 	char	*key;
 	char	*value;
 }	t_expand;
-
 
 typedef struct	s_env
 {
@@ -114,6 +105,8 @@ typedef struct s_minishell
 	t_cmd				*cmds;	// commands list
 	size_t				cmd_count;
 	char				*set;
+	t_mltsplit			*sq;
+	int					T;
 }	t_minishell;
 
 // gautoier
