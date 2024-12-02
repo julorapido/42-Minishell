@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 13:05:20 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/02 15:12:13 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/02 17:29:01 by julessainthor    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,14 +51,14 @@ static char *handle_spaces(char *str_token, t_cmd *cmd_to_modify)
     while(s[i].s)
         i++;
     if(i == 0)
-        return (str_token);
+        return (ft_strdup(str_token));
     i = c + 1;
     while(s[i].s)
     {
         if(ft_strlen(s[i].s) == 0)
             s[i].s = ft_strdup(" ");
         cmd_to_modify->command = ft_strjoin_free(
-            cmd_to_modify->command,  ft_strjoin_free(ft_strdup(" "), s[i].s)
+            cmd_to_modify->command,  ft_strjoin_free(ft_strdup(" "), ft_strdup(s[i].s))
         );
         i++;
     }
@@ -107,9 +107,9 @@ void	fdp_parsing(char *cmd, t_minishell *t)
             }
             free_multisplit(sq);
         }else
-            t->cmds[i].command = s[i].s;
+            t->cmds[i].command = ft_strdup(s[i].s);
         i++;
     }
     free_multisplit(s);
-    p_commands(t->cmds, (*s).mltsplit_l);
+    p_commands(t->cmds, t->cmd_count);
 }

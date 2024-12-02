@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 12:15:52 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/29 12:47:45 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/02 17:15:05 by julessainthor    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	restorefds(t_cmd *c, int fd_stds[2])
 		dup2(fd_stds[0], 0);
 		close(fd_stds[0]);
 	}
-	if (!c->n_out == 0)
+	if (!c->n_out)
 	{
 		dup2(fd_stds[1], 1);
 		close(fd_stds[1]);
@@ -38,7 +38,7 @@ int	openfds(t_cmd *c, int fd_stds[2], int fd_duped[2])
 		dup2(fd_duped[0], 0);
 		close(fd_duped[0]);
 	}
-	if (!c->n_out == 0)
+	if (!c->n_out)
 	{
 		fd_stds[1] = dup(1);
 		fd_duped[1] = open_file(c->output, 1, c->files[c->f_i-1].append);

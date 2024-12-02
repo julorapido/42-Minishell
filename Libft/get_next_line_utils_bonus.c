@@ -45,4 +45,3 @@ int	gnl_strlen(char *dst, char *src, int siz, int alt)
 	}
 	return (i);
 }
-

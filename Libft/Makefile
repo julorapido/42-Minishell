@@ -17,7 +17,7 @@ LIBC =	ft_atoi.c ft_bzero.c ft_calloc.c ft_isalnum.c ft_isalpha.c \
 		ft_strnstr.c ft_strrchr.c ft_tolower.c ft_toupper.c ft_strcmp.c \
 		ft_strchr.c ft_atoi_l.c ft_m_strchr_i.c ft_putendl.c ft_memdel.c \
 		get_next_line_bonus.c get_next_line_utils_bonus.c \
-		ft_last_strchr_i.c ft_strjoin_free.c ft_multisplit.c
+		ft_last_strchr_i.c ft_strjoin_free.c ft_multisplit.c ft_inset.c
 
 ADDITIONAL =	ft_itoa.c ft_putchar_fd.c ft_putendl_fd.c ft_putnbr_fd.c ft_putstr_fd.c \
 				ft_split.c ft_strjoin.c ft_strmapi.c ft_strtrim.c ft_substr.c ft_striteri.c

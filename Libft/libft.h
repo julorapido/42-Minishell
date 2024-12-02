@@ -25,8 +25,10 @@
 # include <sys/uio.h>
 
 # ifndef BUFFER_SIZE
-#  define  BUFFER_SIZE 12
+#  define BUFFER_SIZE 12
 # endif
+
+# define QUOTE(q, si) ( (!q) ? (si) : ((si == q) ? '\0' : q) )
 
 typedef struct s_list
 {
@@ -74,8 +76,6 @@ char	*ft_splitcat(char **ft_split);
 char	**ft_split_ignoreQuote(char const *s, char c);
 int		ft_last_strchr_i(const char *string, char a, char b);
 char	*ft_strjoin_free(char *s1, char *s2);
-t_mltsplit	*ft_multisplit(char *s, char *set);
-
 
 /* additional functions */
 char	*ft_substr(char const *s, unsigned int start, size_t len);
@@ -89,24 +89,21 @@ void	ft_putstr_fd(char const *s, int fd);
 void	ft_putendl_fd(char const *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
 void	ft_striteri(char *s, void (*f)(unsigned int, char *));
-
-// char	*ft_strchr_i(const char *string, int searchedChar);
 int		ft_m_strchr_i(const char *string, char a, char b);
-char	**ft_multi_split(char const *s, char *set);
 void	ft_putendl(char *s);
-
+int		ft_inset(char c, char *set);
 
 /* bonus */
 t_list	*ft_lstnew(void *content);
-void	ft_lstadd_front(t_list **lst, t_list *new);
-int		ft_lstsize(t_list *lst);
-t_list	*ft_lstlast(t_list *lst);
-void	ft_lstadd_back(t_list **lst, t_list *new);
-void	ft_lstdelone(t_list *lst, void (*del)(void*));
-void	ft_lstclear(t_list **lst, void (*del)(void*));
-t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
-void	ft_lstiter(t_list *lst, void (*f)(void *));
-
+void		ft_lstadd_front(t_list **lst, t_list *new);
+int			ft_lstsize(t_list *lst);
+t_list		*ft_lstlast(t_list *lst);
+void		ft_lstadd_back(t_list **lst, t_list *new);
+void		ft_lstdelone(t_list *lst, void (*del)(void*));
+void		ft_lstclear(t_list **lst, void (*del)(void*));
+t_list		*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
+void		ft_lstiter(t_list *lst, void (*f)(void *));
+t_mltsplit	*ft_multisplit(char *s, char *set);
 
 /* gnl */
 char	*get_next_line(int fd);

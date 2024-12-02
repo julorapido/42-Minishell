@@ -6,7 +6,7 @@
 /*   By: gchauvot <gchauvot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 13:45:02 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/30 16:57:31 by gchauvot         ###   ########.fr       */
+/*   Updated: 2024/12/02 17:16:33 by julessainthor    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ char	*get_env_path(t_minishell *t_m)
 	char 	*v;
 	int		j;
 
+	v = NULL;
 	n = (t_m->env);
 	while (n)
 	{

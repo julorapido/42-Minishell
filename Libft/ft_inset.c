@@ -1,25 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_bzero.c                                         :+:      :+:    :+:   */
+/*   ft_inset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julessainthorant <marvin@42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/04 13:41:41 by julessainth       #+#    #+#             */
-/*   Updated: 2024/05/29 15:54:51 by jsaintho         ###   ########.fr       */
+/*   Created: 2024/12/02 18:06:07 by julessainthor     #+#    #+#             */
+/*   Updated: 2024/12/02 18:06:32 by julessainthor    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_bzero(void *c, size_t n)
+int	ft_inset(char c, char *set)
 {
-	size_t	i;
+	int	i;
 
 	i = 0;
-	while (i < n)
+	while (set[i])
 	{
-		*(unsigned char *)(c + i) = 0;
+		if (set[i] == c)
+			return (i);
 		i++;
 	}
+	return (-1);
 }
