@@ -12,7 +12,8 @@
 
 
 #include "minishell.h"
- int	size_t_var(char *s, char *d)
+
+int	size_t_var(char *s, char *d)
 {
 	int	i;
 	int	j;

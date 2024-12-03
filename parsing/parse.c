@@ -6,13 +6,13 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 13:05:20 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/02 22:45:48 by julessainthor    ###   ########.fr       */
+/*   Updated: 2024/12/03 08:44:09 by julessainthor    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
+
 static void p_commands(t_cmd *t, int l)
 {
     for(int i = 0; i < l; i++)
@@ -35,7 +35,7 @@ static void p_commands(t_cmd *t, int l)
         printf("]\n");
     }
 }
-*/
+
 
 static char	*handle_spaces(char *str_token, t_cmd *ct)
 {
@@ -111,4 +111,5 @@ void	fdp_parsing(char *cmd, t_minishell *t)
 		i++;
 	}
 	free_multisplit(s);
+	p_commands(t->cmds, t->cmd_count);
 }

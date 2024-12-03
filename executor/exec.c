@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 12:08:14 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/29 16:58:37 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/03 08:51:23 by julessainthor    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ int	executions(t_minishell *t_m, size_t i)
 		else
 			ft_soloexec(t_m, i, c_int);
 		ft_free_tab(t_m->c_args);
-	fprintf(stderr, "command: &%s&\n", c->command);
+		//fprintf(stderr, "command: &%s&\n", c->command);
 	}
 	return (0);
 }

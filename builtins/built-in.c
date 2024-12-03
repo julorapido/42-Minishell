@@ -29,17 +29,20 @@ int	restorefds(t_cmd *c, int fd_stds[2])
 
 int	openfds(t_cmd *c, int fd_stds[2], int fd_duped[2])
 {
-	if (!c->is_piped_in)
+
+	if (c->n_in > 0)
 	{
+		printf("N PIPED IN \n");
 		fd_stds[0] = dup(0);
 		fd_duped[0] = open_file(c->input, 0, 0);
-		if (fd_duped[0]==-1)
+		if (fd_duped[0] == -1)
 			return (-1);
 		dup2(fd_duped[0], 0);
 		close(fd_duped[0]);
 	}
 	if (!c->n_out)
 	{
+		printf("N N_OUT \n");
 		fd_stds[1] = dup(1);
 		fd_duped[1] = open_file(c->output, 1, c->files[c->f_i-1].append);
 		if (fd_duped[0] == -1)
@@ -57,9 +60,9 @@ int	builtindirector(t_minishell *t_m, t_cmd *c, int n_builtin)
 
 	//fprintf(stderr, "boolin: %d, boolout: %d, isappend; %d\n", c->is_stdin, c->is_stdout, c->is_append);
 	if(openfds(c, fd_stds, fd_duped) == -1)
-		return (restorefds(c, fd_stds), -1);
+	//	return (restorefds(c, fd_stds), -1);
 	run_builtin(t_m, n_builtin, 1, c);
-	restorefds(c, fd_stds);
+	//restorefds(c, fd_stds);
 	return (0);
 }
 
