@@ -12,16 +12,7 @@
 
 #include "minishell.h"
 
-int	dupclose(int fd2, int fd1)
-{
-	if (dup2(fd2, fd1) == -1)
-		return (perror("minishell: dup2: "), exit(126), 1);
-	if (close(fd2) == -1)
-		return (perror("minishell: close: "), exit(126), 1);
-	return (0);
-}
-
-char	*tmpnamer(void)
+static char	*tmpnamer(void)
 {
 	size_t	i;
 	char	*res;
@@ -39,7 +30,7 @@ char	*tmpnamer(void)
 	return (res);
 }
 
-int	heredoc_writer(char *eof, char *tempfile)
+static int	heredoc_writer(char *eof, char *tempfile)
 {
 	char	*line;
 	int		docfd;
@@ -68,12 +59,13 @@ int	heredoc_writer(char *eof, char *tempfile)
 	return (1);
 }
 
-int	heredoc(t_file *f)
+static int	heredoc(t_file *f)
 {
 	char	*tempfile;
 	pid_t	pid;
-	int		tmfr = 0;
+	int		tmfr;
 
+	tmfr = 0;
 	tempfile = tmpnamer();
 	if (!tempfile)
 		return (perror("join err: "), -1);
@@ -104,8 +96,8 @@ int	heredocalloc(t_minishell *t_m)
 		while (a < c->f_i)
 		{
 			if ((c->files[a]).heredoc)
-				if(heredoc(&(c->files[a])) ==-1)
-					return -1;
+				if (heredoc(&(c->files[a])) == -1)
+					return (-1);
 			a++;
 		}
 		i++;

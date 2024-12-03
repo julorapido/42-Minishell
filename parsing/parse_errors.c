@@ -16,7 +16,7 @@ static bool	triple_operator(char a, char b, char c)
 {
 	void	*d;
 
-	d = NULL;
+	(void)d;
 	if (a == '>' || a == '<' || a == '|')
 	{
 		if (a == b && b == c)

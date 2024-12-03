@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static void		print_error(char **args)
+static void	print_error(char **args)
 {
 	ft_putstr_fd("cd: ", 2);
 	if (args[2])
@@ -30,29 +30,30 @@ static int	go_to(int n, t_minishell *t_m)
 	char	*ev_path;
 
 	ev_path = NULL;
+	ev_path = get_env_path(t_m);
 	if (n == 1)
 	{
-		ev_path = get_env_path(t_m);
-		if(!ev_path)
+		if (!ev_path)
 		{
 			ft_putendl_fd("minishell : $HOME not set", STDERR);
 			return (ERROR);
 		}
-	}else
-	{
-			
+		chdir(ev_path);
 	}
-	chdir(ev_path);
-	ft_memdel(ev_path);	
+	else
+	{
+		ft_putstr_fd(ev_path, 1);
+		ft_putstr_fd("\n", 1);
+	}
 	return (SUCCESS);
 }
 
-static void update_oldpwd(t_minishell *t_m)
+static void	update_oldpwd(t_minishell *t_m)
 {
 	t_env	*tmp;
 
 	tmp = t_m->env;
-	while(tmp)
+	while (tmp)
 	{
 		if (ft_strncmp(tmp->value, "OLDPWD=", 8))
 		{
@@ -69,9 +70,9 @@ int	f__cd(char **args, t_minishell *t_m)
 	int	cd_return;
 
 	if (!args[1])
-		return(go_to(1, t_m));	
-	if (ft_strcmp(args[1], "-") == 0)
-		return(go_to(0, t_m));
+		return (go_to(1, t_m));
+	if (ft_strcmp(args[1], "-") == 0 && ft_strlen(args[1]) == 1)
+		return (go_to(0, t_m));
 	else
 	{
 		update_oldpwd(t_m);

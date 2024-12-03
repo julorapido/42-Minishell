@@ -12,14 +12,27 @@
 
 #include "minishell.h"
 
+static void	free_c_args(t_minishell	*t_m)
+{
+	int	i;
+
+	i = 0;
+	while (t_m->c_args[i])
+	{
+		free(t_m->c_args[i]);
+		i++;
+	}
+	free(t_m->c_args[i]);
+	free(t_m->c_args);
+}
+
 void	f__exit(t_minishell *t_m, t_cmd *c)
 {
-	char **tmp;
+	char	**tmp;
 
 	tmp = ft_split(c->command, ' ');
 	if (tmp[1])
 		t_m->exstat = ft_atoi(tmp[1]);
-	//fprintf(stderr, "exit status tmp[1]: %s, t_,exsitat: %d\n", tmp[1], t_m->exstat);
 	ft_free_tab(tmp);
 	free_c_args(t_m);
 	delete_heredocs(t_m);

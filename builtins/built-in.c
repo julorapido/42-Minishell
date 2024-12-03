@@ -12,39 +12,44 @@
 
 #include "minishell.h"
 
-int	restorefds(t_cmd *c, int fd_stds[2])
+static t_file	*last_file(int _out, t_cmd *c)
 {
-	if (!c->is_piped_in)
+	int		i;
+	t_file	*f;
+
+	i = 0;
+	while (i < c->f_i)
 	{
-		dup2(fd_stds[0], 0);
-		close(fd_stds[0]);
+		if (_out)
+		{
+			if (c->files[i]._out)
+				f = &(c->files[i]);
+		}
+		else
+		{
+			if (!c->files[i]._out)
+				f = &(c->files[i]);
+		}
+		i++;
 	}
-	if (!c->n_out)
-	{
-		dup2(fd_stds[1], 1);
-		close(fd_stds[1]);
-	}
-	return (0);
+	return (f);
 }
 
-int	openfds(t_cmd *c, int fd_stds[2], int fd_duped[2])
+static int	openfds(t_cmd *c, int fd_stds[2], int fd_duped[2])
 {
-
 	if (c->n_in > 0)
 	{
-		printf("N PIPED IN \n");
 		fd_stds[0] = dup(0);
-		fd_duped[0] = open_file(c->input, 0, 0);
+		fd_duped[0] = open_file((LF_(0, c))->f_name, 0, 0);
 		if (fd_duped[0] == -1)
 			return (-1);
 		dup2(fd_duped[0], 0);
 		close(fd_duped[0]);
 	}
-	if (!c->n_out)
+	if (c->n_out > 0)
 	{
-		printf("N N_OUT \n");
 		fd_stds[1] = dup(1);
-		fd_duped[1] = open_file(c->output, 1, c->files[c->f_i-1].append);
+		fd_duped[1] = open_file((LF_(1, c))->f_name, 1, (LF_(0, c))->append);
 		if (fd_duped[0] == -1)
 			return (-1);
 		dup2(fd_duped[1], 1);
@@ -55,14 +60,34 @@ int	openfds(t_cmd *c, int fd_stds[2], int fd_duped[2])
 
 int	builtindirector(t_minishell *t_m, t_cmd *c, int n_builtin)
 {
-	int fd_stds[2];
+	int	fd_stds[2];
 	int	fd_duped[2];
 
-	//fprintf(stderr, "boolin: %d, boolout: %d, isappend; %d\n", c->is_stdin, c->is_stdout, c->is_append);
-	if(openfds(c, fd_stds, fd_duped) == -1)
-	//	return (restorefds(c, fd_stds), -1);
+	if (openfds(c, fd_stds, fd_duped) == -1)
+	{
+		if (c->n_in == 0)
+		{
+			dup2(fd_stds[0], 0);
+			close(fd_stds[0]);
+		}
+		if (c->n_in == 0)
+		{
+			dup2(fd_stds[1], 1);
+			close(fd_stds[1]);
+		}
+		return (-1);
+	}
 	run_builtin(t_m, n_builtin, 1, c);
-	//restorefds(c, fd_stds);
+	if (c->n_in == 0)
+	{
+		dup2(fd_stds[0], 0);
+		close(fd_stds[0]);
+	}
+	if (c->n_in == 0)
+	{
+		dup2(fd_stds[1], 1);
+		close(fd_stds[1]);
+	}
 	return (0);
 }
 

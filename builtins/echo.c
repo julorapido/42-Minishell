@@ -22,10 +22,10 @@ static	int	nb_args(char **args)
 	return (size);
 }
 
-int		f__echo(char **args, int fdout)
+int	f__echo(char **args, int fdout)
 {
-	int		i;
-	int		n_option;
+	int	i;
+	int	n_option;
 
 	i = 1;
 	n_option = 0;
@@ -38,16 +38,12 @@ int		f__echo(char **args, int fdout)
 		}
 		while (args[i])
 		{
-			// QUOTE SPECIAL
-			if (args[i][0] == '\"' && args[i][ft_strlen(args[i]) - 1] == '\"')
-				ft_putstr_fd(ft_substr(args[i], 1, ft_strlen(args[i]) - 1), fdout);
-			else
-				ft_putstr_fd(args[i], fdout);
-			if (args[i + 1] && args[i][0] != '\0')
-				write(fdout, " ", 1);
+			ft_putstr_fd(args[i], fdout);
+			if (args[i + 1])
+				ft_putstr_fd(" ", fdout);
 			i++;
 		}
-	}	
+	}
 	if (n_option == 0)
 		write(1, "\n", fdout);
 	return (SUCCESS);

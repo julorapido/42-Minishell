@@ -1,26 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_apply_rmquote.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gchauvot <gchauvot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: julessainthorant <marvin@42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/07 11:57:25 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/16 15:50:08 by gchauvot         ###   ########.fr       */
+/*   Created: 2024/12/03 15:10:08 by julessainthor     #+#    #+#             */
+/*   Updated: 2024/12/03 15:11:10 by julessainthor    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h" 
 
-int	f__pwd(int fdout)
+void	ft_apply_rmquote(char **t)
 {
-	char	cwd[PATH_MAX];
+	size_t	i;
 
-	if (getcwd(cwd, PATH_MAX))
+	i = 0;
+	while (t[i])
 	{
-		ft_putendl_fd(cwd, fdout);
-		return (SUCCESS);
+		t[i] = ft_rm_quotes(t[i]);
+		i++;
 	}
-	else
-		return (ERROR);
+	return ;
 }

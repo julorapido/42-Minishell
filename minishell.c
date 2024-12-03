@@ -16,7 +16,41 @@
 #include <readline/history.h>
 int sigcatch = 0;
 
-void	minishell(t_minishell *t_m)
+static void	shlvlhandler(char **env)
+{
+	int		i;
+	size_t	j;
+	int		mark;
+	char	*res;
+
+	i = 0;
+	j = 0;
+	mark = 0;
+	while (env[i])
+	{
+		if (!ft_strncmp(env[i], "SHLVL=", 6))
+		{
+			res = ft_itoa(ft_atoi(&env[i][6]) + 1);
+			while (j < ft_strlen(res))
+			{
+				env[i][6 + j] = res[j];
+				j++;
+			}
+			free(res);
+			env[i][6 + j] = '\0';
+			mark = -1;
+		}
+		i++;
+	}
+	if (mark != -1)
+	{
+		env[i] = "SHLVL=0";
+		env[i + 1] = 0;
+	}
+}
+
+
+static void	minishell(t_minishell *t_m)
 {
 	char 	*line;
 	signalignore(SIGQUIT);
@@ -26,11 +60,11 @@ void	minishell(t_minishell *t_m)
 	
 	line = readline("$ ");
 	add_history(line);
-	while(line)
+	while (line)
 	{
 		t_m->exp_starter = 0;
 		t_m->set = ft_strdup("><");
-		if(ft_strlen(line) < 1)
+		if (ft_strlen(line) < 1)
 		{
 			line = readline("$ ");
 			add_history(line);

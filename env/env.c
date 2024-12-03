@@ -14,43 +14,41 @@
 
 static int	size_t_var(char *s)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(s[i] && s[i] != '=')
+	while (s[i] && s[i] != '=')
 		i++;
 	return (i);
 }
-
 
 char	*get_env_path(t_minishell *t_m)
 {
 	t_env	*n;
 	char	**spl;
-	char 	*v;
+	char	*v;
 	int		j;
 
 	v = NULL;
 	n = (t_m->env);
 	while (n)
 	{
-		if (ft_strncmp(n->value, "PATH", size_t_var(n->value)) == 0)
+		if (ft_strncmp(n->value, "PWD", size_t_var(n->value)) == 0)
 		{
 			spl = ft_split(n->value, '=');
-			v = spl[1];
+			v = ft_strdup(spl[1]);
 			j = 0;
 			while (spl[j])
 			{
 				free(spl[j]);
 				j++;
 			}
-			break;
+			break ;
 		}
 		n = n->next;
 	}
 	return (v);
 }
-
 
 int	env_init(t_minishell *t_m, char **argv)
 {
@@ -58,7 +56,8 @@ int	env_init(t_minishell *t_m, char **argv)
 	t_env	*new;
 	int		i;
 
-	if (!(env = ft_calloc(1, sizeof(t_env))))
+	env = ft_calloc(1, sizeof(t_env));
+	if (!(env))
 		return (1);
 	env->value = ft_strdup(argv[0]);
 	env->next = NULL;
@@ -66,7 +65,8 @@ int	env_init(t_minishell *t_m, char **argv)
 	i = 1;
 	while (argv && argv[0] && argv[i])
 	{
-		if (!(new = ft_calloc(1, sizeof(t_env))))
+		new = ft_calloc(1, sizeof(t_env));
+		if (!(new))
 			return (1);
 		new->value = ft_strdup(argv[i]);
 		new->next = NULL;
@@ -76,4 +76,3 @@ int	env_init(t_minishell *t_m, char **argv)
 	}
 	return (0);
 }
-

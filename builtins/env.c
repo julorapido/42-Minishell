@@ -12,10 +12,8 @@
 
 #include "minishell.h"
 
-int		f__env(t_env *env, int fdout)
+int	f__env(t_env *env, int fdout)
 {
-	// fprintf(stderr, "ptr_next: %p, env ptr: %p,\n", env->next, env);
-	//fprintf(stderr, "ptr_next: %s, env ptr: %p,\n", env->value, env);
 	while (env && env->next != NULL)
 	{
 		ft_putendl_fd(env->value, fdout);
@@ -25,4 +23,3 @@ int		f__env(t_env *env, int fdout)
 		ft_putendl_fd(env->value, fdout);
 	return (SUCCESS);
 }
-
