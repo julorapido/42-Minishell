@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gchauvot <gchauvot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 11:37:15 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/04 16:01:21 by gchauvot         ###   ########.fr       */
+/*   Updated: 2024/12/04 15:53:04 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,11 @@ int	f__cd(char **args, t_minishell *t_m)
 {
 	int	cd_return;
 
+	if(args[2])
+	{
+		ft_putendl_fd(" too many arguments", STDERR);
+		return (1);
+	}
 	if (!args[1])
 		return (go_to(1, t_m));
 	if (ft_strcmp(args[1], "-") == 0 && ft_strlen(args[1]) == 1)

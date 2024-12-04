@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gchauvot <gchauvot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 12:26:34 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/07 11:23:04 by gchauvot         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:43:08 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ t_env	*findenv(char *name, t_env *env)
 	return (NULL);
 }
 
-int	s_and_chang(char *arg, t_env *env)
+static int	s_and_chang(char *arg, t_env *env)
 {
 	char	**tmp;
 	t_env	*target;
@@ -64,17 +64,26 @@ int	s_and_chang(char *arg, t_env *env)
 	return (0);
 }
 
-void	f__export(t_minishell *t, int fdout)
+int	f__export(t_minishell *t, int fdout)
 {
 	t_env	*h;
 	int		i;
+	int		last_ex;
 
+	last_ex = (EXIT_SUCCESS);
 	i = 1;
 	h = t->env;
-	while (t->c_args[i] != 0)
+	while (t->c_args[i])
 	{
+		/*if ((t->c_args[i][0] == '='))
+			return (EXIT_FAILURE);*/
+		if (ft_m_strchr_i(t->c_args[i], '=', '=') == -1)
+			last_ex = (1);
+		else
+			last_ex = (0);
 		s_and_chang(t->c_args[i], h);
 		i++;
 	}
 	h = t->env;
+	return (last_ex);
 }

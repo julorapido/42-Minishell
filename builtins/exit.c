@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 14:30:09 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/28 15:12:02 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:46:33 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,19 @@ static void	free_c_args(t_minishell	*t_m)
 	free(t_m->c_args);
 }
 
-void	f__exit(t_minishell *t_m, t_cmd *c)
+int	f__exit(t_minishell *t_m, t_cmd *c)
 {
 	char	**tmp;
+	int		e;
 
+	e = (0);
 	tmp = ft_split(c->command, ' ');
 	if (tmp[1])
-		t_m->exstat = ft_atoi(tmp[1]);
+		e = ft_atoi(tmp[1]);
 	ft_free_tab(tmp);
 	free_c_args(t_m);
 	delete_heredocs(t_m);
 	free(t_m->pipes_fd);
 	free(t_m->pid);
-	exit(t_m->exstat);
+	return (e);
 }

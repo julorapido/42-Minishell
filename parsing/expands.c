@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expands.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julessainthorant <marvin@42.fr>            +#+  +:+       +#+        */
+/*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/03 16:44:15 by julessainthor     #+#    #+#             */
-/*   Updated: 2024/12/03 16:44:19 by julessainthor    ###   ########.fr       */
+/*   Created: 2024/12/03 16:44:15 by julessainth       #+#    #+#             */
+/*   Updated: 2024/12/04 17:36:40 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static char	*insert_replace(int a, int b, char *s, char *insert_s)
 	int		i;
 	int		j;
 
-	ir = (char *)(malloc(FT(s) - (b) + (FT(insert_s) - 1) + 1));
+	ir = (char *)(malloc(FT(s) - (b) + (FT(insert_s)) + 1));
 	i = 0;
 	while (s[i] && i < a)
 	{
@@ -26,7 +26,7 @@ static char	*insert_replace(int a, int b, char *s, char *insert_s)
 		i++;
 	}
 	j = i;
-	a = 1;
+	a = 0;
 	while (insert_s[a])
 	{
 		ir[i] = insert_s[a];
@@ -47,11 +47,15 @@ static char	*insert_expands(char *s, t_minishell *t)
 	int		i;
 	int		j;
 	char	*sub_s;
+	bool	q;
 
+	q = false;
 	i = 0;
 	while (s[i])
 	{
-		if (s[i] == '$')
+		if(s[i] == '\'')
+			q = s[i];
+		if (s[i] == '$' && !q)
 		{
 			j = 1;
 			while (s[i + j] != ' ' && s[i + j] != '\0' && s[i + j] != '$'
@@ -59,13 +63,13 @@ static char	*insert_expands(char *s, t_minishell *t)
 				j++;
 			sub_s = ft_substr(s, i + 1, j - 1);
 			if (sub_s[0] == '?')
-				s = IR_(i, j, s, ft_itoa(t->exstat % 255));
+				s = IR_(i, j, s, ft_itoa(t->exstat));
 			else
 			{
 				if (findenv(sub_s, t->env))
 				{
 					if (FC_((findenv(sub_s, t->env))->value, '='))
-						s = IR_(i, j, s, FC_((FE_(sub_s, t->env))->value, '='));
+						s = IR_(i, j, s, FC_((FE_(sub_s, t->env))->value, '=') + 1);
 					else
 						s = IR_(i, j, s, "");
 				}

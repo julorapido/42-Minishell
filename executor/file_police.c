@@ -6,13 +6,13 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 16:41:20 by gchauvot          #+#    #+#             */
-/*   Updated: 2024/12/02 14:01:51 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/04 16:02:44 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	ft_exec2(char *cmd, char **env)
+static int	ft_exec2(char *cmd, char **env)
 {
 	char	**ft_cmd;
 	char	*path;
@@ -27,6 +27,7 @@ static void	ft_exec2(char *cmd, char **env)
 		ft_free_tab(ft_cmd);
 		exit(127);
 	}
+	return (0);
 }
 
 static int	dupclose(int fd2, int fd1)
@@ -80,6 +81,8 @@ static int	child_handler(t_minishell *t_m, size_t i, t_cmd *c)
 
 int	child_molestor(t_minishell *t_m, t_cmd *c, size_t i, int c_int, char **nenv)
 {
+	int	exit_status;
+
 	signalsetter(SIGINT, SIG_DFL);
 	if (child_handler(t_m, i, c))
 		closepipesonfail(t_m, i);
@@ -89,8 +92,8 @@ int	child_molestor(t_minishell *t_m, t_cmd *c, size_t i, int c_int, char **nenv)
 		close(t_m->pipes_fd[i - 1][1]);
 	}
 	if (c_int != -1)
-		run_builtin(t_m, c_int, 1, c);
+		exit_status = run_builtin(t_m, c_int, 1, c);
 	else if (c->command)
-		ft_exec2(c->command, nenv);
-	exit(0);
+		exit_status = ft_exec2(c->command, nenv);
+	exit(exit_status);
 }

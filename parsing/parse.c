@@ -6,18 +6,19 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 13:05:20 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/03 08:44:09 by julessainthor    ###   ########.fr       */
+/*   Updated: 2024/12/04 17:17:43 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
+
 static void p_commands(t_cmd *t, int l)
 {
     for(int i = 0; i < l; i++)
     {
-        printf("-> %s ", t[i].command);
+		if(ft_strlen(t[i].command))
+        	printf("-> %s ", t[i].command);
         printf("[");
         for(int j = 0; j < t[i].f_i; j++)
             if(!t[i].files[j]._out)
@@ -35,7 +36,7 @@ static void p_commands(t_cmd *t, int l)
         printf("]\n");
     }
 }
-*/
+
 
 static char	*handle_spaces(char *str_token, t_cmd *ct)
 {
@@ -74,8 +75,8 @@ static void	fdp_parsing2(t_minishell *t, t_mltsplit *s, int *i)
 	t->cmds[*i].command = ft_strdup(M_1(t->T, (t->sq[0]).s));
 	while ((t->sq[a]).s)
 	{
-		if (t->set[(t->sq[a]).ix] == '<' && (a - 1 >= 0))
-			if (t->set[(t->sq[a - 1]).ix] == '<')
+		if(t->set[(t->sq[a]).ix] == '<' && (a - 1 >= 0))
+			if ((t->sq[a - 1]).ix != -1 && t->set[(t->sq[a - 1]).ix] == '<')
 				t->cmds[*i].files[t->cmds[*i].f_i].heredoc = true;
 		if (t->set[(t->sq[a]).ix] == '>' && FT(t->sq[a].s) && (a - 1 >= 0))
 			if ((!FT(t->sq[a - 1].s)) && (t->set[(t->sq[a - 1]).ix] == '>'))
@@ -104,6 +105,9 @@ void	fdp_parsing(char *cmd, t_minishell *t)
 	i = 0;
 	while (s[i].s)
 	{
+		t->cmds[i].f_i = 0;
+		t->cmds[i].n_out = 0;
+		t->cmds[i].n_in = 0;
 		if (ft_m_strchr_i(s[i].s, '>', '<') != -1)
 			fdp_parsing2(t, s, &i);
 		else
@@ -112,4 +116,5 @@ void	fdp_parsing(char *cmd, t_minishell *t)
 	}
 	free_multisplit(s);
 	apply_expands(t);
+	// p_commands(t->cmds, t->cmd_count);
 }

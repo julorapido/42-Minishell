@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/02 14:41:45 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:45:55 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,9 +119,11 @@ int		f__pwd(int fd_out);
 int		f__env(t_env *env, int fdout);
 int		f__echo(char **args, int fdout);
 int		f__unset(t_minishell *t_m);
-void	f__export(t_minishell *t, int fdout);
+int		f__export(t_minishell *t, int fdout);
 int		is_builtin(char *c);
-void	run_builtin(t_minishell *t_m, int n_builtin, int fdout, t_cmd *cmd);
+//void	run_builtin(t_minishell *t_m, int n_builtin, int fdout, t_cmd *cmd);
+int		run_builtin(t_minishell *t_m, int n_builtin, int fdout, t_cmd *cmd);
+int		f__exit(t_minishell *t_m, t_cmd *c);
 
 /* GAUTIER LE G.O.A.T DU MULTITHREADING */
 //expands
@@ -141,7 +143,6 @@ int		delete_heredocs(t_minishell *t_m);
 // UTILS
 char	**pipe_env(t_minishell *t_m);
 void	shlvladd(char *env, char **env_l);
-void	f__exit(t_minishell *t_m, t_cmd *c);
 
 // SIGNALS
 void	handler(int signum);

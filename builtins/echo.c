@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gchauvot <gchauvot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 14:59:38 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/10/16 15:51:23 by gchauvot         ###   ########.fr       */
+/*   Updated: 2024/12/04 15:47:59 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	f__echo(char **args, int fdout)
 		}
 		while (args[i])
 		{
-			ft_putstr_fd(args[i], fdout);
+			ft_putquote(args[i], fdout);
 			if (args[i + 1])
 				ft_putstr_fd(" ", fdout);
 			i++;
@@ -46,5 +46,5 @@ int	f__echo(char **args, int fdout)
 	}
 	if (n_option == 0)
 		write(1, "\n", fdout);
-	return (SUCCESS);
+	return (EXIT_SUCCESS);
 }
