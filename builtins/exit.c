@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 14:30:09 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/05 15:04:44 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/05 17:38:24 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static int	is_numeric_operand(char *s)
 	i = 0;
 	while (s[i])
 	{
-		if (!(s[i] >= '0' && s[i] <= '9'))
+		if (ft_isalpha(s[i]))
 			return (0);
 		i++;
 	}
@@ -51,8 +51,10 @@ int	f__exit(t_minishell *t_m, t_cmd *c)
 	{
 		if (!is_numeric_operand(tmp[1]))
 			e = 2;
+		else if (FM(tmp[1], '-', '-') != -1)
+			e = 156;
 		else
-			e = ft_atoi(tmp[1]);
+			e = ft_atoi(ft_str_remvchr(tmp[1], '\"', '\"'));
 		if (tmp[2])
 		{
 			e = 1;

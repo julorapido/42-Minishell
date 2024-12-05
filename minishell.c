@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:07:22 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/05 11:56:12 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/05 17:08:59 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static void	minishell(t_minishell *t_m)
 	while (line)
 	{
 		t_m->exp_starter = 0;
-		if (ft_strlen(line) < 1)
+		if (ft_strlen(line) < 1 || !ft_strcmp(line, " "))
 		{
 			line = readline("$ ");
 			add_history(line);

@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 12:26:34 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/05 15:27:35 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/05 17:30:53 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,10 @@ int	f__export(t_minishell *t, int fdout)
 	{
 		if ((t->c_args[i][0] == '='))
 			return (1);
-		else
-			last_ex = (0);
+		if (FM(t->c_args[i], '=', '=') == -1 
+				&& !ft_str_isalpha(t->c_args[i]))
+			return (1);
+		last_ex = (0);
 		s_and_chang(t->c_args[i], h);
 		i++;
 	}

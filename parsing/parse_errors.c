@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 18:13:14 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/05 12:48:15 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/05 17:08:29 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ static int	quote_errors(char *s_cmds, int *p, char *c)
 	in_q = false;
 	in_sq = false;
 	i = 0;
+	if (*s_cmds == '|')
+		return ('|');
 	while (i < (int)ft_strlen(s_cmds))
 	{
 		if (s_cmds[i] == '\"' && (!in_sq))
@@ -64,7 +66,7 @@ static char	cmd_verif(t_mltsplit *s, int i, int j)
 		|| ((s[i].s)[j] == '>' && (s[i].s)[j + 1] == '|')
 		|| ((s[i].s)[j] == '<' && (s[i].s)[j + 1] == '>')
 	)
-		c = ((s[i].s)[j + 1]);
+		c = ((s[i].s)[j]);
 	if ((s[i].s)[j + 1 + 1])
 		if (triple_operator((s[i].s)[j], (s[i].s)[j + 1], (s[i].s)[j + 2]))
 			c = ((s[i].s)[j]);
