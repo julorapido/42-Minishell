@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gchauvot <gchauvot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 11:21:49 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/11/04 15:58:45 by gchauvot         ###   ########.fr       */
+/*   Updated: 2024/12/05 14:58:29 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,8 +93,8 @@ int	f__unset(t_minishell *t_m)
 	int		i;
 
 	args = t_m->c_args;
-	if (!args[1])
-		return (ft_putstr_fd("unset: not enough arguments\n", 2), ERROR);
+	if (!args[1] || !ft_strlen(args[1]))
+		return (SUCCESS);
 	h = t_m->env;
 	i = 1;
 	while (args[i])

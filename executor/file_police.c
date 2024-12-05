@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 16:41:20 by gchauvot          #+#    #+#             */
-/*   Updated: 2024/12/04 16:02:44 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/05 13:04:08 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static int	child_handler(t_minishell *t_m, size_t i, t_cmd *c)
 		fd = open_file(c->files[a].f_name,
 				c->files[a]._out, c->files[a].append);
 		if (fd == -1)
-			return (-1);
+			return (1);
 		dupclose(fd, c->files[a]._out);
 		a++;
 	}
@@ -72,7 +72,7 @@ static int	child_handler(t_minishell *t_m, size_t i, t_cmd *c)
 		close(t_m->pipes_fd[i - 1][1]);
 	}
 	close(t_m->pipes_fd[i][0]);
-	if (i < t_m->cmd_count - 1)
+	if (c->n_out == 0 && i < t_m->cmd_count - 1)
 		dupclose(t_m->pipes_fd[i][1], 1);
 	else
 		close(t_m->pipes_fd[i][1]);

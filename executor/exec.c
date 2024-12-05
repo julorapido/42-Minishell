@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 12:08:14 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/04 16:28:32 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/05 13:05:11 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,11 @@ static int	ft_waiter(t_minishell *t_m)
 	{
 		waitpid(t_m->pid[i], &t_m->exstat, 0);
 		t_m->exstat = WEXITSTATUS(t_m->exstat);
-		if (WIFSIGNALED(t_m->exstat))
+		/*if (WIFSIGNALED(t_m->exstat))
 		{
 			t_m->exstat = 128 + WTERMSIG(t_m->exstat);
 			write(2, "\n", 1);
-		}
+		}*/
 		i++;
 	}
 	return (0);
@@ -94,6 +94,8 @@ void	exec_cmds(t_minishell *t_m)
 	size_t	i;
 
 	i = 0;
+	free(t_m->pid);
+	free(t_m->pipes_fd);
 	t_m->pid = ft_calloc(t_m->cmd_count + 1, sizeof(pid_t));
 	t_m->pipes_fd = ft_calloc(t_m->cmd_count + 1, sizeof(int [2]));
 	if (!t_m->pipes_fd || !t_m->pid)

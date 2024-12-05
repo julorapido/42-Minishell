@@ -6,13 +6,13 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 13:05:20 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/04 17:17:43 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/05 15:59:05 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
+/*
 static void p_commands(t_cmd *t, int l)
 {
     for(int i = 0; i < l; i++)
@@ -35,8 +35,54 @@ static void p_commands(t_cmd *t, int l)
                 );
         printf("]\n");
     }
+}*/
+
+static void	apply_quote_removal(t_minishell *t)
+{
+	size_t	i;
+	int		j;
+	char	*n;
+
+	i = 0;
+	while (i < t->cmd_count)
+	{
+		j = 0;
+		while (j < t->cmds[i].f_i)
+		{
+			if (t->cmds[i].files[j].f_name)
+			{
+				n = t->cmds[i].files[j].f_name;
+				if ((FM(n, '\'', '\'') != -1 && FM(n, '\"', '\"') == -1)
+					|| (FM(n, '\'', '\'') == -1 && FM(n, '\"', '\"') != -1))
+					ft_str_remvchr(t->cmds[i].files[j].f_name, '\"', '\'');
+			}
+			j++;
+		}
+		i++;
+	}
 }
 
+static void	free_commands(t_minishell *t)
+{
+	size_t	i;
+	int		j;
+
+	i = 0;
+	while (i < t->cmd_count)
+	{
+		if (t->cmds[i].command)
+			free(t->cmds[i].command);
+		j = 0;
+		while (j < t->cmds[i].f_i)
+		{
+			if (t->cmds[i].files[j].f_name)
+				free(t->cmds[i].files[j].f_name);
+			j++;
+		}
+		i++;
+	}
+	free(t->cmds);
+}
 
 static char	*handle_spaces(char *str_token, t_cmd *ct)
 {
@@ -75,8 +121,10 @@ static void	fdp_parsing2(t_minishell *t, t_mltsplit *s, int *i)
 	t->cmds[*i].command = ft_strdup(M_1(t->T, (t->sq[0]).s));
 	while ((t->sq[a]).s)
 	{
-		if(t->set[(t->sq[a]).ix] == '<' && (a - 1 >= 0))
-			if ((t->sq[a - 1]).ix != -1 && t->set[(t->sq[a - 1]).ix] == '<')
+		t->cmds[*i].files[t->cmds[*i].f_i].heredoc = false;
+		t->cmds[*i].files[t->cmds[*i].f_i].append = false;
+		if (t->set[(t->sq[a]).ix] == '<' && FT(t->sq[a].s) && (a - 1 >= 0))
+			if ((!FT(t->sq[a - 1].s)) && (t->set[(t->sq[a - 1]).ix] == '<'))
 				t->cmds[*i].files[t->cmds[*i].f_i].heredoc = true;
 		if (t->set[(t->sq[a]).ix] == '>' && FT(t->sq[a].s) && (a - 1 >= 0))
 			if ((!FT(t->sq[a - 1].s)) && (t->set[(t->sq[a - 1]).ix] == '>'))
@@ -100,6 +148,7 @@ void	fdp_parsing(char *cmd, t_minishell *t)
 	t_mltsplit	*s;
 
 	s = ft_multisplit(cmd, "|");
+	free_commands(t);
 	t->cmds = (t_cmd *) malloc((*s).mltsplit_l * sizeof(t_cmd));
 	t->cmd_count = (*s).mltsplit_l;
 	i = 0;
@@ -116,5 +165,5 @@ void	fdp_parsing(char *cmd, t_minishell *t)
 	}
 	free_multisplit(s);
 	apply_expands(t);
-	// p_commands(t->cmds, t->cmd_count);
+	apply_quote_removal(t);
 }

@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 16:44:15 by julessainth       #+#    #+#             */
-/*   Updated: 2024/12/04 17:36:40 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/05 15:59:43 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static char	*insert_expands(char *s, t_minishell *t)
 	i = 0;
 	while (s[i])
 	{
-		if(s[i] == '\'')
+		if (s[i] == '\'')
 			q = s[i];
 		if (s[i] == '$' && !q)
 		{
@@ -64,15 +64,15 @@ static char	*insert_expands(char *s, t_minishell *t)
 			sub_s = ft_substr(s, i + 1, j - 1);
 			if (sub_s[0] == '?')
 				s = IR_(i, j, s, ft_itoa(t->exstat));
-			else
+			else if (j != 1)
 			{
 				if (findenv(sub_s, t->env))
 				{
 					if (FC_((findenv(sub_s, t->env))->value, '='))
 						s = IR_(i, j, s, FC_((FE_(sub_s, t->env))->value, '=') + 1);
-					else
-						s = IR_(i, j, s, "");
 				}
+				else
+					s = FSF(ft_substr(s, 0, i), ft_substr(s, i + j, FT(s)));
 			}
 			free(sub_s);
 		}

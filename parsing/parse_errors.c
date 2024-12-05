@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 18:13:14 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/02 22:07:04 by julessainthor    ###   ########.fr       */
+/*   Updated: 2024/12/05 12:48:15 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	free_multisplit(t_mltsplit *s)
 	int	i;
 
 	i = 0;
-	while (i <= (*s).mltsplit_l)
+	while (i < (*s).mltsplit_l)
 	{
 		if (s[i].s)
 			free(s[i].s);

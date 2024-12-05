@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gchauvot <gchauvot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:48:53 by gchauvot          #+#    #+#             */
-/*   Updated: 2024/11/29 16:01:46 by gchauvot         ###   ########.fr       */
+/*   Updated: 2024/12/05 15:12:31 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ int	open_file(char *file, int in_out, int append)
 	if (ret == -1)
 	{
 		perror("minishell open_file: ");
-		ft_putendl_fd(file, 2);
 		return (ret);
 	}
 	return (ret);

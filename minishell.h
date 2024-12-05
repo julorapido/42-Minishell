@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/04 17:45:55 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/05 15:57:42 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@
 # define FC_ ft_strchr
 # define FE_ findenv
 # define LF_ last_file
+# define FM ft_m_strchr_i
 
 /*
 {

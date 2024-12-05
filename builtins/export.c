@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 12:26:34 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/04 17:43:08 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/05 15:27:35 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,8 @@ int	f__export(t_minishell *t, int fdout)
 	h = t->env;
 	while (t->c_args[i])
 	{
-		/*if ((t->c_args[i][0] == '='))
-			return (EXIT_FAILURE);*/
-		if (ft_m_strchr_i(t->c_args[i], '=', '=') == -1)
-			last_ex = (1);
+		if ((t->c_args[i][0] == '='))
+			return (1);
 		else
 			last_ex = (0);
 		s_and_chang(t->c_args[i], h);

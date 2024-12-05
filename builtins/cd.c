@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 11:37:15 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/04 15:53:04 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/05 12:53:08 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	f__cd(char **args, t_minishell *t_m)
 {
 	int	cd_return;
 
-	if(args[2])
+	if (args[2])
 	{
 		ft_putendl_fd(" too many arguments", STDERR);
 		return (1);

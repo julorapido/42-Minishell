@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:07:22 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/04 16:03:51 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/05 11:56:12 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,13 +57,13 @@ static void	minishell(t_minishell *t_m)
 	signalsetter(SIGINT, handler);
 	t_m->exstat = 0;
 	t_m->exp_starter = 0;
-	
+	t_m->set = ft_strdup("><");
+
 	line = readline("$ ");
 	add_history(line);
 	while (line)
 	{
 		t_m->exp_starter = 0;
-		t_m->set = ft_strdup("><");
 		if (ft_strlen(line) < 1)
 		{
 			line = readline("$ ");
