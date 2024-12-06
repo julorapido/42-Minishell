@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 13:05:20 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/05 18:00:23 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/06 11:43:15 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,5 +171,5 @@ void	fdp_parsing(char *cmd, t_minishell *t)
 	free_multisplit(s);
 	apply_expands(t);
 	apply_quote_removal(t);
-	// p_commands(t->cmds, t->cmd_count);
+	p_commands(t->cmds, t->cmd_count);
 }

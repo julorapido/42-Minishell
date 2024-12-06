@@ -6,7 +6,7 @@
 #    By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/03 21:19:02 by julessainth       #+#    #+#              #
-#    Updated: 2024/12/05 17:22:38 by jsaintho         ###   ########.fr        #
+#    Updated: 2024/12/06 12:18:18 by jsaintho         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ LIBC =	ft_atoi.c ft_bzero.c ft_calloc.c ft_isalnum.c ft_isalpha.c \
 		ft_strchr.c ft_atoi_l.c ft_m_strchr_i.c ft_putendl.c ft_memdel.c \
 		get_next_line_bonus.c get_next_line_utils_bonus.c ft_rm_quotes.c \
 		ft_last_strchr_i.c ft_strjoin_free.c ft_multisplit.c ft_splitter.c ft_putquote.c\
-		ft_str_remvchr.c ft_str_isalpha.c
+		ft_str_remvchr.c ft_str_isalpha.c ft_INC.c
 
 ADDITIONAL =	ft_itoa.c ft_putchar_fd.c ft_putendl_fd.c ft_putnbr_fd.c ft_putstr_fd.c \
 				ft_split.c ft_strjoin.c ft_strmapi.c ft_strtrim.c ft_substr.c ft_striteri.c

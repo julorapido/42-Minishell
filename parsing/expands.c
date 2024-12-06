@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 16:44:15 by julessainth       #+#    #+#             */
-/*   Updated: 2024/12/05 18:03:03 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/06 12:25:14 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,31 +47,26 @@ static char	*insert_expands(char *s, t_minishell *t)
 	int		i;
 	int		j;
 	char	*sub_s;
-	bool	q;
+	char	q;
 
-	q = false;
+	q = '\0';
 	i = 0;
 	while (s[i])
 	{
-		if (s[i] == '\'')
-			q = s[i];
-		if (s[i] == '$' && !q)
+		if (s[i] == '\'' || s[i] == '\"')
+			q = ft_INC(q, s[i]);
+		if (s[i] == '$' && (!q || (q == '\"')))
 		{
 			j = 1;
 			while (s[i + j] != ' ' && s[i + j] != '\0' && s[i + j] != '$'
-				&& s[i + j] != ';' && s[i + j] != '\"')
+				&& s[i + j] != ';' && s[i + j] != '\"' && s[i + j] != '\'')
 				j++;
 			sub_s = ft_substr(s, i + 1, j - 1);
 			if (sub_s[0] == '?')
 			{
-				/*printf("left %s \n", ft_substr(s, 0, i));
-				printf("middle %s \n", ft_itoa(t->exstat));
-				printf("right %s \n", ft_substr(s, i + 2, j - 1));*/
-				s = ft_strjoin_free(
-					ft_substr(s, 0, i),
+				s = ft_strjoin_free( ft_substr(s, 0, i),
 					ft_strjoin_free(ft_itoa(t->exstat), ft_substr(s, i + 2, FT(s) - 1 ))
 				);
-				// s = IR_(i, j, s, ft_itoa(t->exstat));	
 			}
 			else if (j != 1)
 			{
