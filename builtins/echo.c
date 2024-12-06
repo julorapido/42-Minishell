@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 14:59:38 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/06 14:30:38 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/06 17:40:23 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int		f__echo(char **args, int fdout)
 	if (nb_args(args) > 1)
 	{
 		args[i] = ft_rm_quotes(args[i]);
-		while (args[i][0] == '-')
+		while (args[i] && args[i][0] == '-')
 		{
 			while (ft_char_in_set(args[i][++j], "n"));
 			if (args[i][j] != '\0')

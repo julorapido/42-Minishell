@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 12:08:14 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/06 15:12:56 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/06 18:18:43 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,11 +75,8 @@ static int	executions(t_minishell *t_m, size_t i)
 	int		c_int;
 	
 	c = &(t_m->cmds[i]);
-	if (c->command == NULL  || !ft_strlen(c->command) 
-		|| !ft_strcmp(c->command, " "))
-	{
+	if (c->command == NULL  || !ft_strlen(c->command) || !ft_strcmp(c->command, " "))
 		ft_soloexec(t_m, i, -1);
-	}
 	else
 	{
 		if (!c->command || !FT(c->command))
@@ -89,11 +86,12 @@ static int	executions(t_minishell *t_m, size_t i)
 			t_m->c_args = ft_split_quotes(c->command, ' ', 0);
 			c_int = is_builtin(ft_rm_quotes(t_m->c_args[0]));
 		}
+		// ft_free_tab(t_m->c_args);
 		if(c_int != -1 && t_m->cmd_count == 1)
-			builtindirector(t_m, c, c_int);
+			return(builtindirector(t_m, c, c_int), -1);
 		else
-			ft_soloexec(t_m, i, c_int);
-		ft_free_tab(t_m->c_args);
+			return(ft_soloexec(t_m, i, c_int), EXIT_SUCCESS);
+		// ft_free_tab(t_m->c_args);
 	}
 	return (EXIT_SUCCESS);
 }
@@ -101,8 +99,10 @@ static int	executions(t_minishell *t_m, size_t i)
 void	exec_cmds(t_minishell *t_m)
 {
 	size_t	i;
+	int		a;
 
 	i = 0;
+	a = 0;
 	free(t_m->pid);
 	free(t_m->pipes_fd);
 	t_m->pid = ft_calloc(t_m->cmd_count + 1, sizeof(pid_t));
@@ -111,10 +111,11 @@ void	exec_cmds(t_minishell *t_m)
 		return (perror("arrays creation error."), exit(1));
 	if (heredocalloc(t_m) != -1)
 		while (i < t_m->cmd_count)
-			executions(t_m, i++);
+			a += executions(t_m, i++);
 	else
 		write(2, "\n", 1);
-	ft_waiter(t_m);
+	if(a >= 0)
+		ft_waiter(t_m);
 	delete_heredocs(t_m);
 	signalsetter(SIGINT, handler);
 }

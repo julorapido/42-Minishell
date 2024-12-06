@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:07:22 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/06 11:59:42 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/06 17:41:21 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,25 @@ static void	minishell(t_minishell *t_m)
 	}
 }
 
+static char	**envnull(char	*argname)
+{
+	char	**env;
+	char	cwd[PATH_MAX];
+	// char	*temp;
+
+	env = ft_calloc(4, sizeof(char *));
+	if (!env)
+		return (NULL);
+	if(!getcwd(cwd, PATH_MAX))
+		cwd[0] = NULL;
+	env[0] = ft_strjoin("PWD=", cwd);
+	env[1] = ft_strdup("SHLVL=0");
+	env[2] = ft_strjoin("_=", argname);
+	env[3] = NULL;
+	return (env);
+}
+
+
 int main(int argc, char **argv, char **env)
 {	
 	t_minishell	*t_m;	
@@ -94,6 +113,8 @@ int main(int argc, char **argv, char **env)
 	(void)argv;
 	if(!env || argc > 1)
 		return (0);
+	if (!*env)
+		env = envnull(argv[0]);
 	shlvlhandler(env);
 	t_m = ft_calloc(1, sizeof(t_minishell));
 	if(!t_m)

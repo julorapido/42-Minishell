@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 12:26:34 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/06 17:13:47 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/06 18:03:42 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,11 @@ int	f__export(t_minishell *t)
 			return (1);
 		if ((FM(t->c_args[i], '=', '=') == -1 && !ft_str_isalpha(t->c_args[i]))
 			|| (!handle_e(t->c_args[i])))
-			return (1);
+		{
+			t->exstat = 1;
+				fprintf(stderr,"condition ext %d\n", t->exstat);
+				return (1);
+		}
 		last_ex = (0);
 		s_and_chang(t->c_args[i], t->env);
 		i++;
