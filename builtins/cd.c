@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 11:37:15 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/05 12:53:08 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/06 17:19:28 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,28 +38,56 @@ static int	go_to(int n, t_minishell *t_m)
 			ft_putendl_fd("minishell : $HOME not set", STDERR);
 			return (ERROR);
 		}
-		chdir(ev_path);
 	}
 	else
 	{
 		ft_putstr_fd(ev_path, 1);
 		ft_putstr_fd("\n", 1);
 	}
+	chdir(ev_path);
 	return (SUCCESS);
 }
 
-static void	update_oldpwd(t_minishell *t_m)
+static char *gayenv(char *s, t_minishell *t_m)
 {
 	t_env	*tmp;
 
 	tmp = t_m->env;
 	while (tmp)
 	{
-		if (ft_strncmp(tmp->value, "OLDPWD=", 8))
+		if (!ft_strncmp(tmp->value, s, FT(s)))
+		{
+			char **s = ft_split(tmp->value, '=');
+			return (s[1]);
+		}
+		tmp = tmp->next;
+	}
+	return (NULL);
+}
+
+static void	update_oldpwd(t_minishell *t_m, int dd)
+{
+	t_env	*tmp;
+	char	*s;
+	char	cwd[PATH_MAX];
+
+	tmp = t_m->env;
+	s = "OLDPWD=";
+	if (dd)
+		s = "PWD=";
+	while (tmp)
+	{
+		if (!ft_strncmp(tmp->value, s, FT(s)))
 		{
 			free(tmp->value);
-			tmp->value = ft_strjoin("OLDPWD=", getenv("PWD"));
-			break ;
+			if(!dd)
+				tmp->value = ft_strjoin_free(ft_strdup(s), gayenv("PWD", t_m));
+			else
+			{
+				getcwd(cwd, PATH_MAX);
+				tmp->value = ft_strjoin(s, cwd);
+			}
+			break;
 		}
 		tmp = tmp->next;
 	}
@@ -80,8 +108,9 @@ int	f__cd(char **args, t_minishell *t_m)
 		return (go_to(0, t_m));
 	else
 	{
-		update_oldpwd(t_m);
+		update_oldpwd(t_m, 0);
 		cd_return = chdir(args[1]);
+		update_oldpwd(t_m, 1);
 		if (cd_return < 0)
 			cd_return *= -1;
 		if (cd_return != 0)

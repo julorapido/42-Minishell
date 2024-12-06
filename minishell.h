@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/05 15:57:42 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/06 15:48:12 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@
 # define FE_ findenv
 # define LF_ last_file
 # define FM ft_m_strchr_i
+# define F_R ft_str_remvchr
 
 /*
 {
@@ -110,7 +111,6 @@ void	free_multisplit(t_mltsplit *s);
 void	apply_expands(t_minishell *t);
 
 // ENV
-char	*get_env(char **env);
 char	*get_env_path(t_minishell *t_m);
 int		env_init(t_minishell *t_m, char **argv);
 
@@ -120,7 +120,7 @@ int		f__pwd(int fd_out);
 int		f__env(t_env *env, int fdout);
 int		f__echo(char **args, int fdout);
 int		f__unset(t_minishell *t_m);
-int		f__export(t_minishell *t, int fdout);
+int		f__export(t_minishell *t);
 int		is_builtin(char *c);
 //void	run_builtin(t_minishell *t_m, int n_builtin, int fdout, t_cmd *cmd);
 int		run_builtin(t_minishell *t_m, int n_builtin, int fdout, t_cmd *cmd);

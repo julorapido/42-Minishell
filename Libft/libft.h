@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 01:13:37 by julessainth       #+#    #+#             */
-/*   Updated: 2024/12/06 12:17:59 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/06 14:31:07 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ void		ft_putquote(char *s, int fd);
 char		*ft_str_remvchr(char *s, char a, char b); 
 int			ft_str_isalpha(char *s);
 char		ft_INC(char q, char si);
+int			ft_char_in_set(char c, char *set);
 
 /* additional functions */
 char		*ft_substr(char const *s, unsigned int start, size_t len);

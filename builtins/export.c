@@ -6,32 +6,28 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 12:26:34 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/05 17:30:53 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/06 17:13:47 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	env_lastadd(t_env *t, char *value)
+static void	env_lastadd(t_env *t, char *value)
 {
-	int		i;
 	t_env	*h;
 	t_env	*new;
 
-	i = 0;
 	h = t;
 	new = ft_calloc(1, sizeof(t_env));
 	if (!new)
-		return (-1);
+		return ;
 	while (h->next)
 	{
-		i++;
 		h = h->next;
 	}
 	h->next = new;
 	new->value = ft_strdup(value);
 	new->next = NULL;
-	return (i);
 }
 
 t_env	*findenv(char *name, t_env *env)
@@ -64,26 +60,37 @@ static int	s_and_chang(char *arg, t_env *env)
 	return (0);
 }
 
-int	f__export(t_minishell *t, int fdout)
+static int	handle_e(char *s)
 {
-	t_env	*h;
+	int		i;
+	char	*t;
+
+	i = 0;
+	while (s[i] && s[i] != '=')
+		i++;
+	t = ft_substr(s, 0, i);
+	if (FM(t, '-', '-') == -1)
+		return (1);
+	return (0);
+}
+
+int	f__export(t_minishell *t)
+{
 	int		i;
 	int		last_ex;
 
 	last_ex = (EXIT_SUCCESS);
 	i = 1;
-	h = t->env;
 	while (t->c_args[i])
 	{
 		if ((t->c_args[i][0] == '='))
 			return (1);
-		if (FM(t->c_args[i], '=', '=') == -1 
-				&& !ft_str_isalpha(t->c_args[i]))
+		if ((FM(t->c_args[i], '=', '=') == -1 && !ft_str_isalpha(t->c_args[i]))
+			|| (!handle_e(t->c_args[i])))
 			return (1);
 		last_ex = (0);
-		s_and_chang(t->c_args[i], h);
+		s_and_chang(t->c_args[i], t->env);
 		i++;
 	}
-	h = t->env;
 	return (last_ex);
 }

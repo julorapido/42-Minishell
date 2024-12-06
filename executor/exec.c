@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 12:08:14 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/05 17:04:56 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/06 15:12:56 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,10 @@ static int	executions(t_minishell *t_m, size_t i)
 			t_m->c_args = ft_split_quotes(c->command, ' ', 0);
 			c_int = is_builtin(ft_rm_quotes(t_m->c_args[0]));
 		}
-		ft_soloexec(t_m, i, c_int);
+		if(c_int != -1 && t_m->cmd_count == 1)
+			builtindirector(t_m, c, c_int);
+		else
+			ft_soloexec(t_m, i, c_int);
 		ft_free_tab(t_m->c_args);
 	}
 	return (EXIT_SUCCESS);

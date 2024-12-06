@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 16:44:15 by julessainth       #+#    #+#             */
-/*   Updated: 2024/12/06 12:25:14 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/06 12:59:55 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,13 +59,14 @@ static char	*insert_expands(char *s, t_minishell *t)
 		{
 			j = 1;
 			while (s[i + j] != ' ' && s[i + j] != '\0' && s[i + j] != '$'
-				&& s[i + j] != ';' && s[i + j] != '\"' && s[i + j] != '\'')
+				&& s[i + j] != ';' && s[i + j] != '\"' && s[i + j] != '\''
+				&& s[i + j] != ':')
 				j++;
 			sub_s = ft_substr(s, i + 1, j - 1);
 			if (sub_s[0] == '?')
 			{
 				s = ft_strjoin_free( ft_substr(s, 0, i),
-					ft_strjoin_free(ft_itoa(t->exstat), ft_substr(s, i + 2, FT(s) - 1 ))
+					ft_strjoin_free(ft_itoa(t->exstat), ft_substr(s, i + 2, FT(s) - 1))
 				);
 			}
 			else if (j != 1)

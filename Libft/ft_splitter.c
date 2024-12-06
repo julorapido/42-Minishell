@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_splitter.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julessainthorant <marvin@42.fr>            +#+  +:+       +#+        */
+/*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/03 14:50:58 by julessainthor     #+#    #+#             */
-/*   Updated: 2024/12/03 14:50:59 by julessainthor    ###   ########.fr       */
+/*   Created: 2024/12/03 14:50:58 by julessainth       #+#    #+#             */
+/*   Updated: 2024/12/06 13:17:14 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,8 @@ char	**ft_split_quotes(char *s, char c, int remove_quote)
 	size_t	words;
 	char	**tab;
 
+	if(!s)
+		return (NULL);
 	words = count_words(s, c);
 	tab = ft_calloc((words + 1), sizeof(char *));
 	if (!tab)

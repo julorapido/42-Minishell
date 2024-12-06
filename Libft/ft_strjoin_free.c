@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 15:28:51 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/05 14:46:46 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/06 15:59:42 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,10 @@ char	*ft_strjoin_free(char *s1, char *s2)
 	size_t	i;
 	size_t	j;
 
-	if(!ft_strlen(s2))
+	if(!s2 || !ft_strlen(s2))
 	{
-		free(s2);
+		if (s2)
+			free(s2);
 		return (s1);
 	}
 	new = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));

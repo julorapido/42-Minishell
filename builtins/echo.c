@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 14:59:38 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/04 15:47:59 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/06 14:30:38 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,29 +22,35 @@ static	int	nb_args(char **args)
 	return (size);
 }
 
-int	f__echo(char **args, int fdout)
+int		f__echo(char **args, int fdout)
 {
-	int	i;
-	int	n_option;
+	int		i;
+	int		j;
+	int		n_option;
 
 	i = 1;
+	j = 0;
 	n_option = 0;
 	if (nb_args(args) > 1)
 	{
-		while (args[i] && ft_strcmp(args[i], "-n") == 0)
+		args[i] = ft_rm_quotes(args[i]);
+		while (args[i][0] == '-')
 		{
-			n_option = 1;
+			while (ft_char_in_set(args[i][++j], "n"));
+			if (args[i][j] != '\0')
+				break ;
 			i++;
+			j = 0;
+			n_option = 1;
 		}
 		while (args[i])
 		{
-			ft_putquote(args[i], fdout);
-			if (args[i + 1])
-				ft_putstr_fd(" ", fdout);
-			i++;
+			ft_putstr_fd(args[i], fdout);
+			if(args[++i])
+				write(fdout, " ", 1);
 		}
-	}
+	}	
 	if (n_option == 0)
-		write(1, "\n", fdout);
-	return (EXIT_SUCCESS);
+		write(fdout, "\n", 1);
+	return (SUCCESS);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gchauvot <gchauvot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 13:45:02 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/02 17:16:33 by julessainthor    ###   ########.fr       */
+/*   Updated: 2024/12/06 15:14:51 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ char	*get_env_path(t_minishell *t_m)
 	n = (t_m->env);
 	while (n)
 	{
-		if (ft_strncmp(n->value, "PWD", size_t_var(n->value)) == 0)
+		if (ft_strncmp(n->value, "OLDPWD", size_t_var(n->value)) == 0)
 		{
 			spl = ft_split(n->value, '=');
 			v = ft_strdup(spl[1]);

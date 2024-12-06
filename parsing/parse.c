@@ -6,13 +6,13 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 13:05:20 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/06 11:43:15 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/06 12:41:52 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
+/*
 static void p_commands(t_cmd *t, int l)
 {
     for(int i = 0; i < l; i++)
@@ -36,7 +36,7 @@ static void p_commands(t_cmd *t, int l)
         printf("]\n");
     }
 }
-
+*/
 
 static void	apply_quote_removal(t_minishell *t)
 {
@@ -47,10 +47,10 @@ static void	apply_quote_removal(t_minishell *t)
 	i = 0;
 	while (i < t->cmd_count)
 	{
-		if(FT(t->cmds[i].command))
+		if (FT(t->cmds[i].command))
 			if (FM(t->cmds[i].command, '\'', '\'') != -1
 				&& FM(t->cmds[i].command, '\"', '\"') == -1)
-				t->cmds[i].command = ft_str_remvchr(t->cmds[i].command, '\'', '\'');
+				t->cmds[i].command = F_R(t->cmds[i].command, '\'', '\'');
 		j = 0;
 		while (j < t->cmds[i].f_i)
 		{
@@ -171,5 +171,4 @@ void	fdp_parsing(char *cmd, t_minishell *t)
 	free_multisplit(s);
 	apply_expands(t);
 	apply_quote_removal(t);
-	p_commands(t->cmds, t->cmd_count);
 }

@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:48:53 by gchauvot          #+#    #+#             */
-/*   Updated: 2024/12/05 15:12:31 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/06 15:47:29 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	open_file(char *file, int in_out, int append)
 	return (ret);
 }
 
-char	*get_env(char **env)
+static char	*get_env(char **env)
 {
 	int		i;
 	int		j;
@@ -65,6 +65,8 @@ char	*bget_path2(char *cmd, char **env)
 	i = -1;
 	b_path = ft_split_quotes(get_env(env), ':', 0);
 	e_cmd = ft_split_quotes(cmd, ' ', 0);
+	if (!b_path || !e_cmd)
+		return (NULL);
 	while (b_path[++i])
 	{
 		str_path = ft_strjoin(b_path[i], "/");
