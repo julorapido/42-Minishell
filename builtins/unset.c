@@ -42,7 +42,7 @@ static int	arg_check(char *arg)
 	return (1);
 }
 
-int	unsetter1(t_env *h, char *args)
+static int	unsetter1(t_env *h, char *args)
 {
 	t_env	*tmp;
 
@@ -69,7 +69,7 @@ int	unsetter1(t_env *h, char *args)
 	return (0);
 }
 
-int	unsetter(t_env *h, char *args, t_minishell *t_m)
+static int	unsetter(t_env *h, char *args, t_minishell *t_m)
 {
 	t_env	*tmp;
 

@@ -101,6 +101,8 @@ static char	*handle_spaces(char *str_token, t_cmd *ct)
 	s = ft_multisplit(str_token, " ");
 	while (s[c].s && ft_strlen(s[c].s) == 0)
 		c++;
+	if (c + 1 == (*s).mltsplit_l)
+		return (ft_strdup(" "));
 	while (s[i].s)
 		i++;
 	if (i == 0)
@@ -163,7 +165,9 @@ void	fdp_parsing(char *cmd, t_minishell *t)
 		t->cmds[i].n_out = 0;
 		t->cmds[i].n_in = 0;
 		if (ft_m_strchr_i(s[i].s, '>', '<') != -1)
+		{
 			fdp_parsing2(t, s, &i);
+		}
 		else
 			t->cmds[i].command = ft_strdup(s[i].s);
 		i++;

@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 14:14:13 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/06 12:18:41 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/07 11:48:24 by julessainthor    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static size_t	count_words(char *s, char *set)
 	while (s[i])
 	{
 		if (s[i] == '\'' || s[i] == '\"')
-			q = ft_INC(q, s[i]);
+			q = ft_inq(q, s[i]);
 		if (((char_in_set(s[i], set) >= 0 && !q) && s[i + 1] != '\0'))
 			words++;
 		i++;
@@ -58,7 +58,7 @@ static void	fill_tab(t_mltsplit *tab, char *s, char *set, size_t *i)
 	while (s[j] && (char_in_set(s[j], set) < 0 || q))
 	{
 		if (s[j] == '\'' || s[j] == '\"')
-			q = ft_INC(q, s[j]);
+			q = ft_inq(q, s[j]);
 		(tab[(*i)]).s[j] = s[j];
 		j++;
 	}
@@ -83,7 +83,7 @@ static void	set_mem(t_mltsplit *tab, char *s, char *set, char *q)
 		while (s[ix + count] && (char_in_set(s[ix + count], set) < 0 || *q))
 		{
 			if (s[ix + count] == '\'' || s[ix + count] == '\"')
-				*q = ft_INC(*q, s[ix + count]);
+				*q = ft_inq(*q, s[ix + count]);
 			count++;
 		}
 		if (count > 0 || (is_skip))

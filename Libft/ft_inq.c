@@ -1,28 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_INC.c                                           :+:      :+:    :+:   */
+/*   ft_inq.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 12:15:06 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/06 12:17:49 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/07 11:50:08 by julessainthor    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char    ft_INC(char q, char si)
+char	ft_inq(char q, char si)
 {
-    if (!q)
-    {
-        return (si);
-    }
-    else
-    {
-        if(si == q)
-            return ('\0');
-        else
-            return (q);
-    }
+	if (!q)
+	{
+		return (si);
+	}
+	else
+	{
+		if (si == q)
+			return ('\0');
+		else
+			return (q);
+	}
 }

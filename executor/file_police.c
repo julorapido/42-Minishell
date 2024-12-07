@@ -83,6 +83,7 @@ int	child_molestor(t_minishell *t_m, t_cmd *c, size_t i, int c_int, char **nenv)
 {
 	int	exit_status;
 
+	exit_status = 0;
 	signalsetter(SIGINT, SIG_DFL);
 	if (child_handler(t_m, i, c))
 		closepipesonfail(t_m, i);

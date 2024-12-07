@@ -42,11 +42,34 @@ static char	*insert_replace(int a, int b, char *s, char *insert_s)
 	return (ir[i] = '\0', ir);
 }
 
+static char	*i_norm(char *s, int i, int j, t_minishell *t)
+{
+	char	*sub_s;
+
+	sub_s = ft_substr(s, i + 1, j - 1);
+	if (sub_s[0] == '?')
+	{
+		s = FSF(FTS(s, 0, i),
+				FSF(ft_itoa(t->exstat), FTS(s, i + 2, FT(s) - 1)));
+	}
+	else if (j != 1)
+	{
+		if (findenv(sub_s, t->env))
+		{
+			if (FC_((findenv(sub_s, t->env))->value, '='))
+				s = IR_(i, j, s, FC_((FE_(sub_s, t->env))->value, '=') + 1);
+		}
+		else
+			s = FSF(ft_substr(s, 0, i), ft_substr(s, i + j, FT(s)));
+	}
+	free(sub_s);
+	return (s);
+}
+
 static char	*insert_expands(char *s, t_minishell *t)
 {
 	int		i;
 	int		j;
-	char	*sub_s;
 	char	q;
 
 	q = '\0';
@@ -54,7 +77,7 @@ static char	*insert_expands(char *s, t_minishell *t)
 	while (s[i])
 	{
 		if (s[i] == '\'' || s[i] == '\"')
-			q = ft_INC(q, s[i]);
+			q = ft_inq(q, s[i]);
 		if (s[i] == '$' && (!q || (q == '\"')))
 		{
 			j = 1;
@@ -62,24 +85,7 @@ static char	*insert_expands(char *s, t_minishell *t)
 				&& s[i + j] != ';' && s[i + j] != '\"' && s[i + j] != '\''
 				&& s[i + j] != ':')
 				j++;
-			sub_s = ft_substr(s, i + 1, j - 1);
-			if (sub_s[0] == '?')
-			{
-				s = ft_strjoin_free( ft_substr(s, 0, i),
-					ft_strjoin_free(ft_itoa(t->exstat), ft_substr(s, i + 2, FT(s) - 1))
-				);
-			}
-			else if (j != 1)
-			{
-				if (findenv(sub_s, t->env))
-				{
-					if (FC_((findenv(sub_s, t->env))->value, '='))
-						s = IR_(i, j, s, FC_((FE_(sub_s, t->env))->value, '=') + 1);
-				}
-				else
-					s = FSF(ft_substr(s, 0, i), ft_substr(s, i + j, FT(s)));
-			}
-			free(sub_s);
+			s = i_norm(s, i, j, t);
 		}
 		i++;
 	}

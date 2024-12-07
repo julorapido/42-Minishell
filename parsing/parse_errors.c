@@ -111,8 +111,7 @@ char	parse_errors(t_mltsplit *s, char *line)
 		}
 		i++;
 	}
-	if (s[i - 1].s[j - 1] == '>' || s[i - 1].s[j - 1] == '<'
-		|| s[i - 1].s[j - 1] == '|' )
+	if (P_E == '>' || P_E == '<' || P_E == '|' )
 		return (*(s[i - 1].s));
 	return ('\0');
 }

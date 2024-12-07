@@ -16,7 +16,7 @@ int	f__env(t_env *env, int fdout)
 {
 	while (env && env->next != NULL)
 	{
-		if(FM(env->value, '=', '=') != -1)
+		if (FM(env->value, '=', '=') != -1)
 			ft_putendl_fd(env->value, fdout);
 		env = env->next;
 	}

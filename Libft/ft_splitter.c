@@ -93,7 +93,7 @@ char	**ft_split_quotes(char *s, char c, int remove_quote)
 	size_t	words;
 	char	**tab;
 
-	if(!s)
+	if (!s)
 		return (NULL);
 	words = count_words(s, c);
 	tab = ft_calloc((words + 1), sizeof(char *));

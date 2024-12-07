@@ -29,5 +29,5 @@ char	*ft_str_remvchr(char *s, char a, char b)
 		i++;
 	}
 	s[j] = '\0';
-	return (s); 
+	return (s);
 }

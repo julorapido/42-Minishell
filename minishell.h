@@ -51,6 +51,10 @@
 # define LF_ last_file
 # define FM ft_m_strchr_i
 # define F_R ft_str_remvchr
+# define P_E s[i - 1].s[j - 1]
+# define FTS ft_substr
+# define FTF ft_free_tab
+
 
 /*
 {

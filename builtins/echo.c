@@ -22,7 +22,7 @@ static	int	nb_args(char **args)
 	return (size);
 }
 
-int		f__echo(char **args, int fdout)
+int	f__echo(char **args, int fdout)
 {
 	int		i;
 	int		j;
@@ -46,7 +46,7 @@ int		f__echo(char **args, int fdout)
 		while (args[i])
 		{
 			ft_putstr_fd(args[i], fdout);
-			if(args[++i])
+			if (args[++i])
 				write(fdout, " ", 1);
 		}
 	}	

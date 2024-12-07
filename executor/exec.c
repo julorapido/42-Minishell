@@ -73,9 +73,10 @@ static int	executions(t_minishell *t_m, size_t i)
 {
 	t_cmd	*c;
 	int		c_int;
-	
+
 	c = &(t_m->cmds[i]);
-	if (c->command == NULL  || !ft_strlen(c->command) || !ft_strcmp(c->command, " "))
+	if (c->command == NULL || !ft_strlen(c->command)
+		|| !ft_strcmp(c->command, " "))
 		ft_soloexec(t_m, i, -1);
 	else
 	{
@@ -86,12 +87,10 @@ static int	executions(t_minishell *t_m, size_t i)
 			t_m->c_args = ft_split_quotes(c->command, ' ', 0);
 			c_int = is_builtin(ft_rm_quotes(t_m->c_args[0]));
 		}
-		// ft_free_tab(t_m->c_args);
-		if(c_int != -1 && t_m->cmd_count == 1)
-			return(builtindirector(t_m, c, c_int), -1);
+		if (c_int != -1 && t_m->cmd_count == 1)
+			return (builtindirector(t_m, c, c_int), FTF(t_m->c_args), -1);
 		else
-			return(ft_soloexec(t_m, i, c_int), EXIT_SUCCESS);
-		// ft_free_tab(t_m->c_args);
+			return (ft_soloexec(t_m, i, c_int), FTF(t_m->c_args), EXIT_SUCCESS);
 	}
 	return (EXIT_SUCCESS);
 }
@@ -114,7 +113,7 @@ void	exec_cmds(t_minishell *t_m)
 			a += executions(t_m, i++);
 	else
 		write(2, "\n", 1);
-	if(a >= 0)
+	if (a >= 0)
 		ft_waiter(t_m);
 	delete_heredocs(t_m);
 	signalsetter(SIGINT, handler);

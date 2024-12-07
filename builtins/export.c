@@ -83,14 +83,14 @@ int	f__export(t_minishell *t)
 	i = 1;
 	while (t->c_args[i])
 	{
-		if ((t->c_args[i][0] == '='))
+		if ((t->c_args[i][0]) == '=')
 			return (1);
 		if ((FM(t->c_args[i], '=', '=') == -1 && !ft_str_isalpha(t->c_args[i]))
 			|| (!handle_e(t->c_args[i])))
 		{
 			t->exstat = 1;
-				fprintf(stderr,"condition ext %d\n", t->exstat);
-				return (1);
+			fprintf(stderr, "condition ext %d\n", t->exstat);
+			return (1);
 		}
 		last_ex = (0);
 		s_and_chang(t->c_args[i], t->env);

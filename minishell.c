@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:07:22 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/06 17:41:21 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/07 10:39:23 by julessainthor    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ static void	shlvlhandler(char **env)
 	}
 }
 
-
 static void	minishell(t_minishell *t_m)
 {
 	char 	*line;
@@ -80,7 +79,7 @@ static void	minishell(t_minishell *t_m)
 			continue ;
 		}
 		fdp_parsing(line, t_m);
-		exec_cmds(t_m);
+		// exec_cmds(t_m);
 		free_multisplit(s);
 		line = readline("$ ");
 		add_history(line);
@@ -91,13 +90,12 @@ static char	**envnull(char	*argname)
 {
 	char	**env;
 	char	cwd[PATH_MAX];
-	// char	*temp;
 
 	env = ft_calloc(4, sizeof(char *));
 	if (!env)
 		return (NULL);
-	if(!getcwd(cwd, PATH_MAX))
-		cwd[0] = NULL;
+	//if(!getcwd(cwd, PATH_MAX))
+	//	cwd[0] = NULL;
 	env[0] = ft_strjoin("PWD=", cwd);
 	env[1] = ft_strdup("SHLVL=0");
 	env[2] = ft_strjoin("_=", argname);

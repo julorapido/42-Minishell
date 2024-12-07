@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 01:13:37 by julessainth       #+#    #+#             */
-/*   Updated: 2024/12/06 14:31:07 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/07 11:47:52 by julessainthor    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,6 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 12
 # endif
-
-# define Q(x) x < 0 ? -x : x
-# define INC(q, si)	((!q) ? (si) : ((si == q) ? ('\0') : (q)))
 
 typedef struct s_list
 {
@@ -79,9 +76,9 @@ char		**ft_split_ignoreQuote(char const *s, char c);
 int			ft_last_strchr_i(const char *string, char a, char b);
 char		*ft_strjoin_free(char *s1, char *s2);
 void		ft_putquote(char *s, int fd);
-char		*ft_str_remvchr(char *s, char a, char b); 
+char		*ft_str_remvchr(char *s, char a, char b);
 int			ft_str_isalpha(char *s);
-char		ft_INC(char q, char si);
+char		ft_inq(char q, char si);
 int			ft_char_in_set(char c, char *set);
 
 /* additional functions */
