@@ -12,24 +12,6 @@
 
 #include "minishell.h"
 
-int	open_file(char *file, int in_out, int append)
-{
-	int	ret;
-
-	if (in_out == 0)
-		ret = open(file, O_RDONLY, 0644);
-	if (in_out == 1 && !append)
-		ret = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (in_out == 1 && append)
-		ret = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-	if (ret == -1)
-	{
-		perror("minishell open_file: ");
-		return (ret);
-	}
-	return (ret);
-}
-
 static char	*get_env(char **env)
 {
 	int		i;
@@ -52,6 +34,47 @@ static char	*get_env(char **env)
 		i++;
 	}
 	return (NULL);
+}
+
+int	open_file(char *file, int in_out, int append)
+{
+	int	ret;
+
+	if (in_out == 0)
+		ret = open(file, O_RDONLY, 0644);
+	if (in_out == 1 && !append)
+		ret = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (in_out == 1 && append)
+		ret = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (ret == -1)
+	{
+		perror("minishell open_file: ");
+		return (ret);
+	}
+	return (ret);
+}
+
+t_file	*last_file(int _out, t_cmd *c)
+{
+	int		i;
+	t_file	*f;
+
+	i = 0;
+	while (i < c->f_i)
+	{
+		if (_out)
+		{
+			if (c->files[i]._out)
+				f = &(c->files[i]);
+		}
+		else
+		{
+			if (!c->files[i]._out)
+				f = &(c->files[i]);
+		}
+		i++;
+	}
+	return (f);
 }
 
 char	*bget_path2(char *cmd, char **env)
@@ -81,19 +104,6 @@ char	*bget_path2(char *cmd, char **env)
 	ft_free_tab(e_cmd);
 	ft_free_tab(b_path);
 	return (cmd);
-}
-
-void	ft_free_tab(char **tab)
-{
-	size_t	i;
-
-	i = 0;
-	while (tab[i])
-	{
-		free(tab[i]);
-		i++;
-	}
-	free(tab);
 }
 
 char	**pipe_env(t_minishell *t_m)

@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 01:13:37 by julessainth       #+#    #+#             */
-/*   Updated: 2024/12/07 11:47:52 by julessainthor    ###   ########.fr       */
+/*   Updated: 2024/12/08 11:41:49 by julessainthor    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,9 @@ char		*ft_str_remvchr(char *s, char a, char b);
 int			ft_str_isalpha(char *s);
 char		ft_inq(char q, char si);
 int			ft_char_in_set(char c, char *set);
+void		ft_free_multisplit(t_mltsplit *s);
+void		ft_free_split(char **s);
+void		ft_free_tab(char **tab);
 
 /* additional functions */
 char		*ft_substr(char const *s, unsigned int start, size_t len);

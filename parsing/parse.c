@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-
+/*
 static void p_commands(t_cmd *t, int l)
 {
     for(int i = 0; i < l; i++)
@@ -33,10 +33,10 @@ static void p_commands(t_cmd *t, int l)
                     t[i].files[j].append ? ">>" : "out", 
                     t[i].files[j].f_name
                 );
-        printf("]\n");
+        printf("] [%d: (%d, %d)]\n", t[i].f_i, t[i].n_in, t[i].n_out);
     }
 }
-
+*/
 
 static void	apply_quote_removal(t_minishell *t)
 {
@@ -115,14 +115,13 @@ static char	*handle_spaces(char *str_token, t_cmd *ct)
 		ct->command = FSF(ct->command, FSF(FSR(" "), FSR(s[i].s)));
 		i++;
 	}
-	return (a = ft_strdup(s[c].s), free_multisplit(s), a);
+	return (a = ft_strdup(s[c].s), ft_free_multisplit(s), a);
 }
 
 static void	fdp_parsing2(t_minishell *t, t_mltsplit *s, int *i)
 {
 	int	a;
 
-	t->sq = ft_multisplit(s[*i].s, t->set);
 	t->T = (*s[*i].s) == '>' || (*s[*i].s == '<');
 	a = !(t->T);
 	t->cmds[*i].command = ft_strdup(M_1(t->T, (t->sq[0]).s));
@@ -146,7 +145,6 @@ static void	fdp_parsing2(t_minishell *t, t_mltsplit *s, int *i)
 		}
 		a++;
 	}
-	free_multisplit(t->sq);
 }
 
 void	fdp_parsing(char *cmd, t_minishell *t)
@@ -156,24 +154,22 @@ void	fdp_parsing(char *cmd, t_minishell *t)
 
 	s = ft_multisplit(cmd, "|");
 	free_commands(t);
-	t->cmds = (t_cmd *) malloc((*s).mltsplit_l * sizeof(t_cmd));
+	t->cmds = (t_cmd *) calloc((*s).mltsplit_l, sizeof(t_cmd));
 	t->cmd_count = (*s).mltsplit_l;
 	i = 0;
 	while (s[i].s)
 	{
-		t->cmds[i].f_i = 0;
-		t->cmds[i].n_out = 0;
-		t->cmds[i].n_in = 0;
 		if (ft_m_strchr_i(s[i].s, '>', '<') != -1)
 		{
+			t->sq = ft_multisplit(s[i].s, t->set);
 			fdp_parsing2(t, s, &i);
+			ft_free_multisplit(t->sq);
 		}
 		else
 			t->cmds[i].command = ft_strdup(s[i].s);
 		i++;
 	}
-	free_multisplit(s);
+	ft_free_multisplit(s);
 	apply_expands(t);
 	apply_quote_removal(t);
-	p_commands(t->cmds, t->cmd_count);
 }

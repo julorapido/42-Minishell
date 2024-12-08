@@ -108,6 +108,8 @@ t_mltsplit	*ft_multisplit(char *s, char *set)
 	t_mltsplit	*tab;
 	char		q;
 
+	if (!s || !set || !ft_strlen(s))
+		return (NULL);
 	q = '\0';
 	words = count_words(s, set);
 	tab = malloc((words + 1) * sizeof(t_mltsplit));

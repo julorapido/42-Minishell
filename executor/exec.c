@@ -59,11 +59,6 @@ static int	ft_waiter(t_minishell *t_m)
 	{
 		waitpid(t_m->pid[i], &t_m->exstat, 0);
 		t_m->exstat = WEXITSTATUS(t_m->exstat);
-		/*if (WIFSIGNALED(t_m->exstat))
-		{
-			t_m->exstat = 128 + WTERMSIG(t_m->exstat);
-			write(2, "\n", 1);
-		}*/
 		i++;
 	}
 	return (0);

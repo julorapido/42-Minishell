@@ -12,29 +12,6 @@
 
 #include "minishell.h"
 
-static t_file	*last_file(int _out, t_cmd *c)
-{
-	int		i;
-	t_file	*f;
-
-	i = 0;
-	while (i < c->f_i)
-	{
-		if (_out)
-		{
-			if (c->files[i]._out)
-				f = &(c->files[i]);
-		}
-		else
-		{
-			if (!c->files[i]._out)
-				f = &(c->files[i]);
-		}
-		i++;
-	}
-	return (f);
-}
-
 static int	openfds(t_cmd *c, int fd_stds[2], int fd_duped[2])
 {
 	if (c->n_in > 0)
@@ -58,7 +35,6 @@ static int	openfds(t_cmd *c, int fd_stds[2], int fd_duped[2])
 	return (0);
 }
 
-
 int	restorefds(t_cmd *c, int fd_stds[2])
 {
 	if (c->n_in > 0)
@@ -73,7 +49,6 @@ int	restorefds(t_cmd *c, int fd_stds[2])
 	}
 	return (0);
 }
-
 
 int	builtindirector(t_minishell *t_m, t_cmd *c, int n_builtin)
 {

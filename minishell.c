@@ -14,7 +14,7 @@
 
 #include <readline/readline.h>
 #include <readline/history.h>
-int sigcatch = 0;
+int	sigcatch = 0;
 
 static void	shlvlhandler(char **env)
 {
@@ -51,36 +51,29 @@ static void	shlvlhandler(char **env)
 
 static void	minishell(t_minishell *t_m)
 {
-	char 	*line;
+	char	*line;
+	char	**spl;
+
 	signalignore(SIGQUIT);
 	signalsetter(SIGINT, handler);
 	t_m->exstat = 0;
-	t_m->exp_starter = 0;
 	t_m->set = ft_strdup("><");
-
 	line = readline("$ ");
 	add_history(line);
 	while (line)
 	{
-		t_m->exp_starter = 0;
-		if (ft_strlen(line) < 1 || !ft_strcmp(line, " "))
+		spl = ft_split(line, ' ');
+		if (FT(line) < 1 || !ft_strcmp(line, " ") || P_ER(spl, line) != '\0')
 		{
-			line = readline("$ ");
-			add_history(line);
-			continue ;
-		}
-		t_mltsplit *s = ft_multisplit(line, " ");
-		if (parse_errors(s, line) != '\0')
-		{
-			printf("zsh: parse error near `%c' \n", parse_errors(s, line));
-			free_multisplit(s);
+			if (P_ER(spl, line) != '\0')
+				printf("zsh: parse error near `%c'\n", P_ER(spl, line));
+			ft_free_split(spl);
 			line = readline("$ ");
 			add_history(line);
 			continue ;
 		}
 		fdp_parsing(line, t_m);
 		// exec_cmds(t_m);
-		free_multisplit(s);
 		line = readline("$ ");
 		add_history(line);
 	}
@@ -94,8 +87,8 @@ static char	**envnull(char	*argname)
 	env = ft_calloc(4, sizeof(char *));
 	if (!env)
 		return (NULL);
-	//if(!getcwd(cwd, PATH_MAX))
-	//	cwd[0] = NULL;
+	if (!getcwd(cwd, PATH_MAX))
+		cwd[0] = NULL;
 	env[0] = ft_strjoin("PWD=", cwd);
 	env[1] = ft_strdup("SHLVL=0");
 	env[2] = ft_strjoin("_=", argname);
@@ -103,19 +96,18 @@ static char	**envnull(char	*argname)
 	return (env);
 }
 
-
-int main(int argc, char **argv, char **env)
-{	
+int	main(int argc, char **argv, char **env)
+{
 	t_minishell	*t_m;	
-	
+
 	(void)argv;
-	if(!env || argc > 1)
+	if (!env || argc > 1)
 		return (0);
 	if (!*env)
 		env = envnull(argv[0]);
 	shlvlhandler(env);
 	t_m = ft_calloc(1, sizeof(t_minishell));
-	if(!t_m)
+	if (!t_m)
 		return (EXIT_FAILURE);
 	env_init(t_m, env);
 	minishell(t_m);

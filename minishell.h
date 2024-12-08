@@ -51,10 +51,10 @@
 # define LF_ last_file
 # define FM ft_m_strchr_i
 # define F_R ft_str_remvchr
-# define P_E s[i - 1].s[j - 1]
+# define P_E s[i - 1][j - 1]
 # define FTS ft_substr
 # define FTF ft_free_tab
-
+# define P_ER parse_errors
 
 /*
 {
@@ -67,7 +67,7 @@
 
 typedef struct s_file
 {
-    char	*f_name;
+	char	*f_name;
 	bool	expand;
 	bool	append;
 	bool	_out;
@@ -97,7 +97,6 @@ typedef struct s_minishell
 	int					(*pipes_fd)[2];	// array of pipes
 	int					*heredocs;		// array of heredocs
 	int					exstat;
-	int					exp_starter;
 	t_cmd				*cmds;	// commands list
 	size_t				cmd_count;
 	char				*set;
@@ -110,7 +109,7 @@ char	**ft_split_quotes(char *s, char c, int remove_quote);
 
 // [PARSING] 
 void	fdp_parsing(char *cmd, t_minishell *t);
-char	parse_errors(t_mltsplit *s, char *line);
+char	parse_errors(char **s, char *line);
 void	free_multisplit(t_mltsplit *s);
 void	apply_expands(t_minishell *t);
 
@@ -148,6 +147,7 @@ int		delete_heredocs(t_minishell *t_m);
 // UTILS
 char	**pipe_env(t_minishell *t_m);
 void	shlvladd(char *env, char **env_l);
+t_file	*last_file(int _out, t_cmd *c);
 
 // SIGNALS
 void	handler(int signum);
@@ -156,7 +156,7 @@ void	signalsetter(int signum, void (*handler)(int));
 void	signalignore(int signum);
 
 //builtins
-int	builtindirector(t_minishell *t_m, t_cmd *c, int n_builtin);
+int		builtindirector(t_minishell *t_m, t_cmd *c, int n_builtin);
 t_env	*findenv(char *name, t_env *env);
 
 #endif

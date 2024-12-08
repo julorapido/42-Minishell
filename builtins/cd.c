@@ -48,17 +48,21 @@ static int	go_to(int n, t_minishell *t_m)
 	return (SUCCESS);
 }
 
-static char *gayenv(char *s, t_minishell *t_m)
+static char	*gayenv(char *s, t_minishell *t_m)
 {
 	t_env	*tmp;
+	char	**spl;
+	char	*z;
 
 	tmp = t_m->env;
 	while (tmp)
 	{
 		if (!ft_strncmp(tmp->value, s, FT(s)))
 		{
-			char **s = ft_split(tmp->value, '=');
-			return (s[1]);
+			spl = ft_split(tmp->value, '=');
+			z = ft_strdup(spl[1]);
+			ft_free_split(spl);
+			return (z);
 		}
 		tmp = tmp->next;
 	}
@@ -80,14 +84,14 @@ static void	update_oldpwd(t_minishell *t_m, int dd)
 		if (!ft_strncmp(tmp->value, s, FT(s)))
 		{
 			free(tmp->value);
-			if(!dd)
+			if (!dd)
 				tmp->value = ft_strjoin_free(ft_strdup(s), gayenv("PWD", t_m));
 			else
 			{
 				getcwd(cwd, PATH_MAX);
 				tmp->value = ft_strjoin(s, cwd);
 			}
-			break;
+			break ;
 		}
 		tmp = tmp->next;
 	}

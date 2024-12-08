@@ -55,39 +55,25 @@ static int	quote_errors(char *s_cmds, int *p, char *c)
 	return ('\0');
 }
 
-static char	cmd_verif(t_mltsplit *s, int i, int j)
+static char	cmd_verif(char **s, int i, int j)
 {
 	char	c;
 
 	c = '\0';
-	if (((s[i].s)[j] == '>' && (s[i].s)[j + 1] == '<')
-		|| ((s[i].s)[j] == '<' && (s[i].s)[j + 1] == '|')
-		|| ((s[i].s)[j] == '|' && (s[i].s)[j + 1] == '|')
-		|| ((s[i].s)[j] == '>' && (s[i].s)[j + 1] == '|')
-		|| ((s[i].s)[j] == '<' && (s[i].s)[j + 1] == '>')
+	if (((s[i])[j] == '>' && (s[i])[j + 1] == '<')
+		|| ((s[i])[j] == '<' && (s[i])[j + 1] == '|')
+		|| ((s[i])[j] == '|' && (s[i])[j + 1] == '|')
+		|| ((s[i])[j] == '>' && (s[i])[j + 1] == '|')
+		|| ((s[i])[j] == '<' && (s[i])[j + 1] == '>')
 	)
-		c = ((s[i].s)[j]);
-	if ((s[i].s)[j + 1 + 1])
-		if (triple_operator((s[i].s)[j], (s[i].s)[j + 1], (s[i].s)[j + 2]))
-			c = ((s[i].s)[j]);
+		c = ((s[i])[j]);
+	if ((s[i])[j + 1 + 1])
+		if (triple_operator((s[i])[j], (s[i])[j + 1], (s[i])[j + 2]))
+			c = ((s[i])[j]);
 	return (c);
 }
 
-void	free_multisplit(t_mltsplit *s)
-{
-	int	i;
-
-	i = 0;
-	while (i < (*s).mltsplit_l)
-	{
-		if (s[i].s)
-			free(s[i].s);
-		i++;
-	}
-	free(s);
-}
-
-char	parse_errors(t_mltsplit *s, char *line)
+char	parse_errors(char **s, char *line)
 {
 	int		i;
 	int		j;
@@ -95,23 +81,23 @@ char	parse_errors(t_mltsplit *s, char *line)
 
 	if (quote_errors(line, &i, &c) != '\0')
 		return (quote_errors(line, &i, &c));
-	while (s[i].s)
+	while (s[i])
 	{
 		j = 0;
-		while (s[i].s[j] != '\0')
+		while (s[i][j] != '\0')
 		{
-			if (!c && (s[i].s[j] == '\'' || s[i].s[j] == '\"'))
-				c = s[i].s[j];
-			else if (c == s[i].s[j])
+			if (!c && (s[i][j] == '\'' || s[i][j] == '\"'))
+				c = s[i][j];
+			else if (c == s[i][j])
 				c = '\0';
-			if (s[i].s[j + 1] && !(c))
+			if (s[i][j + 1] && !(c))
 				if (cmd_verif(s, i, j) != '\0')
 					return (cmd_verif(s, i, j));
 			j++;
 		}
 		i++;
 	}
-	if (P_E == '>' || P_E == '<' || P_E == '|' )
-		return (*(s[i - 1].s));
+	if ((i > 0 && j > 0) && (P_E == '>' || P_E == '<' || P_E == '|'))
+		return (*(s[i - 1]));
 	return ('\0');
 }
