@@ -49,6 +49,23 @@ static void	shlvlhandler(char **env)
 	}
 }
 
+static char	**envnull(char	*argname)
+{
+	char	**env;
+	char	cwd[PATH_MAX];
+
+	env = ft_calloc(4, sizeof(char *));
+	if (!env)
+		return (NULL);
+	//if (!getcwd(cwd, PATH_MAX))
+	// 	cwd[0] = NULL;
+	env[0] = ft_strjoin("PWD=", cwd);
+	env[1] = ft_strdup("SHLVL=0");
+	env[2] = ft_strjoin("_=", argname);
+	env[3] = NULL;
+	return (env);
+}
+
 static void	minishell(t_minishell *t_m)
 {
 	char	*line;
@@ -72,28 +89,11 @@ static void	minishell(t_minishell *t_m)
 			add_history(line);
 			continue ;
 		}
-		fdp_parsing(line, t_m);
+		// fdp_parsing(line, t_m);
 		// exec_cmds(t_m);
 		line = readline("$ ");
 		add_history(line);
 	}
-}
-
-static char	**envnull(char	*argname)
-{
-	char	**env;
-	char	cwd[PATH_MAX];
-
-	env = ft_calloc(4, sizeof(char *));
-	if (!env)
-		return (NULL);
-	if (!getcwd(cwd, PATH_MAX))
-		cwd[0] = NULL;
-	env[0] = ft_strjoin("PWD=", cwd);
-	env[1] = ft_strdup("SHLVL=0");
-	env[2] = ft_strjoin("_=", argname);
-	env[3] = NULL;
-	return (env);
 }
 
 int	main(int argc, char **argv, char **env)

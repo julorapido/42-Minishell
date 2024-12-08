@@ -27,6 +27,32 @@ static bool	triple_operator(char a, char b, char c)
 	return (false);
 }
 
+static char	empty_spaces(char *line)
+{
+	t_mltsplit	*s;
+	int			i;
+	int			j;
+	char		c;
+
+	if (*line == '|')
+		return ('|');
+	i = 1;
+	s = ft_multisplit(line, "<|>");
+	while (s[i].s)
+	{
+		j = 0;
+		while (s[i].s[j] && s[i].s[j] == ' ')
+			j++;
+		if ((size_t)j == FT(s[i].s))
+		{
+			c = "<|>"[s[i].ix];
+			return (ft_free_multisplit(s), c);
+		}
+		i++;
+	}
+	return ('\0');
+}
+
 static int	quote_errors(char *s_cmds, int *p, char *c)
 {
 	bool	in_q;
@@ -38,8 +64,8 @@ static int	quote_errors(char *s_cmds, int *p, char *c)
 	in_q = false;
 	in_sq = false;
 	i = 0;
-	if (*s_cmds == '|')
-		return ('|');
+	if (empty_spaces(s_cmds) != '\0')
+		return (empty_spaces(s_cmds));
 	while (i < (int)ft_strlen(s_cmds))
 	{
 		if (s_cmds[i] == '\"' && (!in_sq))
