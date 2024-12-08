@@ -89,8 +89,8 @@ static void	minishell(t_minishell *t_m)
 			add_history(line);
 			continue ;
 		}
-		// fdp_parsing(line, t_m);
-		// exec_cmds(t_m);
+		fdp_parsing(line, t_m);
+		exec_cmds(t_m);
 		line = readline("$ ");
 		add_history(line);
 	}
