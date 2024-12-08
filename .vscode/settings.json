@@ -1,9 +1,0 @@
-{
-    "files.associations": {
-        "*.embeddedhtml": "html",
-        "libft.h": "c",
-        "types.h": "c",
-        "stdlib.h": "c",
-        "minishell.h": "c"
-    }
-}

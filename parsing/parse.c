@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-/*
+
 static void p_commands(t_cmd *t, int l)
 {
     for(int i = 0; i < l; i++)
@@ -36,7 +36,7 @@ static void p_commands(t_cmd *t, int l)
         printf("]\n");
     }
 }
-*/
+
 
 static void	apply_quote_removal(t_minishell *t)
 {
@@ -175,4 +175,5 @@ void	fdp_parsing(char *cmd, t_minishell *t)
 	free_multisplit(s);
 	apply_expands(t);
 	apply_quote_removal(t);
+	p_commands(t->cmds, t->cmd_count);
 }
