@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:07:22 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/09 12:37:07 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/09 15:47:27 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ static char	**envnull(char	*argname)
 static void	minishell(t_minishell *t_m)
 {
 	char	*line;
-	char	**spl;
 
 	signalignore(SIGQUIT);
 	signalsetter(SIGINT, handler);
@@ -79,20 +78,17 @@ static void	minishell(t_minishell *t_m)
 	add_history(line);
 	while (line)
 	{
-		spl = ft_split(line, ' ');
-		if (FT(line) < 1 || !ft_strcmp(line, " ") || P_ER(spl, line) != '\0')
+		if (FT(line) < 1 || !ft_strcmp(line, " ") || P_ER(line) != '\0')
 		{
-			if (P_ER(spl, line) != '\0')
-				printf("zsh: parse error near `%c'\n", P_ER(spl, line));
-			ft_free_split(spl);
+			if (P_ER(line) != '\0')
+				printf("zsh: parse error near `%c'\n", P_ER(line));
 			line = readline("$ ");
 			add_history(line);
 			continue ;
 		}
 		fdp_parsing(line, t_m);
-		exec_cmds(t_m);
-		ft_free_split(spl);
-		free_commands(t_m);
+		//exec_cmds(t_m);
+		//free_commands(t_m);
 		line = readline("$ ");
 		add_history(line);
 	}

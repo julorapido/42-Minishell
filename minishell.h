@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/09 12:00:15 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/09 15:16:06 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@
 # define LF_ last_file
 # define FM ft_m_strchr_i
 # define F_R ft_str_remvchr
-# define P_E s[i - 1][j - 1]
 # define FTS ft_substr
 # define FTF ft_free_tab
 # define P_ER parse_errors
@@ -109,7 +108,7 @@ char	**ft_split_quotes(char *s, char c, int remove_quote);
 
 // [PARSING] 
 void	fdp_parsing(char *cmd, t_minishell *t);
-char	parse_errors(char **s, char *line);
+char	parse_errors(char *line);
 void	free_multisplit(t_mltsplit *s);
 void	apply_expands(t_minishell *t);
 void	free_commands(t_minishell *t);

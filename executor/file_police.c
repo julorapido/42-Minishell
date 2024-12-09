@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 16:41:20 by gchauvot          #+#    #+#             */
-/*   Updated: 2024/12/05 13:04:08 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/09 13:29:17 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ static int	ft_exec2(char *cmd, char **env)
 	char	**ft_cmd;
 	char	*path;
 
+	if (ft_stronly(cmd, ' '))
+		return (0);
 	ft_cmd = ft_split_quotes(cmd, ' ', 0);
 	path = bget_path2(ft_cmd[0], env);
 	ft_apply_rmquote(ft_cmd);

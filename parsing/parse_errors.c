@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 18:13:14 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/09 11:53:33 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/09 15:53:59 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,8 @@ static int	quote_errors(char *s_cmds, int *p, char *c)
 	in_q = false;
 	in_sq = false;
 	i = 0;
-	if (empty_spaces(s_cmds) != '\0')
-		return (empty_spaces(s_cmds));
+	//if (empty_spaces(s_cmds) != '\0')
+	//	return (empty_spaces(s_cmds));
 	while (i < (int)ft_strlen(s_cmds))
 	{
 		if (s_cmds[i] == '\"' && (!in_sq))
@@ -83,49 +83,58 @@ static int	quote_errors(char *s_cmds, int *p, char *c)
 	return ('\0');
 }
 
-static char	cmd_verif(char **s, int i, int j)
+static char	cmd_verif(char *s, int i)
 {
 	char	c;
 
 	c = '\0';
-	if (((s[i])[j] == '>' && (s[i])[j + 1] == '<')
-		|| ((s[i])[j] == '<' && (s[i])[j + 1] == '|')
-		|| ((s[i])[j] == '|' && (s[i])[j + 1] == '|')
-		|| ((s[i])[j] == '>' && (s[i])[j + 1] == '|')
-		|| ((s[i])[j] == '<' && (s[i])[j + 1] == '>')
+	if ((s[i] == '>' && s[i+1] == '<')
+		|| (s[i] == '<' && s[i+1] == '|')
+		|| (s[i] == '|' && s[i+1] == '|')
+		|| (s[i] == '>' && s[i+1] == '|')
+		|| (s[i] == '<' && s[i+1] == '>')
 	)
-		c = ((s[i])[j]);
-	if ((s[i])[j + 1 + 1])
-		if (triple_operator((s[i])[j], (s[i])[j + 1], (s[i])[j + 2]))
-			c = ((s[i])[j]);
+		c = ((s[i]));
+	if ((s)[i+1+ 1])
+		if (triple_operator(s[i], s[i+1], s[i + 2]))
+			c = ((s[i]));
 	return (c);
 }
-
-char	parse_errors(char **s, char *line)
+void	ft_print_tab(char **tab)
 {
-	int		i;
-	int		j;
-	char	c;
+	size_t	i;
 
-	if (quote_errors(line, &i, &c) != '\0')
-		return (quote_errors(line, &i, &c));
-	while (s[i])
+	i = 0;
+	while (tab[i])
 	{
-		j = 0;
-		while (s[i][j] != '\0')
-		{
-			if (!c && (s[i][j] == '\'' || s[i][j] == '\"'))
-				c = s[i][j];
-			else if (c == s[i][j])
-				c = '\0';
-			if (s[i][j + 1] && !(c))
-				if (cmd_verif(s, i, j) != '\0')
-					return (cmd_verif(s, i, j));
-			j++;
-		}
+		fprintf(stderr, "env[%ld]: %s\n", i, tab[i]);
 		i++;
 	}
-	if ((i > 0 && j > 0) && (P_E == '>' || P_E == '<' || P_E == '|'))
-		return (*(s[i - 1]));
+}
+
+char	parse_errors(char *line)
+{
+	int		i;
+	char	c;
+	char	*s;
+	char	*l;
+
+	l = ft_strdup(line);
+	if (quote_errors(l, &i, &c) != '\0')
+		return (quote_errors(l, &i, &c));
+	s = ft_str_remvchr(l, ' ', ' ');
+	while (s[i])
+	{
+		if (!c && (s[i] == '\'' || s[i] == '\"'))
+			c = s[i];
+		else if (c == s[i])
+			c = '\0';
+		if (s[i+1] && !(c))
+			if (cmd_verif(s, i) != '\0')
+				return (cmd_verif(s, i));
+		i++;
+	}
+	if ((i > 0) && (s[i-1] == '>' || s[i-1] == '<' || s[i-1] == '|'))
+		return ((s[i - 1]));
 	return ('\0');
 }

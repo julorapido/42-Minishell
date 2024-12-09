@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 16:44:15 by julessainth       #+#    #+#             */
-/*   Updated: 2024/12/09 12:55:56 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/09 14:20:28 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,27 +44,35 @@ static char	*insert_replace(int a, int b, char *s, char *insert_s)
 }
 
 
-static char	*i_norm(char *s, int i, int j, t_minishell *t)
+static char	*i_norm(char *s, int *i, int j, t_minishell *t)
 {
 	char	*sub_s;
 	char	*stored_s;
 
-	sub_s = ft_substr(s, i + 1, j - 1);
+	sub_s = ft_substr(s, *i + 1, j - 1);
 	stored_s = s;
 	if (sub_s[0] == '?')
 	{
-		s = FSF(FTS(s, 0, i),
-				FSF(ft_itoa(t->exstat), FTS(s, i + 2, FT(s) - 1)));
+		s = FSF(FTS(s, 0, *i),
+				FSF(ft_itoa(t->exstat), FTS(s, *i + 2, FT(s) - 1)));
 	}
 	else if (j != 1)
 	{
 		if (findenv(sub_s, t->env))
 		{
 			if (FC_((findenv(sub_s, t->env))->value, '='))
-				s = IR_(i, j, s, FC_((FE_(sub_s, t->env))->value, '=') + 1);
+				s = IR_(*i, j, s, FC_((FE_(sub_s, t->env))->value, '=') + 1);
 		}
 		else
-			s = FSF(ft_substr(s, 0, i), ft_substr(s, i + j, FT(s)));
+		{
+			if(*i + j == (int)FT(s) && *i == 0)
+				s = ft_strdup("");
+			else
+			{
+				s = FSF(ft_substr(s, 0, *i), ft_substr(s, *i + j, FT(s)));
+				(*i)--;
+			}
+		}
 	}
 	if (stored_s)
 		free(stored_s);
@@ -86,14 +94,17 @@ static char	*insert_expands(char *s, t_minishell *t)
 	{
 		if (s[i] == '\'' || s[i] == '\"')
 			q = ft_inq(q, s[i]);
-		if (s[i] == '$' && (!q || (q == '\"')))
+		if ((s[i] == '$' && s[i + 1]) && (!q || (q == '\"')))
 		{
 			j = 1;
 			while (s[i + j] != ' ' && s[i + j] != '\0' && s[i + j] != '$'
 				&& s[i + j] != ';' && s[i + j] != '\"' && s[i + j] != '\''
 				&& s[i + j] != ':')
 				j++;
-			s = i_norm(s, i, j, t);
+			if(j > 1)
+				s = i_norm(s, &i, j, t);
+			if (ft_stronly(s, ' ') || !s[i])
+				return (s);
 		}
 		i++;
 	}

@@ -6,13 +6,13 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 13:05:20 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/09 12:57:12 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/09 15:53:10 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
+
 static void p_commands(t_cmd *t, int l)
 {
     for(int i = 0; i < l; i++)
@@ -35,7 +35,7 @@ static void p_commands(t_cmd *t, int l)
                 );
         printf("] [%d: (%d, %d)]\n", t[i].f_i, t[i].n_in, t[i].n_out);
     }
-}*/
+}
 
 static void	apply_quote_removal(t_minishell *t)
 {
@@ -46,19 +46,18 @@ static void	apply_quote_removal(t_minishell *t)
 	i = 0;
 	while (i < t->cmd_count)
 	{
-		if (FT(t->cmds[i].command))
+		/*if (FT(t->cmds[i].command))
 			if (FM(t->cmds[i].command, '\'', '\'') != -1
 				&& FM(t->cmds[i].command, '\"', '\"') == -1)
-				t->cmds[i].command = F_R(t->cmds[i].command, '\'', '\'');
+				t->cmds[i].command = F_R(t->cmds[i].command, '\'', '\'');*/
 		j = 0;
 		while (j < t->cmds[i].f_i)
 		{
 			if (t->cmds[i].files[j].f_name)
 			{
 				n = t->cmds[i].files[j].f_name;
-				if ((FM(n, '\'', '\'') != -1 && FM(n, '\"', '\"') == -1)
-					|| (FM(n, '\'', '\'') == -1 && FM(n, '\"', '\"') != -1))
-					ft_str_remvchr(t->cmds[i].files[j].f_name, '\"', '\'');
+				if (FM(n, '\"', '\'') != -1)
+					t->cmds[i].files[j].f_name = ft_rm_quotes(t->cmds[i].files[j].f_name);
 			}
 			j++;
 		}
@@ -100,7 +99,7 @@ static char	*handle_spaces(char *str_token, t_cmd *ct)
 	s = ft_multisplit(str_token, " ");
 	while (s[c].s && ft_strlen(s[c].s) == 0)
 		c++;
-	if (c + 1 == (*s).mltsplit_l)
+	if (c + 1 == (*s).mltsplit_l && c > 2)
 		return (ft_free_multisplit(s), ft_strdup(" "));
 	while (s[i].s)
 		i++;
@@ -128,7 +127,7 @@ static void	fdp_parsing2(t_minishell *t, t_mltsplit *s, int *i)
 	{
 		t->cmds[*i].files[t->cmds[*i].f_i].heredoc = false;
 		t->cmds[*i].files[t->cmds[*i].f_i].append = false;
-		if (t->set[(t->sq[a]).ix] == '<' && FT(t->sq[a].s) && (a - 1 >= 0))
+		if(t->set[(t->sq[a]).ix] == '<' && FT(t->sq[a].s) && (a - 1 >= 0))
 			if ((!FT(t->sq[a - 1].s)) && (t->set[(t->sq[a - 1]).ix] == '<'))
 				t->cmds[*i].files[t->cmds[*i].f_i].heredoc = true;
 		if (t->set[(t->sq[a]).ix] == '>' && FT(t->sq[a].s) && (a - 1 >= 0))
@@ -170,4 +169,5 @@ void	fdp_parsing(char *cmd, t_minishell *t)
 	ft_free_multisplit(s);
 	apply_expands(t);
 	apply_quote_removal(t);
+	p_commands(t->cmds, t->cmd_count);
 }
