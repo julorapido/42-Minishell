@@ -6,18 +6,19 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 16:44:15 by julessainth       #+#    #+#             */
-/*   Updated: 2024/12/06 12:59:55 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/09 12:55:56 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 
 static char	*insert_replace(int a, int b, char *s, char *insert_s)
 {
 	char	*ir;
 	int		i;
 	int		j;
-
+	
 	ir = (char *)(malloc(FT(s) - (b) + (FT(insert_s)) + 1));
 	i = 0;
 	while (s[i] && i < a)
@@ -42,11 +43,14 @@ static char	*insert_replace(int a, int b, char *s, char *insert_s)
 	return (ir[i] = '\0', ir);
 }
 
+
 static char	*i_norm(char *s, int i, int j, t_minishell *t)
 {
 	char	*sub_s;
+	char	*stored_s;
 
 	sub_s = ft_substr(s, i + 1, j - 1);
+	stored_s = s;
 	if (sub_s[0] == '?')
 	{
 		s = FSF(FTS(s, 0, i),
@@ -62,6 +66,8 @@ static char	*i_norm(char *s, int i, int j, t_minishell *t)
 		else
 			s = FSF(ft_substr(s, 0, i), ft_substr(s, i + j, FT(s)));
 	}
+	if (stored_s)
+		free(stored_s);
 	free(sub_s);
 	return (s);
 }
@@ -74,6 +80,8 @@ static char	*insert_expands(char *s, t_minishell *t)
 
 	q = '\0';
 	i = 0;
+	if (!s || !ft_strlen(s))
+		return (s);
 	while (s[i])
 	{
 		if (s[i] == '\'' || s[i] == '\"')

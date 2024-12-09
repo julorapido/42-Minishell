@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_free_multisplit.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julessainthorant <marvin@42.fr>            +#+  +:+       +#+        */
+/*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/08 10:47:40 by julessainthor     #+#    #+#             */
-/*   Updated: 2024/12/08 10:48:00 by julessainthor    ###   ########.fr       */
+/*   Created: 2024/12/08 10:47:40 by julessainth       #+#    #+#             */
+/*   Updated: 2024/12/09 11:52:59 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

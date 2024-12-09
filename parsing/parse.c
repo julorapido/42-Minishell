@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 13:05:20 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/06 12:41:52 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/09 12:57:12 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,7 @@ static void p_commands(t_cmd *t, int l)
                 );
         printf("] [%d: (%d, %d)]\n", t[i].f_i, t[i].n_in, t[i].n_out);
     }
-}
-*/
+}*/
 
 static void	apply_quote_removal(t_minishell *t)
 {
@@ -67,7 +66,7 @@ static void	apply_quote_removal(t_minishell *t)
 	}
 }
 
-static void	free_commands(t_minishell *t)
+void	free_commands(t_minishell *t)
 {
 	size_t	i;
 	int		j;
@@ -102,7 +101,7 @@ static char	*handle_spaces(char *str_token, t_cmd *ct)
 	while (s[c].s && ft_strlen(s[c].s) == 0)
 		c++;
 	if (c + 1 == (*s).mltsplit_l)
-		return (ft_strdup(" "));
+		return (ft_free_multisplit(s), ft_strdup(" "));
 	while (s[i].s)
 		i++;
 	if (i == 0)
@@ -153,7 +152,6 @@ void	fdp_parsing(char *cmd, t_minishell *t)
 	t_mltsplit	*s;
 
 	s = ft_multisplit(cmd, "|");
-	free_commands(t);
 	t->cmds = (t_cmd *) calloc((*s).mltsplit_l, sizeof(t_cmd));
 	t->cmd_count = (*s).mltsplit_l;
 	i = 0;

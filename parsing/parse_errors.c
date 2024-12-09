@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 18:13:14 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/06 11:48:53 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/09 11:53:33 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,23 +34,25 @@ static char	empty_spaces(char *line)
 	int			j;
 	char		c;
 
-	if (*line == '|')
+	if (*line == '|' || !line || !FT(line))
 		return ('|');
 	i = 1;
 	s = ft_multisplit(line, "<|>");
+	if (!s[i].s)
+		return (ft_free_multisplit(s), '\0');
 	while (s[i].s)
 	{
 		j = 0;
 		while (s[i].s[j] && s[i].s[j] == ' ')
 			j++;
-		if ((size_t)j == FT(s[i].s))
+		if ((size_t)j == FT(s[i].s) && j > 0)
 		{
 			c = "<|>"[s[i].ix];
 			return (ft_free_multisplit(s), c);
 		}
 		i++;
 	}
-	return ('\0');
+	return (ft_free_multisplit(s), '\0');
 }
 
 static int	quote_errors(char *s_cmds, int *p, char *c)

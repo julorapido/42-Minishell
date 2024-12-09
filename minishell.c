@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:07:22 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/07 10:39:23 by julessainthor    ###   ########.fr       */
+/*   Updated: 2024/12/09 12:37:07 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,8 @@ static char	**envnull(char	*argname)
 	env = ft_calloc(4, sizeof(char *));
 	if (!env)
 		return (NULL);
-	//if (!getcwd(cwd, PATH_MAX))
-	// 	cwd[0] = NULL;
+	if (!getcwd(cwd, PATH_MAX))
+		cwd[0] = NULL;
 	env[0] = ft_strjoin("PWD=", cwd);
 	env[1] = ft_strdup("SHLVL=0");
 	env[2] = ft_strjoin("_=", argname);
@@ -91,6 +91,8 @@ static void	minishell(t_minishell *t_m)
 		}
 		fdp_parsing(line, t_m);
 		exec_cmds(t_m);
+		ft_free_split(spl);
+		free_commands(t_m);
 		line = readline("$ ");
 		add_history(line);
 	}

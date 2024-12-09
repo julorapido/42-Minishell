@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/06 15:48:12 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/09 12:00:15 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,13 +91,13 @@ typedef struct	s_env
 
 typedef struct s_minishell
 {
-	t_env				*env;		// saved environment
-	char				**c_args;	// splited args (for built-ins)
-	pid_t				*pid;			// array of all pids, one per command
-	int					(*pipes_fd)[2];	// array of pipes
-	int					*heredocs;		// array of heredocs
+	t_env				*env;
+	char				**c_args;
+	pid_t				*pid;
+	int					(*pipes_fd)[2];
+	int					*heredocs;
 	int					exstat;
-	t_cmd				*cmds;	// commands list
+	t_cmd				*cmds;
 	size_t				cmd_count;
 	char				*set;
 	t_mltsplit			*sq;
@@ -112,6 +112,7 @@ void	fdp_parsing(char *cmd, t_minishell *t);
 char	parse_errors(char **s, char *line);
 void	free_multisplit(t_mltsplit *s);
 void	apply_expands(t_minishell *t);
+void	free_commands(t_minishell *t);
 
 // ENV
 char	*get_env_path(t_minishell *t_m);
