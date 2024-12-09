@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 14:14:13 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/07 11:48:24 by julessainthor    ###   ########.fr       */
+/*   Updated: 2024/12/09 16:46:50 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,6 @@ t_mltsplit	*ft_multisplit(char *s, char *set)
 	if (!ft_strlen(tab[0].s))
 		tab[0].ix = char_in_set(*s, set);
 	else
-		tab[0].ix = -1;
+		tab[0].ix = 0;
 	return (tab);
 }

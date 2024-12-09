@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 18:13:14 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/09 15:53:59 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/09 17:19:19 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static char	empty_spaces(char *line)
 
 	if (*line == '|' || !line || !FT(line))
 		return ('|');
-	i = 1;
+	i = 0;
 	s = ft_multisplit(line, "<|>");
 	if (!s[i].s)
 		return (ft_free_multisplit(s), '\0');
@@ -45,7 +45,7 @@ static char	empty_spaces(char *line)
 		j = 0;
 		while (s[i].s[j] && s[i].s[j] == ' ')
 			j++;
-		if ((size_t)j == FT(s[i].s) && j > 0)
+		if ((size_t)j == FT(s[i].s) && (j > 0))
 		{
 			c = "<|>"[s[i].ix];
 			return (ft_free_multisplit(s), c);
@@ -66,8 +66,8 @@ static int	quote_errors(char *s_cmds, int *p, char *c)
 	in_q = false;
 	in_sq = false;
 	i = 0;
-	//if (empty_spaces(s_cmds) != '\0')
-	//	return (empty_spaces(s_cmds));
+	if (empty_spaces(s_cmds) != '\0')
+		return (empty_spaces(s_cmds));
 	while (i < (int)ft_strlen(s_cmds))
 	{
 		if (s_cmds[i] == '\"' && (!in_sq))
@@ -95,21 +95,10 @@ static char	cmd_verif(char *s, int i)
 		|| (s[i] == '<' && s[i+1] == '>')
 	)
 		c = ((s[i]));
-	if ((s)[i+1+ 1])
+	if (s[i + 2])
 		if (triple_operator(s[i], s[i+1], s[i + 2]))
 			c = ((s[i]));
 	return (c);
-}
-void	ft_print_tab(char **tab)
-{
-	size_t	i;
-
-	i = 0;
-	while (tab[i])
-	{
-		fprintf(stderr, "env[%ld]: %s\n", i, tab[i]);
-		i++;
-	}
 }
 
 char	parse_errors(char *line)
@@ -118,10 +107,15 @@ char	parse_errors(char *line)
 	char	c;
 	char	*s;
 	char	*l;
+	char	x;
 
 	l = ft_strdup(line);
 	if (quote_errors(l, &i, &c) != '\0')
-		return (quote_errors(l, &i, &c));
+	{
+		x = (quote_errors(l, &i, &c));
+		free(l);
+		return (x);
+	}
 	s = ft_str_remvchr(l, ' ', ' ');
 	while (s[i])
 	{
@@ -130,11 +124,21 @@ char	parse_errors(char *line)
 		else if (c == s[i])
 			c = '\0';
 		if (s[i+1] && !(c))
+		{
 			if (cmd_verif(s, i) != '\0')
-				return (cmd_verif(s, i));
+			{
+				x = (cmd_verif(s, i));
+				free(s);
+				return (x);
+			}
+		}
 		i++;
 	}
 	if ((i > 0) && (s[i-1] == '>' || s[i-1] == '<' || s[i-1] == '|'))
-		return ((s[i - 1]));
-	return ('\0');
+	{
+		x = (s[i - 1]);
+		free(s);
+		return (x);
+	}
+	return (free(s), '\0');
 }

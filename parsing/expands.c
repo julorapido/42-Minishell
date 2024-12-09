@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 16:44:15 by julessainth       #+#    #+#             */
-/*   Updated: 2024/12/09 14:20:28 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/09 17:17:38 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,12 +119,17 @@ void	apply_expands(t_minishell *t)
 	e = 0;
 	while ((size_t)(e) < t->cmd_count)
 	{
-		(&(t->cmds[e]))->command = insert_expands((&(t->cmds[e]))->command, t);
+		if (ft_m_strchr_i((&(t->cmds[e]))->command, '$', '$') != -1)
+			(&(t->cmds[e]))->command = insert_expands((&(t->cmds[e]))->command, t);
 		f = 0;
 		while (f < (&(t->cmds[e]))->f_i)
 		{
-			(&(t->cmds[e]))->files[f].f_name = insert_expands(
-				(&(t->cmds[e]))->files[f].f_name, t);
+			if (ft_m_strchr_i((&(t->cmds[e]))->files[f].f_name, '$', '$') != -1)
+			{
+				(&(t->cmds[e]))->files[f].f_name = insert_expands(
+					(&(t->cmds[e]))->files[f].f_name, t
+				);
+			}
 			f++;
 		}
 		e++;
