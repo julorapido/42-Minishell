@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 15:28:51 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/09 11:49:00 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/11 12:27:38 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*ft_strjoin_free(char *s1, char *s2)
 	size_t	i;
 	size_t	j;
 
-	if (!ft_strlen(s2))
+	if (!ft_strlen(s2) || !s2)
 	{
 		free(s2);
 		return (s1);

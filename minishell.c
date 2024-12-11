@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:07:22 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/09 16:05:12 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/09 17:35:02 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,14 +80,14 @@ static void	minishell(t_minishell *t_m)
 	{
 		if (FT(line) < 1 || !ft_strcmp(line, " ") || P_ER(line) != '\0')
 		{
-			if (P_ER(line) != '\0')
+			if (P_ER(line) != '\0' && !ft_stronly(line, ' '))
 				printf("zsh: parse error near `%c'\n", P_ER(line));
 			line = readline("$ ");
 			add_history(line);
 			continue ;
 		}
 		fdp_parsing(line, t_m);
-		//exec_cmds(t_m);
+		exec_cmds(t_m);
 		free_commands(t_m);
 		line = readline("$ ");
 		add_history(line);

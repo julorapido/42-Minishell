@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 12:15:52 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/09 12:31:35 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/09 17:56:02 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,9 +94,11 @@ int	builtindirector(t_minishell *t_m, t_cmd *c, int n_builtin)
 	if (openfds(t_m, c, fd_stds, fd_duped) == -1)
 	{
 		restorefds(c, fd_stds);
+		fprintf(stderr, "joe\n");
 		return (-1);
 	}
-	run_builtin(t_m, n_builtin, 1, c);
+	run_builtin(t_m, n_builtin, fd_duped[1], c);
+	fprintf(stderr, "qwkwqw\n");
 	restorefds(c, fd_stds);
 	return (0);
 }
