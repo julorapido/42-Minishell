@@ -6,13 +6,13 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 13:05:20 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/11 14:17:36 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/11 14:58:13 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
+/*
 static void p_commands(t_cmd *t, int l)
 {
     for(int i = 0; i < l; i++)
@@ -36,6 +36,7 @@ static void p_commands(t_cmd *t, int l)
         printf("] [%d: (%d, %d)]\n", t[i].f_i, t[i].n_in, t[i].n_out);
     }
 }
+*/
 
 static void	apply_quote_removal(t_minishell *t)
 {
@@ -176,5 +177,5 @@ void	fdp_parsing(char *cmd, t_minishell *t)
 	ft_free_multisplit(s);
 	apply_expands(t);
 	apply_quote_removal(t);
-	p_commands(t->cmds, t->cmd_count);
+	// p_commands(t->cmds, t->cmd_count);
 }

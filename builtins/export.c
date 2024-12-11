@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 12:26:34 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/06 18:03:42 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/11 17:30:26 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,9 @@ static int	handle_e(char *s)
 	while (s[i] && s[i] != '=')
 		i++;
 	t = ft_substr(s, 0, i);
-	if (FM(t, '-', '-') == -1)
-		return (1);
-	return (0);
+	if (ft_str_isalnum(t) == 0)
+		return (free(t), 1);
+	return (free(t), 0);
 }
 
 int	f__export(t_minishell *t)
@@ -83,10 +83,10 @@ int	f__export(t_minishell *t)
 	i = 1;
 	while (t->c_args[i])
 	{
-		if ((t->c_args[i][0]) == '=')
-			return (1);
-		if ((FM(t->c_args[i], '=', '=') == -1 && !ft_str_isalpha(t->c_args[i]))
-			|| (!handle_e(t->c_args[i])))
+		if (*(t->c_args[i]) == '='
+			|| (FM(t->c_args[i], '=', '=') == -1 && !ft_str_isalpha(t->c_args[i]))
+			|| (handle_e(t->c_args[i]))
+		)
 		{
 			t->exstat = 1;
 			fprintf(stderr, "condition ext %d\n", t->exstat);

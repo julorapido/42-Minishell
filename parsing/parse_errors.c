@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 18:13:14 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/11 12:51:45 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/11 15:47:09 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,11 @@ static char	empty_spaces(char *line)
 	int			j;
 	char		c;
 
-	if (*line == '|' || !line || !FT(line))
+	if (!line || !FT(line))
 		return ('|');
 	i = 1;
-	s = ft_multisplit(line, "<|>");
-	if(ft_strlen(s[0].s) && ft_stronly(s[0].s, ' ') && ft_char_in_set(*line, "<|>"))
+	s = ft_multisplit(line, "<>");
+	if(ft_strlen(s[0].s) && ft_stronly(s[0].s, ' ') && ft_char_in_set(*line, "<>"))
 		return (ft_free_multisplit(s), *line);
 	if (!s[i].s)
 		return (ft_free_multisplit(s), '\0');
@@ -49,7 +49,7 @@ static char	empty_spaces(char *line)
 			j++;
 		if ((size_t)j == FT(s[i].s) && (j > 0))
 		{
-			c = "<|>"[s[i].ix];
+			c = "<>"[s[i].ix];
 			return (ft_free_multisplit(s), c);
 		}
 		i++;

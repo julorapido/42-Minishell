@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 01:13:37 by julessainth       #+#    #+#             */
-/*   Updated: 2024/12/09 13:28:39 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/11 15:58:51 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void		ft_free_multisplit(t_mltsplit *s);
 void		ft_free_split(char **s);
 void		ft_free_tab(char **tab);
 int			ft_stronly(char *s, char c);
-
+int			ft_str_isalnum(char *s);
 
 /* additional functions */
 char		*ft_substr(char const *s, unsigned int start, size_t len);

@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:23:33 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/09 15:16:06 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/11 16:53:59 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ void	apply_expands(t_minishell *t);
 void	free_commands(t_minishell *t);
 
 // ENV
+char	*gay_env(t_minishell *t_m, char *v);
 char	*get_env_path(t_minishell *t_m);
 int		env_init(t_minishell *t_m, char **argv);
 

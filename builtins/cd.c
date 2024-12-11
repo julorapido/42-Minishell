@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 11:37:15 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/09 17:31:01 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/11 17:38:14 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static int	go_to(int n, t_minishell *t_m)
 	char	*ev_path;
 
 	ev_path = NULL;
-	ev_path = get_env_path(t_m);
+	ev_path = gay_env(t_m, "OLDPWD");
 	if (n == 1)
 	{
 		if (!ev_path)
@@ -48,26 +48,6 @@ static int	go_to(int n, t_minishell *t_m)
 	return (SUCCESS);
 }
 
-static char	*gayenv(char *s, t_minishell *t_m)
-{
-	t_env	*tmp;
-	char	**spl;
-	char	*z;
-
-	tmp = t_m->env;
-	while (tmp)
-	{
-		if (!ft_strncmp(tmp->value, s, FT(s)))
-		{
-			spl = ft_split(tmp->value, '=');
-			z = ft_strdup(spl[1]);
-			ft_free_split(spl);
-			return (z);
-		}
-		tmp = tmp->next;
-	}
-	return (NULL);
-}
 
 static void	update_oldpwd(t_minishell *t_m, int dd)
 {
@@ -85,7 +65,7 @@ static void	update_oldpwd(t_minishell *t_m, int dd)
 		{
 			free(tmp->value);
 			if (!dd)
-				tmp->value = ft_strjoin_free(ft_strdup(s), gayenv("PWD", t_m));
+				tmp->value = ft_strjoin_free(ft_strdup(s), gay_env(t_m, ft_strdup("PWD")));
 			else
 			{
 				getcwd(cwd, PATH_MAX);

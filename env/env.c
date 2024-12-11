@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 13:45:02 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/06 15:14:51 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/11 17:25:13 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,32 +22,27 @@ static int	size_t_var(char *s)
 	return (i);
 }
 
-char	*get_env_path(t_minishell *t_m)
+char	*gay_env(t_minishell *t_m, char *v)
 {
 	t_env	*n;
-	char	**spl;
-	char	*v;
-	int		j;
+	char	*s;
 
-	v = NULL;
+	s = NULL;
 	n = (t_m->env);
 	while (n)
 	{
-		if (ft_strncmp(n->value, "OLDPWD", size_t_var(n->value)) == 0)
+		if(n->value)
 		{
-			spl = ft_split(n->value, '=');
-			v = ft_strdup(spl[1]);
-			j = 0;
-			while (spl[j])
+			///printf("N->VALUE: %s (size_t_var = %d) \n", n->value, size_t_var(n->value));
+			if (ft_strncmp(n->value, v, size_t_var(n->value)) == 0)
 			{
-				free(spl[j]);
-				j++;
+				s = ft_substr(n->value, size_t_var(n->value) + 1, FT(n->value));
+				break ;
 			}
-			break ;
 		}
 		n = n->next;
 	}
-	return (v);
+	return (s);
 }
 
 int	env_init(t_minishell *t_m, char **argv)
