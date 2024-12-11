@@ -6,7 +6,7 @@
 /*   By: jsaintho <jsaintho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 13:05:20 by jsaintho          #+#    #+#             */
-/*   Updated: 2024/12/11 12:22:17 by jsaintho         ###   ########.fr       */
+/*   Updated: 2024/12/11 14:17:36 by jsaintho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,8 @@ static char	*handle_spaces(char *str_token, t_cmd *ct)
 
 	c = 0;
 	i = 0;
+	if (ft_m_strchr_i(str_token, ' ', ' ') == -1)
+		return (ft_strdup(str_token));
 	if (ft_stronly(str_token, ' '))
 		return (str_token);
 	s = ft_multisplit(str_token, " ");
@@ -111,7 +113,7 @@ static char	*handle_spaces(char *str_token, t_cmd *ct)
 	while (s[i].s)
 	{
 		if (ft_strlen(s[i].s) == 0)
-			s[i].s = ft_strdup(" ");
+			s[i].s = FSF(s[i].s, ft_strdup(" "));
 		ct->command = FSF(ct->command, FSF(FSR(" "), FSR(s[i].s)));
 		i++;
 	}
@@ -129,7 +131,6 @@ static void	fdp_parsing2(t_minishell *t, t_mltsplit *s, int *i)
 	{
 		t->cmds[*i].files[t->cmds[*i].f_i].heredoc = false;
 		t->cmds[*i].files[t->cmds[*i].f_i].append = false;
-		// printf("t->sq[a].s = %s t->set[%d] = %c \n", NULL, (t->sq[a]).ix, '0' );
 		if(t->set[(t->sq[a]).ix] == '<' && FT(t->sq[a].s) && (a - 1 >= 0)) 
 			if ((!FT(t->sq[a - 1].s)) && (t->set[(t->sq[a - 1]).ix] == '<'))
 				t->cmds[*i].files[t->cmds[*i].f_i].heredoc = true;
